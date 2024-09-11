@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 public class Database {
     public static String queryDataFromDatabase() throws SQLException {
-        final var conn = DriverManager.getConnection("jdbc:postgresql:apartment");
+        final var conn = DriverManager.getConnection("jdbc:mysql://localhost/apartment", "USERNAME", "PASSWORD");
         final var stmt = conn.createStatement();
         final var query = stmt.executeQuery("SELECT 2 + 2");
         query.next();
