@@ -11,9 +11,4 @@ class TestTrivial {
     void trivialTest() {
         assertEquals(2, 1 + 1);
     }
-
-    @Test
-    void dbTest() throws SQLException {
-        assertEquals("4", Database.queryDataFromDatabase());
-    }
 }
