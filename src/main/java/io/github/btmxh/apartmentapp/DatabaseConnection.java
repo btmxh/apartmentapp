@@ -4,10 +4,13 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.SQLException;
 import io.github.cdimascio.dotenv.Dotenv;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 public class DatabaseConnection
 {
     private static DatabaseConnection instance;
     private Connection connection;
+    private static final Logger logger = LogManager.getLogger();
     private DatabaseConnection() {
         try {
             Dotenv dotenv = Dotenv.load();
@@ -15,7 +18,7 @@ public class DatabaseConnection
             String username = dotenv.get("DB_USERNAME");
             String password = dotenv.get("DB_PASSWORD");
             connection = DriverManager.getConnection(url, username, password);
-            System.out.println("Successfully connected to Database!");
+            logger.info("Successfully connected to Database!");
         } catch(SQLException e) {
             e.printStackTrace();
         }
@@ -36,7 +39,7 @@ public class DatabaseConnection
                                         ")";
         try (Statement statement = connection.createStatement()) {
             statement.execute(sql_createUsersTable);
-            System.out.println("Successfully created a table for users!");
+            logger.info("Successfully created a table for users!");
         } catch(SQLException e) {
             e.printStackTrace();
         }
