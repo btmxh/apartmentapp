@@ -59,10 +59,10 @@
                   </Lighting>
                </effect>
             </ChoiceBox>
-            <TextField layoutX="125.0" layoutY="44.0" />
-            <PasswordField layoutX="125.0" layoutY="90.0" />
-            <PasswordField layoutX="125.0" layoutY="141.0" />
-            <Label alignment="CENTER" layoutX="85.0" layoutY="256.0" prefHeight="20.0" prefWidth="233.0" text="If you have an account, click here" underline="true">
+            <TextField fx:id="usernameRegTextField" layoutX="125.0" layoutY="44.0" promptText="username" />
+            <PasswordField fx:id="passwordPasswordField" layoutX="125.0" layoutY="90.0" />
+            <PasswordField fx:id="repasswordPasswordField" layoutX="125.0" layoutY="141.0" />
+            <Label fx:id="returnLogin" alignment="CENTER" layoutX="85.0" layoutY="256.0" prefHeight="20.0" prefWidth="233.0" text="If you have an account, click here" underline="true">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>

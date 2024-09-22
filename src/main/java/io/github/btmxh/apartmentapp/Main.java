@@ -10,38 +10,44 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.sql.SQLException;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 
 public class Main extends Application {
-    private static final Logger LOGGER = LogManager.getLogger();
+    // Initialize logger
+    private static final Logger LOGGER = LogManager.getLogger(Main.class);
 
     @Override
     public void start(Stage stage) {
-        final var content = new VBox();
-        final var label = new Label("Hello, World!");
-        final var button = new Button("Query");
-        final var result = new Label();
+        try {
+            // Log info message
+            LOGGER.info("Starting the application");
 
-        content.setAlignment(Pos.CENTER);
-        content.getChildren().addAll(label, button, result);
+            // Load FXML
+            Parent root;
+            root = FXMLLoader.load(getClass().getResource("login-view.fxml"));
 
-        button.setOnAction((e) -> {
-            try {
-                LOGGER.debug("Button pressed");
-                result.setText(Database.queryDataFromDatabase());
-            } catch (SQLException ex) {
-                result.setText("ERROR");
-                LOGGER.error("Error querying from DB", ex);
-            }
-        });
+            final var content = new VBox(root);
+            final var scene = new Scene(content);
+            stage.setScene(scene);
+            stage.setWidth(520);
+            stage.setHeight(400);
+            stage.show();
 
-        final var scene = new Scene(content);
-        stage.setScene(scene);
-        stage.setWidth(480);
-        stage.setHeight(360);
-        stage.show();
+            // Log success
+            LOGGER.info("Application started successfully");
+        } catch (Exception e) {
+            // Log any exceptions
+            LOGGER.error("Error during application startup", e);
+        }
     }
 
     public static void main(String[] args) {
+        // Log the application start
+        LOGGER.debug("Launching the application");
         launch(args);
+        // Log the application end
+        LOGGER.debug("Application shutdown");
     }
 }
+
