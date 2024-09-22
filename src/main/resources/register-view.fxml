@@ -25,6 +25,19 @@
    </VBox>
 
    <VBox alignment="CENTER_LEFT" maxWidth="350.0" prefWidth="300.0" spacing="5">
+      <children>
+         <Label text="Email" />
+         <TextField fx:id="emailRegTextField" maxWidth="400.0" prefWidth="300" />
+      </children>
+   </VBox>
+   <VBox alignment="CENTER_LEFT" layoutX="60.0" layoutY="201.0" maxWidth="350.0" prefWidth="300.0" spacing="5">
+      <children>
+         <Label text="Phone number" />
+         <TextField fx:id="phoneNumberRegTextField" maxWidth="400.0" prefWidth="300" />
+      </children>
+   </VBox>
+
+   <VBox alignment="CENTER_LEFT" maxWidth="350.0" prefWidth="300.0" spacing="5">
       <Label text="Password" />
       <PasswordField fx:id="passwordRegPasswordField" maxWidth="400.0" prefWidth="300" />
    </VBox>

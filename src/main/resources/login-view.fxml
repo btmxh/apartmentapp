@@ -29,7 +29,7 @@
       <Label text="Password" />
       <PasswordField fx:id="passwordPasswordField" maxWidth="350.0" prefWidth="300" />
    </VBox>
-   <Label fx:id="loginMessageLabel" alignment="CENTER" prefHeight="17.0" prefWidth="120.0" />
+   <Label fx:id="loginMessageLabel" alignment="CENTER" />
 
    <Button onAction="#loginButtonOnActive" prefWidth="200" style="-fx-background-color: #DBBCC3; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;" text="Sign in">
       <VBox.margin>

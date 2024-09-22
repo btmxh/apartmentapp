@@ -61,16 +61,18 @@ public class DatabaseConnection
 
     }
 
-    public boolean signup(String username, String password) throws SQLException {
+    public boolean signup(String username, String email, String phoneNumber, String password) throws SQLException {
         String sql = "SELECT user_name FROM users WHERE user_name = ?;";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setString(1, username);
         ResultSet rs = ps.executeQuery();
         if (!rs.next()) {
-            String sql2 = "INSERT INTO users (user_name, user_password) VALUES (?, ?);";
+            String sql2 = "INSERT INTO users (user_name, user_email, user_phone_number, user_password) VALUES (?, ?, ?, ?);";
             ps = connection.prepareStatement(sql2);
             ps.setString(1, username);
-            ps.setString(2, password);
+            ps.setString(2, email);
+            ps.setString(3, phoneNumber);
+            ps.setString(4, password);
             ps.executeUpdate();
             return true;
         }

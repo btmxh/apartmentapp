@@ -25,6 +25,12 @@ public class RegisterController {
     private TextField usernameRegTextField;
 
     @FXML
+    private TextField emailRegTextField;
+
+    @FXML
+    private TextField phoneNumberRegTextField;
+
+    @FXML
     private Button signUpButton;
 
     @FXML
@@ -35,37 +41,49 @@ public class RegisterController {
 
     private void handleSignUp() {
         String username = usernameRegTextField.getText().trim();
+        String email = emailRegTextField.getText().trim();
         String password = passwordRegPasswordField.getText().trim();
+        String phoneNumber = phoneNumberRegTextField.getText().trim();
         String reenteredPassword = repasswordRegPasswordField.getText().trim();
 
         if (username.isEmpty()) {
-            showAlert("Error", "Username không được để trống.");
+            showAlert("Error", "Username must not be empty");
             return;
         }
+
         if (password.isEmpty()) {
-            showAlert("Error", "Password không được để trống.");
+            showAlert("Error", "Password must not be empty");
             return;
         }
+
+        if(email.isEmpty()) {
+            showAlert("Error", "Email must not be empty");
+        }
+
+        if(phoneNumber.isEmpty()) {
+            showAlert("Error", "Phone number must not be empty");
+        }
+
         if (reenteredPassword.isEmpty()) {
-            showAlert("Error", "Bạn phải nhập lại mật khẩu.");
+            showAlert("Error", "Please reenter password");
             return;
         }
 
         if (!password.equals(reenteredPassword)) {
-            showAlert("Error", "Mật khẩu nhập lại không khớp.");
+            showAlert("Error", "Password does not match");
             return;
         }
 
-        processSignUp(username, password);
+        processSignUp(username, email, phoneNumber, password);
     }
 
-    private void processSignUp(String username, String password) {
+    private void processSignUp(String username, String email, String phoneNumber, String password) {
         DatabaseConnection dbc = DatabaseConnection.getInstance();
         try {
-            if(dbc.signup(username, password)) {
-                showAlert("Successful!", "Successful login for username " + username);
+            if(dbc.signup(username, email, phoneNumber, password)) {
+                showAlert("Successful!", "Successful registered user " + username);
             } else {
-                showAlert("Error", "Username" + username + "has already been taken. Please choose another username");
+                showAlert("Error", "Username " + username + " has already been taken. Please choose another username");
             }
         } catch (SQLException e) {
             showAlert("Error", "Unable to sign up");
