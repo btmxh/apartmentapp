@@ -8,12 +8,12 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="600.0" maxWidth="400.0" prefHeight="421.0" prefWidth="400.0" spacing="20.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.RegisterController">
+<VBox alignment="CENTER" maxHeight="600.0" maxWidth="406.0" spacing="20.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.RegisterController">
    <padding>
       <Insets bottom="50" left="50" right="50" top="50" />
    </padding>
 
-   <Label prefHeight="45.0" prefWidth="133.0" style="-fx-text-fill: #000000;" text="Sign Up">
+   <Label style="-fx-text-fill: #000000;" text="Sign Up">
       <font>
          <Font name="System Bold" size="36.0" />
       </font>
