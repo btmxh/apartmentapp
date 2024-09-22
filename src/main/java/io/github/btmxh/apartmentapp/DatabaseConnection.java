@@ -20,7 +20,7 @@ public class DatabaseConnection
             connection = DriverManager.getConnection(url, username, password);
             logger.info("Successfully connected to Database!");
         } catch(SQLException e) {
-            logger.error("Unable to connect to database", e);
+            throw new RuntimeException("Unable to connect to database", e);
         }
     }
     public static DatabaseConnection getInstance() {
@@ -42,7 +42,7 @@ public class DatabaseConnection
             statement.execute(sql_createUsersTable);
             logger.info("Successfully created a table for users!");
         } catch(SQLException e) {
-            logger.error("Unable to create users table on database", e);
+            throw new RuntimeException("Unable to create users table on database", e);
         }
     }
 }
