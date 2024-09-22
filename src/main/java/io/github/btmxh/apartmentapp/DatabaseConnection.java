@@ -28,7 +28,7 @@ public class DatabaseConnection
         String sql_createUsersTable =   "CREATE TABLE IF NOT EXISTS users (" +
                                         "user_id INT PRIMARY KEY AUTO_INCREMENT, " +
                                         "user_name VARCHAR(50) NOT NULL, " +
-                                        "user_address VARCHAR(50) NOT NULL, " +
+                                        "user_password VARCHAR(50) NOT NULL, " +
                                         "user_phone_number VARCHAR(15) NOT NULL, " +
                                         "user_email VARCHAR(50) NOT NULL, " +
                                         ")";
