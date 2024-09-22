@@ -30,13 +30,14 @@ public class DatabaseConnection
         return instance;
     }
     public void createUsersTable() {
-        String sql_createUsersTable =   "CREATE TABLE IF NOT EXISTS users (" +
-                                        "user_id INT PRIMARY KEY AUTO_INCREMENT, " +
-                                        "user_name VARCHAR(50) NOT NULL, " +
-                                        "user_password VARCHAR(50) NOT NULL, " +
-                                        "user_phone_number VARCHAR(15) NOT NULL, " +
-                                        "user_email VARCHAR(50) NOT NULL" +
-                                        ")";
+        String sql_createUsersTable = """
+                CREATE TABLE IF NOT EXISTS users (
+                user_id INT PRIMARY KEY AUTO_INCREMENT,
+                user_name VARCHAR(50) NOT NULL,
+                user_password VARCHAR(50) NOT NULL,
+                user_phone_number VARCHAR(15) NOT NULL,
+                user_email VARCHAR(50) NOT NULL
+                )""";
         try (Statement statement = connection.createStatement()) {
             statement.execute(sql_createUsersTable);
             logger.info("Successfully created a table for users!");
