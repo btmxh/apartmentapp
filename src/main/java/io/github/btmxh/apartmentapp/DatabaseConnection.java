@@ -3,15 +3,17 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.SQLException;
+import io.github.cdimascio.dotenv.Dotenv;
 public class DatabaseConnection
 {
     private static DatabaseConnection instance;
     private Connection connection;
     private DatabaseConnection() {
         try {
+            Dotenv dotenv = Dotenv.load();
             String url = "jdbc:mysql://localhost:3306/apartment";
-            String username = "root";
-            String password = "SE_06";
+            String username = dotenv.get("DB_USERNAME");
+            String password = dotenv.get("DB_PASSWORD");
             connection = DriverManager.getConnection(url, username, password);
             System.out.println("Successfully connected to Database!");
         } catch(SQLException e) {
