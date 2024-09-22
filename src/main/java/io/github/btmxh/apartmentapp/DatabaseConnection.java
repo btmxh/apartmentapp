@@ -35,7 +35,7 @@ public class DatabaseConnection
                                         "user_name VARCHAR(50) NOT NULL, " +
                                         "user_password VARCHAR(50) NOT NULL, " +
                                         "user_phone_number VARCHAR(15) NOT NULL, " +
-                                        "user_email VARCHAR(50) NOT NULL, " +
+                                        "user_email VARCHAR(50) NOT NULL" +
                                         ")";
         try (Statement statement = connection.createStatement()) {
             statement.execute(sql_createUsersTable);
