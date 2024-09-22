@@ -3,19 +3,12 @@ package io.github.btmxh.apartmentapp;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.*;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 import java.sql.SQLException;
 
 public class LoginController {
-    public Label clicktoRegister;
     @FXML
     private TextField usernameTextField;
 
@@ -23,17 +16,17 @@ public class LoginController {
     private PasswordField passwordPasswordField;
 
     @FXML
-    private Button cancelButton;
+    private Label loginMessageLabel;
 
     @FXML
-    private Label loginMessageLabel;
+    private Hyperlink clicktoRegister;
 
     public void loginButtonOnActive(ActionEvent event) {
 
         String username = usernameTextField.getText();
         String password = passwordPasswordField.getText();
 
-        if (username.isEmpty() || password.isEmpty()) {
+        if (username.isBlank() || password.isBlank()) {
             loginMessageLabel.setText("Username and password cannot be empty!");
             usernameTextField.setText("");
             passwordPasswordField.setText("");
@@ -45,9 +38,7 @@ public class LoginController {
                     loginMessageLabel.setText("Login successfully!");
                 }
                 else {
-                    loginMessageLabel.setText("The Username or Password is Incorrect. Try again!");
-                    usernameTextField.setText("");
-                    passwordPasswordField.setText("");
+                    loginMessageLabel.setText("The Username or Password is incorrect. Try again!");
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -55,19 +46,18 @@ public class LoginController {
         }
     }
 
-    public void cancelButtonOnActive(ActionEvent e) {
-        Stage stage = (Stage) cancelButton.getScene().getWindow();
-        stage.close();
-    }
 
-    public void setMouseClicked(MouseEvent mouseEvent) {
-        try {
-            Stage stage = (Stage) clicktoRegister.getScene().getWindow();
-            Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/register-view.fxml")));
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    @FXML
+    public void initialize() {
+        // Add a button click handler to navigate to the registration page
+        clicktoRegister.setOnAction(event -> {
+            try {
+                Region registerRoot = FXMLLoader.load(getClass().getResource("/register-view.fxml"));
+                Stage stage = (Stage) clicktoRegister.getScene().getWindow();
+                stage.getScene().setRoot(registerRoot);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

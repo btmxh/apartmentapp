@@ -1,78 +1,99 @@
 package io.github.btmxh.apartmentapp;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
+`import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
-
+import javafx.scene.control.Alert;
 import java.io.IOException;
 import java.sql.SQLException;
 
 public class RegisterController {
-    public Label loginMessageLabel;
+    @FXML
+    private PasswordField passwordRegPasswordField;
+
+    @FXML
+    private PasswordField repasswordRegPasswordField;
+
+    @FXML
+    private Button returnLogin;
+
     @FXML
     private TextField usernameRegTextField;
 
     @FXML
-    public PasswordField passwordPasswordField;
+    private Button signUpButton;
 
     @FXML
-    public PasswordField repasswordPasswordField;
+    private void initialize() {
+        signUpButton.setOnAction(event -> handleSignUp());
+        returnLogin.setOnAction(event -> handleCancel());
+    }
 
-    @FXML
-    public Button signupButton;
+    private void handleSignUp() {
+        String username = usernameRegTextField.getText().trim();
+        String password = passwordRegPasswordField.getText().trim();
+        String reenteredPassword = repasswordRegPasswordField.getText().trim();
 
-    @FXML
-    private Label returnLogin;
+        if (username.isEmpty()) {
+            showAlert("Error", "Username không được để trống.");
+            return;
+        }
+        if (password.isEmpty()) {
+            showAlert("Error", "Password không được để trống.");
+            return;
+        }
+        if (reenteredPassword.isEmpty()) {
+            showAlert("Error", "Bạn phải nhập lại mật khẩu.");
+            return;
+        }
 
-    public void setOnMouseClicked(MouseEvent mouseEvent) {
+        if (!password.equals(reenteredPassword)) {
+            showAlert("Error", "Mật khẩu nhập lại không khớp.");
+            return;
+        }
+
+        processSignUp(username, password);
+    }
+
+    private void processSignUp(String username, String password) {
+        DatabaseConnection dbc = DatabaseConnection.getInstance();
         try {
-            Stage stage = (Stage) returnLogin.getScene().getWindow();
-            Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/login-view.fxml")));
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
+            if(dbc.signup(username, password)) {
+                showAlert("Successful!", "Successful login for username " + username);
+            } else {
+                showAlert("Error", "Username" + username + "has already been taken. Please choose another username");
+            }
+        } catch (SQLException e) {
+            showAlert("Error", "Unable to sign up");
             e.printStackTrace();
         }
     }
 
-    public void signup(ActionEvent actionEvent) {
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 
-        String username = usernameRegTextField.getText();
-        String password = passwordPasswordField.getText();
-        String repassword = repasswordPasswordField.getText();
+    private void handleCancel() {
+        // Quay lại trang login
+        try {
+            // Tải file FXML của trang đăng nhập
+            Region loginPage = FXMLLoader.load(getClass().getResource("/login-view.fxml"));
 
-        if (username.isEmpty() || password.isEmpty() || repassword.isEmpty()) {
-            loginMessageLabel.setText("Username and password cannot be empty!");
-            usernameRegTextField.setText("");
-            passwordPasswordField.setText("");
-            repasswordPasswordField.setText("");
-        }
-        else if (!password.equals(repassword)) {
-            loginMessageLabel.setText("Passwords are not matching. Try again!");
-        }
-        else {
-            try {
-                DatabaseConnection dbc = DatabaseConnection.getInstance();
-                if (dbc.signup(username, password)) {
-                    loginMessageLabel.setText("Register successfully!");
-                }
-                else {
-                    loginMessageLabel.setText("Username has already been taken. Please choose another username!");
-                    usernameRegTextField.setText("");
-                    passwordPasswordField.setText("");
-                    repasswordPasswordField.setText("");
-                }
-            }
-            catch (SQLException e) {
-                e.printStackTrace();
-            }
+            // Lấy Stage hiện tại từ nút Cancel
+            Stage stage = (Stage) returnLogin.getScene().getWindow();
+
+            // Đặt Scene mới với trang đăng nhập
+            stage.getScene().setRoot(loginPage);
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
