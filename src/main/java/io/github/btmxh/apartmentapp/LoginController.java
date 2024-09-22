@@ -3,15 +3,19 @@ package io.github.btmxh.apartmentapp;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 public class LoginController {
+    public Label clicktoRegister;
     @FXML
     private TextField usernameTextField;
 
@@ -24,14 +28,30 @@ public class LoginController {
     @FXML
     private Label loginMessageLabel;
 
-    @FXML
-    private Label clicktoRegister;
+    public void loginButtonOnActive(ActionEvent event) {
 
-    public void loginButtonOnActive(ActionEvent e) {
-        if (!usernameTextField.getText().isBlank() && !passwordPasswordField.getText().isBlank()) {
-            loginMessageLabel.setText("You try login again!");
-        } else {
-            loginMessageLabel.setText("Please enter username and password.");
+        String username = usernameTextField.getText();
+        String password = passwordPasswordField.getText();
+
+        if (username.isEmpty() || password.isEmpty()) {
+            loginMessageLabel.setText("Username and password cannot be empty!");
+            usernameTextField.setText("");
+            passwordPasswordField.setText("");
+        }
+        else {
+            try {
+                DatabaseConnection dbc = DatabaseConnection.getInstance();
+                if (dbc.login(username, password)) {
+                    loginMessageLabel.setText("Login successfully!");
+                }
+                else {
+                    loginMessageLabel.setText("The Username or Password is Incorrect. Try again!");
+                    usernameTextField.setText("");
+                    passwordPasswordField.setText("");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -40,19 +60,14 @@ public class LoginController {
         stage.close();
     }
 
-    @FXML
-    public void initialize() {
-        // Add a button click handler to navigate to the registration page
-        clicktoRegister.setOnMouseClicked(event -> {
-            try {
-                Parent registerRoot = FXMLLoader.load(getClass().getResource("register-view.fxml"));
-                Scene registerScene = new Scene(registerRoot);
-                Stage stage = (Stage) clicktoRegister.getScene().getWindow();
-                stage.setScene(registerScene);
-                stage.show();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+    public void setMouseClicked(MouseEvent mouseEvent) {
+        try {
+            Stage stage = (Stage) clicktoRegister.getScene().getWindow();
+            Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/register-view.fxml")));
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
