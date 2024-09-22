@@ -25,13 +25,10 @@ public class Main extends Application {
 
             // Load FXML
             Parent root;
-            root = FXMLLoader.load(getClass().getResource("login-view.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/login-view.fxml"));
 
-            final var content = new VBox(root);
-            final var scene = new Scene(content);
+            final var scene = new Scene(root);
             stage.setScene(scene);
-            stage.setWidth(520);
-            stage.setHeight(400);
             stage.show();
 
             // Log success

@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -19,13 +20,10 @@ public class LoginController {
     private PasswordField passwordPasswordField;
 
     @FXML
-    private Button cancelButton;
-
-    @FXML
     private Label loginMessageLabel;
 
     @FXML
-    private Label clicktoRegister;
+    private Hyperlink clicktoRegister;
 
     public void loginButtonOnActive(ActionEvent e) {
         if (!usernameTextField.getText().isBlank() && !passwordPasswordField.getText().isBlank()) {
@@ -35,17 +33,13 @@ public class LoginController {
         }
     }
 
-    public void cancelButtonOnActive(ActionEvent e) {
-        Stage stage = (Stage) cancelButton.getScene().getWindow();
-        stage.close();
-    }
 
     @FXML
     public void initialize() {
         // Add a button click handler to navigate to the registration page
-        clicktoRegister.setOnMouseClicked(event -> {
+        clicktoRegister.setOnAction(event -> {
             try {
-                Parent registerRoot = FXMLLoader.load(getClass().getResource("register-view.fxml"));
+                Parent registerRoot = FXMLLoader.load(getClass().getResource("/register-view.fxml"));
                 Scene registerScene = new Scene(registerRoot);
                 Stage stage = (Stage) clicktoRegister.getScene().getWindow();
                 stage.setScene(registerScene);
