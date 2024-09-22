@@ -1,17 +1,13 @@
 package io.github.btmxh.apartmentapp;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert;
-
 import java.io.IOException;
 
 public class RegisterController {
@@ -77,14 +73,13 @@ public class RegisterController {
         // Quay lại trang login
         try {
             // Tải file FXML của trang đăng nhập
-            Parent loginPage = FXMLLoader.load(getClass().getResource("/login-view.fxml"));
+            Region loginPage = FXMLLoader.load(getClass().getResource("/login-view.fxml"));
 
             // Lấy Stage hiện tại từ nút Cancel
             Stage stage = (Stage) returnLogin.getScene().getWindow();
 
             // Đặt Scene mới với trang đăng nhập
-            stage.setScene(new Scene(loginPage));
-            stage.show();
+            stage.getScene().setRoot(loginPage);
 
         } catch (IOException e) {
             e.printStackTrace();

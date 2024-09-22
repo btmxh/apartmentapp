@@ -3,13 +3,11 @@ package io.github.btmxh.apartmentapp;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 public class LoginController {
@@ -39,11 +37,9 @@ public class LoginController {
         // Add a button click handler to navigate to the registration page
         clicktoRegister.setOnAction(event -> {
             try {
-                Parent registerRoot = FXMLLoader.load(getClass().getResource("/register-view.fxml"));
-                Scene registerScene = new Scene(registerRoot);
+                Region registerRoot = FXMLLoader.load(getClass().getResource("/register-view.fxml"));
                 Stage stage = (Stage) clicktoRegister.getScene().getWindow();
-                stage.setScene(registerScene);
-                stage.show();
+                stage.getScene().setRoot(registerRoot);
             } catch (Exception e) {
                 e.printStackTrace();
             }
