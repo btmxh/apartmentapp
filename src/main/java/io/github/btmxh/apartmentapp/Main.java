@@ -1,17 +1,13 @@
 package io.github.btmxh.apartmentapp;
 
 import javafx.application.Application;
-import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import java.sql.SQLException;
+
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 
 public class Main extends Application {
     // Initialize logger
@@ -29,6 +25,9 @@ public class Main extends Application {
 
             final var scene = new Scene(root);
             stage.setScene(scene);
+            stage.setMinWidth(360);
+            stage.setMinHeight(480);
+
             stage.show();
 
             // Log success
