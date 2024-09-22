@@ -43,8 +43,8 @@ public class Main extends Application {
         LOGGER.debug("Connecting to DB");
         DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
         databaseConnection.createUsersTable();
-      
-        // Log the application start      
+
+        // Log the application start
         LOGGER.debug("Launching the application");
         launch(args);
         // Log the application end

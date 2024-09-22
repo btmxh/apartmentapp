@@ -1,6 +1,6 @@
 package io.github.btmxh.apartmentapp;
 
-import javafx.fxml.FXML;
+`import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -9,6 +9,7 @@ import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert;
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class RegisterController {
     @FXML
@@ -59,7 +60,17 @@ public class RegisterController {
     }
 
     private void processSignUp(String username, String password) {
-        showAlert("Succesful!", "Đăng ký thành công! Username: " + username);
+        DatabaseConnection dbc = DatabaseConnection.getInstance();
+        try {
+            if(dbc.signup(username, password)) {
+                showAlert("Successful!", "Successful login for username " + username);
+            } else {
+                showAlert("Error", "Username" + username + "has already been taken. Please choose another username");
+            }
+        } catch (SQLException e) {
+            showAlert("Error", "Unable to sign up");
+            e.printStackTrace();
+        }
     }
 
     private void showAlert(String title, String message) {
@@ -86,3 +97,4 @@ public class RegisterController {
         }
     }
 }
+

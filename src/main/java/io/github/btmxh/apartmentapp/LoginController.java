@@ -3,12 +3,10 @@ package io.github.btmxh.apartmentapp;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Label;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
+import java.sql.SQLException;
 
 public class LoginController {
     @FXML
@@ -23,11 +21,28 @@ public class LoginController {
     @FXML
     private Hyperlink clicktoRegister;
 
-    public void loginButtonOnActive(ActionEvent e) {
-        if (!usernameTextField.getText().isBlank() && !passwordPasswordField.getText().isBlank()) {
-            loginMessageLabel.setText("You try login again!");
-        } else {
-            loginMessageLabel.setText("Please enter username and password.");
+    public void loginButtonOnActive(ActionEvent event) {
+
+        String username = usernameTextField.getText();
+        String password = passwordPasswordField.getText();
+
+        if (username.isBlank() || password.isBlank()) {
+            loginMessageLabel.setText("Username and password cannot be empty!");
+            usernameTextField.setText("");
+            passwordPasswordField.setText("");
+        }
+        else {
+            try {
+                DatabaseConnection dbc = DatabaseConnection.getInstance();
+                if (dbc.login(username, password)) {
+                    loginMessageLabel.setText("Login successfully!");
+                }
+                else {
+                    loginMessageLabel.setText("The Username or Password is incorrect. Try again!");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
