@@ -39,7 +39,12 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        // Log the application start
+        // Create a table for users
+        LOGGER.debug("Connecting to DB");
+        DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
+        databaseConnection.createUsersTable();
+      
+        // Log the application start      
         LOGGER.debug("Launching the application");
         launch(args);
         // Log the application end
