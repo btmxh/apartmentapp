@@ -22,6 +22,25 @@ public class LoginController {
     public PasswordField passwordField;
     public Label statusLabel;
 
+    private boolean login(Connection conn, String username, String password) throws SQLException {
+
+        String sql = "SELECT * FROM users WHERE username = ? AND password = ?;";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, username);
+        ps.setString(2, password);
+        ResultSet rs = ps.executeQuery();
+        return rs.next();
+
+    }
+
+    public void switchScene(ActionEvent event, String URL) throws IOException {
+
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(FXMLLoader.load(getClass().getResource(URL)));
+        stage.setScene(scene);
+        stage.show();
+    }
+
     public void login(ActionEvent actionEvent) {
         String username = usernameTextField.getText();
         String password = passwordField.getText();
@@ -36,16 +55,10 @@ public class LoginController {
         }
         else {
             try {
-                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/apartment", "root", "200416");
-                Statement st = conn.createStatement();
-                String sql = "SELECT password FROM users WHERE username = \"" + username + "\";";
-                ResultSet rs = st.executeQuery(sql);
-                if (rs.next() && rs.getString("password").equals(password)) {
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/apartment", "USERNAME", "PASSWORD");
+                if (login(conn, username, password)) {
                     try {
-                        Stage stage = (Stage)((Node) actionEvent.getSource()).getScene().getWindow();
-                        Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/Application.fxml")));
-                        stage.setScene(scene);
-                        stage.show();
+                        switchScene(actionEvent, "/Application.fxml");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -63,11 +76,9 @@ public class LoginController {
 
     public void switchToSignupScene(ActionEvent actionEvent) {
         try {
-            Stage stage = (Stage)((Node) actionEvent.getSource()).getScene().getWindow();
-            Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/Signup.fxml")));
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
+            switchScene(actionEvent, "/Signup.fxml");
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }

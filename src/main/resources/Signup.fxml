@@ -12,7 +12,7 @@
       <Label layoutX="102.0" layoutY="200.0" text="Password" />
       <TextField fx:id="usernameTextField" layoutX="191.0" layoutY="126.0" />
       <Button layoutX="240.0" layoutY="262.0" mnemonicParsing="false" onAction="#signup" text="signup" />
-      <Button layoutX="341.0" layoutY="346.0" mnemonicParsing="false" onAction="#switchToLoginScece" text="login" />
+      <Button layoutX="341.0" layoutY="346.0" mnemonicParsing="false" onAction="#switchToLoginScene" text="login" />
       <Label fx:id="statusLabel" layoutX="216.0" layoutY="314.0" />
       <PasswordField fx:id="passwordField" layoutX="192.0" layoutY="196.0" />
    </children>

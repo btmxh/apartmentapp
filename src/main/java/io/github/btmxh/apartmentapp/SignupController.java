@@ -1,13 +1,9 @@
 package io.github.btmxh.apartmentapp;
 
 import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,6 +18,23 @@ public class SignupController {
     public PasswordField passwordField;
     public Label statusLabel;
 
+    private boolean signup(Connection conn, String username, String password) throws SQLException {
+        String sql = "SELECT username FROM users WHERE username = ?;";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, username);
+        ResultSet rs = ps.executeQuery();
+        if (!rs.next()) {
+            String sql2 = "INSERT INTO users (username, password) VALUES (?, ?);";
+            ps = conn.prepareStatement(sql2);
+            ps.setString(1, username);
+            ps.setString(2, password);
+            ps.executeUpdate();
+            return true;
+        }
+        else return false;
+    }
+
+
     public void signup(ActionEvent actionEvent) {
         String username = usernameTextField.getText();
         String password = passwordField.getText();
@@ -35,13 +48,8 @@ public class SignupController {
         }
         else {
             try {
-                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/apartment", "root", "200416");
-                Statement st = conn.createStatement();
-                String sql = "SELECT username FROM users WHERE username = \"" + username + "\";";
-                ResultSet rs = st.executeQuery(sql);
-                if (!rs.next()) {
-                    sql = "INSERT INTO users (username, password) VALUES (\"" + username + "\", \"" + password + "\");";
-                    st.execute(sql);
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/apartment", "USERNAME", "PASSWORD");
+                if (signup(conn, username, password)) {
                     statusLabel.setText("Signup successfully!");
                     usernameTextField.setText("");
                     passwordField.setText("");
@@ -57,12 +65,10 @@ public class SignupController {
         }
     }
 
-    public void switchToLoginScece(ActionEvent actionEvent) {
+    public void switchToLoginScene(ActionEvent actionEvent) {
         try {
-            Stage stage = (Stage)((Node) actionEvent.getSource()).getScene().getWindow();
-            Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/Login.fxml")));
-            stage.setScene(scene);
-            stage.show();
+            LoginController loginController = new LoginController();
+            loginController.switchScene(actionEvent, "/Login.fxml");
         } catch (IOException e) {
             e.printStackTrace();
         }
