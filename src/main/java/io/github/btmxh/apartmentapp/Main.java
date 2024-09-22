@@ -42,9 +42,9 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        launch(args);
         // Create a table for users
         DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
         databaseConnection.createUsersTable();
+        launch(args);
     }
 }
