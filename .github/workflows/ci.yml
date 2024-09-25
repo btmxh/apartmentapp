@@ -107,6 +107,12 @@ jobs:
           name: apartment-app.jar
           path: build/libs/*.jar
 
+      # Optional: Tag the release
+      - name: Tag Release
+        run: |
+          git tag v${{ github.event.release.tag_name }}
+          git push origin --tags
+
       # Create a GitHub Release with the JAR
       - name: Create Release
         uses: softprops/action-gh-release@v1
@@ -115,9 +121,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub token provided automatically
 
-      # Optional: Tag the release
-      - name: Tag Release
-        run: |
-          git tag v${{ github.event.release.tag_name }}
-          git push origin --tags
 
