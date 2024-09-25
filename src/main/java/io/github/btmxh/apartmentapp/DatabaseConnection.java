@@ -17,17 +17,12 @@ public class DatabaseConnection
     private DatabaseConnection() {
         try {
             Dotenv dotenv = Dotenv.load();
-            String hostname = dotenv.get("DB_HOSTNAME");
-            String port = dotenv.get("DB_PORT");
+            String url = dotenv.get("DB_URL");
             String username = dotenv.get("DB_USERNAME");
             String password = dotenv.get("DB_PASSWORD");
-            if (hostname == null) {
-                hostname = "localhost";
+            if (url == null) {
+                url = "jdbc:mysql://localhost:3306/apartment";
             }
-            if (port == null) {
-                port = "3306";
-            }
-            String url ="jdbc:mysql://" + hostname + ":" + port + "/apartment";
             connection = DriverManager.getConnection(url, username, password);
             logger.info("Successfully connected to Database!");
         } catch(SQLException e) {
