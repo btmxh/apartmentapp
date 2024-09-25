@@ -6,9 +6,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.sql.SQLException;
 
 public class LoginController {
+
+    private static final Logger logger = LogManager.getLogger();
+
     @FXML
     private TextField usernameTextField;
 
@@ -41,11 +47,11 @@ public class LoginController {
                     loginMessageLabel.setText("The Username or Password is incorrect. Try again!");
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.warn("Error during executing SQL statement", e);
+                Announcement.show("Error", "Unable to log in");
             }
         }
     }
-
 
     @FXML
     public void initialize() {
@@ -56,7 +62,8 @@ public class LoginController {
                 Stage stage = (Stage) clicktoRegister.getScene().getWindow();
                 stage.getScene().setRoot(registerRoot);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Error during loading FXML file", e);
+                Announcement.show("Error", "Unable to reach sign up page");
             }
         });
     }
