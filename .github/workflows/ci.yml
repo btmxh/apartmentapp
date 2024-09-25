@@ -11,7 +11,6 @@ on:
     branches:
       - test-ci
       - master
-      - release
 
 jobs:
   build:
@@ -99,13 +98,6 @@ jobs:
       # Build the JAR file
       - name: Build JAR
         run: ./gradlew jar
-
-      # Upload the JAR file to GitHub Release
-      - name: Upload JAR to GitHub Releases
-        uses: actions/upload-artifact@v3
-        with:
-          name: apartment-app.jar
-          path: build/libs/*.jar
 
       # Optional: Tag the release
       - name: Tag Release
