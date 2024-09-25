@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
+import java.util.regex.Matcher;
 
 public class RegisterController {
 
@@ -43,6 +44,24 @@ public class RegisterController {
         returnLogin.setOnAction(event -> handleCancel());
     }
 
+    private boolean validateEmail(String email){
+        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+    }
+    private boolean validatePhoneNumber(String phoneNumber) {
+        if(phoneNumber.length() != 10 && phoneNumber.length() != 11) {
+            return false;
+        }
+
+        for(int i = 0; i < phoneNumber.length(); i++) {
+            char c = phoneNumber.charAt(i);
+            if(c < '0' || c > '9') {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private void handleSignUp() {
         String username = usernameRegTextField.getText().trim();
         String email = emailRegTextField.getText().trim();
@@ -62,10 +81,22 @@ public class RegisterController {
 
         if(email.isEmpty()) {
             Announcement.show("Error", "Email must not be empty");
+            return;
         }
 
         if(phoneNumber.isEmpty()) {
             Announcement.show("Error", "Phone number must not be empty");
+            return;
+        }
+
+        if(!validateEmail(email)) {
+            Announcement.show("Error", "Invalid email");
+            return;
+        }
+
+        if(!validatePhoneNumber(phoneNumber)) {
+            Announcement.show("Error", "Invalid phone number: " + phoneNumber);
+            return;
         }
 
         if (reenteredPassword.isEmpty()) {
