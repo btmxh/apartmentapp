@@ -7,12 +7,16 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
-import javafx.scene.control.Alert;
-import java.io.IOException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.sql.SQLException;
 import java.util.regex.Matcher;
 
 public class RegisterController {
+
+    private static final Logger logger = LogManager.getLogger();
+
     @FXML
     private PasswordField passwordRegPasswordField;
 
@@ -66,42 +70,42 @@ public class RegisterController {
         String reenteredPassword = repasswordRegPasswordField.getText().trim();
 
         if (username.isEmpty()) {
-            showAlert("Error", "Username must not be empty");
+            Announcement.show("Error", "Username must not be empty");
             return;
         }
 
         if (password.isEmpty()) {
-            showAlert("Error", "Password must not be empty");
+            Announcement.show("Error", "Password must not be empty");
             return;
         }
 
         if(email.isEmpty()) {
-            showAlert("Error", "Email must not be empty");
+            Announcement.show("Error", "Email must not be empty");
             return;
         }
 
         if(phoneNumber.isEmpty()) {
-            showAlert("Error", "Phone number must not be empty");
+            Announcement.show("Error", "Phone number must not be empty");
             return;
         }
 
         if(!validateEmail(email)) {
-            showAlert("Error", "Invalid email");
+            Announcement.show("Error", "Invalid email");
             return;
         }
 
         if(!validatePhoneNumber(phoneNumber)) {
-            showAlert("Error", "Invalid phone number: " + phoneNumber);
+            Announcement.show("Error", "Invalid phone number: " + phoneNumber);
             return;
         }
 
         if (reenteredPassword.isEmpty()) {
-            showAlert("Error", "Please reenter password");
+            Announcement.show("Error", "Please reenter password");
             return;
         }
 
         if (!password.equals(reenteredPassword)) {
-            showAlert("Error", "Password does not match");
+            Announcement.show("Error", "Password does not match");
             return;
         }
 
@@ -112,21 +116,14 @@ public class RegisterController {
         DatabaseConnection dbc = DatabaseConnection.getInstance();
         try {
             if(dbc.signup(username, email, phoneNumber, password)) {
-                showAlert("Successful!", "Successful registered user " + username);
+                Announcement.show("Successful!", "Successful registered user " + username);
             } else {
-                showAlert("Error", "Username " + username + " has already been taken. Please choose another username");
+                Announcement.show("Error", "Username " + username + " has already been taken. Please choose another username");
             }
         } catch (SQLException e) {
-            showAlert("Error", "Unable to sign up");
-            e.printStackTrace();
+            logger.warn("Error during executing SQL statement", e);
+            Announcement.show("Error", "Unable to sign up");
         }
-    }
-
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 
     private void handleCancel() {
@@ -141,8 +138,9 @@ public class RegisterController {
             // Đặt Scene mới với trang đăng nhập
             stage.getScene().setRoot(loginPage);
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            logger.error("Error during loading FXML file", e);
+            Announcement.show("Error", "Unable to reach log in page");
         }
     }
 }

@@ -13,7 +13,7 @@ public class DatabaseConnection
 {
     private static DatabaseConnection instance;
     private Connection connection;
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger(DatabaseConnection.class);
     private DatabaseConnection() {
         try {
             Dotenv dotenv = Dotenv.load();
