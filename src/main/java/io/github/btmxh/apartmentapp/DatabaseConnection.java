@@ -78,4 +78,11 @@ public class DatabaseConnection
         }
         else return false;
     }
+
+    public void resetDatabase() throws SQLException {
+        try(final var st = connection.createStatement()) {
+            st.execute("DROP TABLE IF EXISTS users");
+            logger.info("Successfully reset database");
+        }
+    }
 }
