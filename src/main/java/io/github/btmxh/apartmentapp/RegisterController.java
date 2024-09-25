@@ -10,7 +10,6 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
 import java.sql.SQLException;
 
 public class RegisterController {
@@ -52,30 +51,30 @@ public class RegisterController {
         String reenteredPassword = repasswordRegPasswordField.getText().trim();
 
         if (username.isEmpty()) {
-            Alert.show("Error", "Username must not be empty");
+            Announcement.show("Error", "Username must not be empty");
             return;
         }
 
         if (password.isEmpty()) {
-            Alert.show("Error", "Password must not be empty");
+            Announcement.show("Error", "Password must not be empty");
             return;
         }
 
         if(email.isEmpty()) {
-            Alert.show("Error", "Email must not be empty");
+            Announcement.show("Error", "Email must not be empty");
         }
 
         if(phoneNumber.isEmpty()) {
-            Alert.show("Error", "Phone number must not be empty");
+            Announcement.show("Error", "Phone number must not be empty");
         }
 
         if (reenteredPassword.isEmpty()) {
-            Alert.show("Error", "Please reenter password");
+            Announcement.show("Error", "Please reenter password");
             return;
         }
 
         if (!password.equals(reenteredPassword)) {
-            Alert.show("Error", "Password does not match");
+            Announcement.show("Error", "Password does not match");
             return;
         }
 
@@ -86,13 +85,13 @@ public class RegisterController {
         DatabaseConnection dbc = DatabaseConnection.getInstance();
         try {
             if(dbc.signup(username, email, phoneNumber, password)) {
-                Alert.show("Successful!", "Successful registered user " + username);
+                Announcement.show("Successful!", "Successful registered user " + username);
             } else {
-                Alert.show("Error", "Username " + username + " has already been taken. Please choose another username");
+                Announcement.show("Error", "Username " + username + " has already been taken. Please choose another username");
             }
         } catch (SQLException e) {
             logger.warn("Error during executing SQL statement", e);
-            Alert.show("Error", "Unable to sign up");
+            Announcement.show("Error", "Unable to sign up");
         }
     }
 
@@ -108,9 +107,9 @@ public class RegisterController {
             // Đặt Scene mới với trang đăng nhập
             stage.getScene().setRoot(loginPage);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error("Error during loading FXML file", e);
-            Alert.show("Error", "Unable to reach log in page");
+            Announcement.show("Error", "Unable to reach log in page");
         }
     }
 }
