@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import javafx.scene.control.Alert;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.regex.Matcher;
 
 public class RegisterController {
     @FXML
@@ -39,6 +40,9 @@ public class RegisterController {
         returnLogin.setOnAction(event -> handleCancel());
     }
 
+    private boolean validateEmail(String email){
+        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+    }
     private boolean validatePhoneNumber(String phoneNumber) {
         if(phoneNumber.length() != 10 && phoneNumber.length() != 11) {
             return false;
@@ -78,6 +82,11 @@ public class RegisterController {
 
         if(phoneNumber.isEmpty()) {
             showAlert("Error", "Phone number must not be empty");
+            return;
+        }
+
+        if(!validateEmail(email)) {
+            showAlert("Error", "Invalid email");
             return;
         }
 
