@@ -48,7 +48,10 @@ public class Main extends Application {
         LOGGER.debug("Launching the application");
         launch(args);
         // Log the application end
+        databaseConnection.disconnect();
+        LOGGER.debug("Disconnected from Database");
         LOGGER.debug("Application shutdown");
+
     }
 }
 

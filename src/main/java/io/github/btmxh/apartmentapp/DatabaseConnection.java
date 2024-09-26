@@ -36,6 +36,15 @@ public class DatabaseConnection
         return instance;
     }
 
+    public void disconnect() {
+        try {
+            connection.close();
+        }
+        catch (SQLException e) {
+            throw new RuntimeException("Unable to disconnect from Database", e);
+        }
+    }
+
     public void createUsersTable() {
         String sql_createUsersTable = """
                 CREATE TABLE IF NOT EXISTS users (
@@ -53,32 +62,47 @@ public class DatabaseConnection
         }
     }
 
-    public boolean login(String username, String password) throws SQLException {
+    public boolean login(String username, String password) {
 
         String sql = "SELECT * FROM users WHERE user_name = ? AND user_password = ?;";
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setString(1, username);
-        ps.setString(2, password);
-        ResultSet rs = ps.executeQuery();
-        return rs.next();
-
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ps.setString(2, password);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        }
+        catch (SQLException e) {
+            logger.warn("Error during executing SQL statement", e);
+            Announcement.show("Error", "Unable to log in");
+            return false;
+        }
     }
 
-    public boolean signup(String username, String email, String phoneNumber, String password) throws SQLException {
+    public boolean signup(String username, String email, String phoneNumber, String password) {
+
         String sql = "SELECT user_name FROM users WHERE user_name = ?;";
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setString(1, username);
-        ResultSet rs = ps.executeQuery();
-        if (!rs.next()) {
-            String sql2 = "INSERT INTO users (user_name, user_email, user_phone_number, user_password) VALUES (?, ?, ?, ?);";
-            ps = connection.prepareStatement(sql2);
-            ps.setString(1, username);
-            ps.setString(2, email);
-            ps.setString(3, phoneNumber);
-            ps.setString(4, password);
-            ps.executeUpdate();
-            return true;
+        try (PreparedStatement ps1 = connection.prepareStatement(sql)) {
+            ps1.setString(1, username);
+            try (ResultSet rs = ps1.executeQuery()) {
+                if (rs.next())
+                    return false;
+                else {
+                    String sql2 = "INSERT INTO users (user_name, user_email, user_phone_number, user_password) VALUES (?, ?, ?, ?);";
+                    try (PreparedStatement ps2 = connection.prepareStatement(sql2)) {
+                        ps2.setString(1, username);
+                        ps2.setString(2, email);
+                        ps2.setString(3, phoneNumber);
+                        ps2.setString(4, password);
+                        ps2.executeUpdate();
+                    }
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            logger.warn("Error during executing SQL statement", e);
+            Announcement.show("Error", "Unable to sign up");
+            return false;
         }
-        else return false;
     }
 }
