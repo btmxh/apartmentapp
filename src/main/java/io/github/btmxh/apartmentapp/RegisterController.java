@@ -11,7 +11,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
-import java.util.regex.Matcher;
 
 public class RegisterController {
 
@@ -44,10 +43,10 @@ public class RegisterController {
         returnLogin.setOnAction(event -> handleCancel());
     }
 
-    private boolean validateEmail(String email){
+    private static boolean validateEmail(String email){
         return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
     }
-    private boolean validatePhoneNumber(String phoneNumber) {
+    private static boolean validatePhoneNumber(String phoneNumber) {
         if(phoneNumber.length() != 10 && phoneNumber.length() != 11) {
             return false;
         }
@@ -62,6 +61,42 @@ public class RegisterController {
         return true;
     }
 
+    public static String validateSignUpInfo(String username, String password, String email, String phoneNumber, String reenteredPassword) {
+        if (username.isEmpty()) {
+            return "Username must not be empty";
+        }
+
+        if (password.isEmpty()) {
+            return "Password must not be empty";
+        }
+
+        if(email.isEmpty()) {
+            return "Email must not be empty";
+        }
+
+        if(phoneNumber.isEmpty()) {
+            return "Phone number must not be empty";
+        }
+
+        if(!validateEmail(email)) {
+            return "Invalid email: " + email;
+        }
+
+        if(!validatePhoneNumber(phoneNumber)) {
+            return "Invalid phone number: " + phoneNumber;
+        }
+
+        if (reenteredPassword.isEmpty()) {
+            return "Please reenter password";
+        }
+
+        if (!password.equals(reenteredPassword)) {
+            return "Password does not match";
+        }
+
+        return null;
+    }
+
     private void handleSignUp() {
         String username = usernameRegTextField.getText().trim();
         String email = emailRegTextField.getText().trim();
@@ -69,43 +104,9 @@ public class RegisterController {
         String phoneNumber = phoneNumberRegTextField.getText().trim();
         String reenteredPassword = repasswordRegPasswordField.getText().trim();
 
-        if (username.isEmpty()) {
-            Announcement.show("Error", "Username must not be empty");
-            return;
-        }
-
-        if (password.isEmpty()) {
-            Announcement.show("Error", "Password must not be empty");
-            return;
-        }
-
-        if(email.isEmpty()) {
-            Announcement.show("Error", "Email must not be empty");
-            return;
-        }
-
-        if(phoneNumber.isEmpty()) {
-            Announcement.show("Error", "Phone number must not be empty");
-            return;
-        }
-
-        if(!validateEmail(email)) {
-            Announcement.show("Error", "Invalid email");
-            return;
-        }
-
-        if(!validatePhoneNumber(phoneNumber)) {
-            Announcement.show("Error", "Invalid phone number: " + phoneNumber);
-            return;
-        }
-
-        if (reenteredPassword.isEmpty()) {
-            Announcement.show("Error", "Please reenter password");
-            return;
-        }
-
-        if (!password.equals(reenteredPassword)) {
-            Announcement.show("Error", "Password does not match");
+        String failReason = validateSignUpInfo(username, password, email, phoneNumber, reenteredPassword);
+        if(failReason != null) {
+            Announcement.show("Error", failReason);
             return;
         }
 
