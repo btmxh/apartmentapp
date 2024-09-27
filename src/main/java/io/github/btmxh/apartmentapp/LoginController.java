@@ -38,15 +38,15 @@ public class LoginController {
             passwordPasswordField.setText("");
         }
         else {
+            DatabaseConnection dbc = DatabaseConnection.getInstance();
             try {
-                DatabaseConnection dbc = DatabaseConnection.getInstance();
                 if (dbc.login(username, password)) {
                     loginMessageLabel.setText("Login successfully!");
-                }
-                else {
+                } else {
                     loginMessageLabel.setText("The Username or Password is incorrect. Try again!");
                 }
-            } catch (SQLException e) {
+            }
+            catch (SQLException e) {
                 logger.warn("Error during executing SQL statement", e);
                 Announcement.show("Error", "Unable to log in");
             }
