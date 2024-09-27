@@ -9,6 +9,8 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.SQLException;
+
 public class LoginController {
 
     private static final Logger logger = LogManager.getLogger();
@@ -37,11 +39,16 @@ public class LoginController {
         }
         else {
             DatabaseConnection dbc = DatabaseConnection.getInstance();
-            if (dbc.login(username, password)) {
-                loginMessageLabel.setText("Login successfully!");
+            try {
+                if (dbc.login(username, password)) {
+                    loginMessageLabel.setText("Login successfully!");
+                } else {
+                    loginMessageLabel.setText("The Username or Password is incorrect. Try again!");
+                }
             }
-            else {
-                loginMessageLabel.setText("The Username or Password is incorrect. Try again!");
+            catch (SQLException e) {
+                logger.warn("Error during executing SQL statement", e);
+                Announcement.show("Error", "Unable to log in");
             }
         }
     }

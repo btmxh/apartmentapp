@@ -62,7 +62,7 @@ public class DatabaseConnection
         }
     }
 
-    public boolean login(String username, String password) {
+    public boolean login(String username, String password) throws SQLException {
 
         String sql = "SELECT * FROM users WHERE user_name = ? AND user_password = ?;";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -72,21 +72,17 @@ public class DatabaseConnection
                 return rs.next();
             }
         }
-        catch (SQLException e) {
-            logger.warn("Error during executing SQL statement", e);
-            Announcement.show("Error", "Unable to log in");
-            return false;
-        }
     }
 
-    public boolean signup(String username, String email, String phoneNumber, String password) {
+    public boolean signup(String username, String email, String phoneNumber, String password) throws SQLException {
 
         String sql = "SELECT user_name FROM users WHERE user_name = ?;";
         try (PreparedStatement ps1 = connection.prepareStatement(sql)) {
             ps1.setString(1, username);
             try (ResultSet rs = ps1.executeQuery()) {
-                if (rs.next())
+                if (rs.next()) {
                     return false;
+                }
                 else {
                     String sql2 = "INSERT INTO users (user_name, user_email, user_phone_number, user_password) VALUES (?, ?, ?, ?);";
                     try (PreparedStatement ps2 = connection.prepareStatement(sql2)) {
@@ -99,10 +95,6 @@ public class DatabaseConnection
                     return true;
                 }
             }
-        } catch (SQLException e) {
-            logger.warn("Error during executing SQL statement", e);
-            Announcement.show("Error", "Unable to sign up");
-            return false;
         }
     }
 }

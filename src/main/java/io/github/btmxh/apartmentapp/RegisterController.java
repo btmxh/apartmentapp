@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.SQLException;
 import java.util.regex.Matcher;
 
 public class RegisterController {
@@ -114,10 +115,16 @@ public class RegisterController {
     private void processSignUp(String username, String email, String phoneNumber, String password) {
 
         DatabaseConnection dbc = DatabaseConnection.getInstance();
-        if(dbc.signup(username, email, phoneNumber, password)) {
-            Announcement.show("Successful!", "Successful registered user " + username);
-        } else {
-            Announcement.show("Error", "Username " + username + " has already been taken. Please choose another username");
+        try {
+            if (dbc.signup(username, email, phoneNumber, password)) {
+                Announcement.show("Successful!", "Successful registered user " + username);
+            } else {
+                Announcement.show("Error", "Username " + username + " has already been taken. Please choose another username");
+            }
+        }
+        catch (SQLException e) {
+            logger.warn("Error during executing SQL statement", e);
+            Announcement.show("Error", "Unable to sign up");
         }
     }
 
