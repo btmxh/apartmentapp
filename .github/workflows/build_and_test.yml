@@ -1,12 +1,11 @@
 # AI code lmfao
-name: CI Pipeline
+name: Build and test
 
 on:
   push:
     branches:
       - test-ci
       - master
-      - release
   pull_request:
     branches:
       - test-ci
@@ -80,37 +79,16 @@ jobs:
       - name: Run Tests
         run: ./gradlew test
 
-  release:
-    needs: build
-    if: github.ref_name == 'release'  # Only run if on 'release' branch
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up JDK 22
-        uses: actions/setup-java@v3
-        with:
-          java-version: '22'
-          distribution: 'adopt'
-
-      # Build the JAR file
+      # Build artifact JAR
       - name: Build JAR
         run: ./gradlew jar
 
-      # Optional: Tag the release
-      - name: Tag Release
-        run: |
-          git tag v${{ github.event.release.tag_name }}
-          git push origin --tags
-
-      # Create a GitHub Release with the JAR
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
+      # Upload build JAR
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
         with:
-          files: build/libs/*.jar
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub token provided automatically
+          name: apartment-app.jar
+          path: build/libs/*.jar
+
 
 
