@@ -119,6 +119,9 @@ public class RegisterController {
         try {
             if (dbc.signup(username, email, phoneNumber, password)) {
                 Announcement.show("Successful!", "Successful registered user " + username);
+                if (dbc.get_role(username).equals("admin")) {
+                    Announcement.show("INFORMATION", "Your account is an administrator.");
+                }
             } else {
                 Announcement.show("Error", "Username " + username + " has already been taken. Please choose another username");
             }

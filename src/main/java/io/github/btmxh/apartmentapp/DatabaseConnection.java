@@ -14,6 +14,7 @@ public class DatabaseConnection
     private static DatabaseConnection instance;
     private Connection connection;
     private static final Logger logger = LogManager.getLogger(DatabaseConnection.class);
+    private boolean admin = false;
     private DatabaseConnection() {
         try {
             Dotenv dotenv = Dotenv.load();
@@ -52,7 +53,8 @@ public class DatabaseConnection
                 user_name VARCHAR(50) NOT NULL,
                 user_password VARCHAR(50) NOT NULL,
                 user_phone_number VARCHAR(15) NOT NULL,
-                user_email VARCHAR(50) NOT NULL
+                user_email VARCHAR(50) NOT NULL,
+                user_role ENUM("admin", "resident") NOT NULL
                 )""";
         try (Statement statement = connection.createStatement()) {
             statement.execute(sql_createUsersTable);
@@ -84,15 +86,39 @@ public class DatabaseConnection
                     return false;
                 }
                 else {
-                    String sql2 = "INSERT INTO users (user_name, user_email, user_phone_number, user_password) VALUES (?, ?, ?, ?);";
+                    String role;
+                    if (admin) {
+                        role = "resident";
+                    }
+                    else {
+                        role = "admin";
+                        admin = true;
+                    }
+                    String sql2 = "INSERT INTO users (user_name, user_email, user_phone_number, user_password, user_role) VALUES (?, ?, ?, ?, ?);";
                     try (PreparedStatement ps2 = connection.prepareStatement(sql2)) {
                         ps2.setString(1, username);
                         ps2.setString(2, email);
                         ps2.setString(3, phoneNumber);
                         ps2.setString(4, password);
+                        ps2.setString(5, role);
                         ps2.executeUpdate();
                     }
                     return true;
+                }
+            }
+        }
+    }
+
+    public String get_role(String username) throws SQLException {
+        String sql = "SELECT user_role FROM users WHERE user_name = ?";
+        try(PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("user_role");
+                }
+                else {
+                    return "";
                 }
             }
         }
