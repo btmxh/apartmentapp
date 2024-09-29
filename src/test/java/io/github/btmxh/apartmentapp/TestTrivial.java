@@ -9,6 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class TestTrivial {
     @Test
     void trivialTest() {
-        assertEquals(3, 1 + 1);
+        assertEquals(2, 1 + 1);
     }
 }
