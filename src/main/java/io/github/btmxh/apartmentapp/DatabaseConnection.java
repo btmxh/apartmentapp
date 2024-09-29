@@ -15,6 +15,30 @@ public class DatabaseConnection
     private Connection connection;
     private static final Logger logger = LogManager.getLogger(DatabaseConnection.class);
     private boolean admin = false;
+    public enum Role {
+        ADMIN("admin"),
+        RESIDENT("resident");
+
+        private String sqlName;
+        Role(String sqlName) {
+            this.sqlName = sqlName;
+        }
+
+        public String getsqlName() {
+            return sqlName;
+        }
+
+        public static String getRoleEnum() {
+            StringBuilder roleEnum = new StringBuilder("ENUM('");
+            for (Role r: Role.values()) {
+                roleEnum.append(r.getsqlName()).append("', '");
+            }
+            roleEnum.delete(roleEnum.length()-3, roleEnum.length());
+            roleEnum.append(")");
+            return roleEnum.toString();
+        }
+    }
+
     private DatabaseConnection() {
         try {
             Dotenv dotenv = Dotenv.load();
@@ -47,6 +71,7 @@ public class DatabaseConnection
     }
 
     public void createUsersTable() {
+        String roleEnum = Role.getRoleEnum();
         String sql_createUsersTable = """
                 CREATE TABLE IF NOT EXISTS users (
                 user_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -54,8 +79,8 @@ public class DatabaseConnection
                 user_password VARCHAR(50) NOT NULL,
                 user_phone_number VARCHAR(15) NOT NULL,
                 user_email VARCHAR(50) NOT NULL,
-                user_role ENUM("admin", "resident") NOT NULL
-                )""";
+                """ +
+                "user_role " + roleEnum + " NOT NULL);";
         try (Statement statement = connection.createStatement()) {
             statement.execute(sql_createUsersTable);
             logger.info("Successfully created a table for users!");
@@ -88,13 +113,13 @@ public class DatabaseConnection
                 else {
                     String role;
                     if (admin) {
-                        role = "resident";
+                        role = Role.RESIDENT.getsqlName();
                     }
                     else {
-                        role = "admin";
+                        role = Role.ADMIN.getsqlName();
                         admin = true;
                     }
-                    String sql2 = "INSERT INTO users (user_name, user_email, user_phone_number, user_password, user_role) VALUES (?, ?, ?, ?, ?);";
+                    String sql2 = "INSERT INTO   users (user_name, user_email, user_phone_number, user_password, user_role) VALUES (?, ?, ?, ?, ?);";
                     try (PreparedStatement ps2 = connection.prepareStatement(sql2)) {
                         ps2.setString(1, username);
                         ps2.setString(2, email);
