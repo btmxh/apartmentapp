@@ -48,7 +48,7 @@ public class LoginController {
             }
             catch (SQLException e) {
                 logger.warn("Error during executing SQL statement", e);
-                Announcement.show("Error", "Unable to log in");
+                Announcement.show("Error", "This is the header","Unable to log in");
             }
         }
     }
@@ -63,7 +63,7 @@ public class LoginController {
                 stage.getScene().setRoot(registerRoot);
             } catch (Exception e) {
                 logger.error("Error during loading FXML file", e);
-                Announcement.show("Error", "Unable to reach sign up page");
+                Announcement.show("Error","This is the header", "Unable to reach sign up page");
             }
         });
     }
