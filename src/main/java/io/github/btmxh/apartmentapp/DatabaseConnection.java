@@ -119,7 +119,7 @@ public class DatabaseConnection
                         role = Role.ADMIN.getsqlName();
                         admin = true;
                     }
-                    String sql2 = "INSERT INTO   users (user_name, user_email, user_phone_number, user_password, user_role) VALUES (?, ?, ?, ?, ?);";
+                    String sql2 = "INSERT INTO users (user_name, user_email, user_phone_number, user_password, user_role) VALUES (?, ?, ?, ?, ?);";
                     try (PreparedStatement ps2 = connection.prepareStatement(sql2)) {
                         ps2.setString(1, username);
                         ps2.setString(2, email);
