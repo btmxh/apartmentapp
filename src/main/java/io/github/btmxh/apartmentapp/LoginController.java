@@ -48,7 +48,7 @@ public class LoginController {
             }
             catch (SQLException e) {
                 logger.warn("Error during executing SQL statement", e);
-                Announcement.show("We can't connect to the database", "Database Connection Error","Unable to log in");
+                Announcement.show("Error", "Unable to log in","Database connection error: " + e.getMessage());
             }
         }
     }
@@ -62,8 +62,8 @@ public class LoginController {
                 Stage stage = (Stage) clicktoRegister.getScene().getWindow();
                 stage.getScene().setRoot(registerRoot);
             } catch (Exception e) {
-                logger.error("Error during loading FXML file", e);
-                Announcement.show("We can't load FXML file","Loading FXML File Error", "Unable to reach sign up page");
+                logger.fatal("Error loading FXML file", e);
+                Announcement.show("Error","Unable to reach sign up page", "FXML loading error: " + e.getMessage());
             }
         });
     }
