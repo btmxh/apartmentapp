@@ -106,7 +106,7 @@ public class RegisterController {
 
         String failReason = validateSignUpInfo(username, password, email, phoneNumber, reenteredPassword);
         if(failReason != null) {
-            Announcement.show("Error", failReason);
+            Announcement.show("Error","Invalid sign up information", failReason);
             return;
         }
 
@@ -118,14 +118,14 @@ public class RegisterController {
         DatabaseConnection dbc = DatabaseConnection.getInstance();
         try {
             if (dbc.signup(username, email, phoneNumber, password)) {
-                Announcement.show("Successful!", "Successful registered user " + username);
+                Announcement.show("Successful!", "Successful Registration","Successful registered user " + username);
             } else {
-                Announcement.show("Error", "Username " + username + " has already been taken. Please choose another username");
+                Announcement.show("Error", "Registration Error","Username " + username + " has already been taken. Please choose another username");
             }
         }
         catch (SQLException e) {
             logger.warn("Error during executing SQL statement", e);
-            Announcement.show("Error", "Unable to sign up");
+            Announcement.show("Error", "Unable to sign up","Database Connection Error: " + e.getMessage());
         }
     }
 
@@ -143,7 +143,7 @@ public class RegisterController {
 
         } catch (Exception e) {
             logger.error("Error during loading FXML file", e);
-            Announcement.show("Error", "Unable to reach log in page");
+            Announcement.show("Error","Unable to reach sign in page", "FXML loading error: " + e.getMessage());
         }
     }
 }
