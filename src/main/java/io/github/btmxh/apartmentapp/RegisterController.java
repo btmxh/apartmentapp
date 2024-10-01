@@ -118,7 +118,10 @@ public class RegisterController {
         DatabaseConnection dbc = DatabaseConnection.getInstance();
         try {
             if (dbc.signup(username, email, phoneNumber, password)) {
-                Announcement.show("Successful!", "Successful Registration","Successful registered user " + username);
+                Announcement.show("Successful!", "Successful Registration", "Successful registered user " + username);
+                if (dbc.getRole(username).equals("admin")) {
+                    Announcement.show("Information", "Your account is an administrator.");
+                }
             } else {
                 Announcement.show("Error", "Registration Error","Username " + username + " has already been taken. Please choose another username");
             }
