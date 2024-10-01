@@ -9,12 +9,14 @@ import java.sql.SQLException;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import java.util.stream.Collectors;
+import java.util.Arrays;
+
 public class DatabaseConnection
 {
     private static DatabaseConnection instance;
     private Connection connection;
     private static final Logger logger = LogManager.getLogger(DatabaseConnection.class);
-    private boolean admin = false;
     public enum Role {
         ADMIN("admin"),
         RESIDENT("resident");
@@ -24,18 +26,16 @@ public class DatabaseConnection
             this.sqlName = sqlName;
         }
 
-        public String getsqlName() {
+        public String getSQLName() {
             return sqlName;
         }
 
         public static String getRoleEnum() {
-            StringBuilder roleEnum = new StringBuilder("ENUM('");
-            for (Role r: Role.values()) {
-                roleEnum.append(r.getsqlName()).append("', '");
-            }
-            roleEnum.delete(roleEnum.length()-3, roleEnum.length());
-            roleEnum.append(")");
-            return roleEnum.toString();
+            String roleEnum = Arrays.stream(Role.values())
+                    .map(Role::getSQLName)
+                    .map(role -> "'" + role + "'")
+                    .collect (Collectors.joining(", "));
+            return "Enum(" + roleEnum + ")";
         }
     }
 
@@ -111,14 +111,7 @@ public class DatabaseConnection
                     return false;
                 }
                 else {
-                    String role;
-                    if (admin) {
-                        role = Role.RESIDENT.getsqlName();
-                    }
-                    else {
-                        role = Role.ADMIN.getsqlName();
-                        admin = true;
-                    }
+                    String role = isFirstAccount() ? Role.ADMIN.getSQLName() : Role.RESIDENT.getSQLName();
                     String sql2 = "INSERT INTO users (user_name, user_email, user_phone_number, user_password, user_role) VALUES (?, ?, ?, ?, ?);";
                     try (PreparedStatement ps2 = connection.prepareStatement(sql2)) {
                         ps2.setString(1, username);
@@ -134,9 +127,9 @@ public class DatabaseConnection
         }
     }
 
-    public String get_role(String username) throws SQLException {
-        String sql = "SELECT user_role FROM users WHERE user_name = ?";
-        try(PreparedStatement ps = connection.prepareStatement(sql)) {
+    public String getRole(String username) throws SQLException {
+        String sql = "SELECT user_role FROM users WHERE user_name = ?;";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, username);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -146,6 +139,15 @@ public class DatabaseConnection
                     return "";
                 }
             }
+        }
+    }
+
+    public boolean isFirstAccount() throws SQLException {
+        String sql = "SELECT * FROM users;";
+        try (Statement s = connection.createStatement();
+            ResultSet rs = s.executeQuery(sql)) {
+
+            return !rs.next();
         }
     }
 
