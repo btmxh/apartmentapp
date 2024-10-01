@@ -17,4 +17,7 @@ dependencies {
 
 tasks.named("run") {
     workingDir = rootDir
+    onlyIf {
+        project.name == rootProject.name
+    }
 }
