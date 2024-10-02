@@ -50,3 +50,6 @@ test {
     useJUnitPlatform()
 }
 
+tasks.register("resetDatabase") {
+    dependsOn(":resetdb:run")
+}
