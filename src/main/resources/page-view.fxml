@@ -14,44 +14,39 @@
 <?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="516.0" prefWidth="962.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.PageController">
-   <AnchorPane prefHeight="200.0" prefWidth="200.0">
-      <BorderPane prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <left>
-            <AnchorPane prefHeight="438.0" prefWidth="198.0" style="-fx-background-color: #E9E3DE;" BorderPane.alignment="CENTER">
-               <AnchorPane layoutX="2.0" prefHeight="51.0" prefWidth="157.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="0.0">
-                  <Label alignment="CENTER" layoutX="52.0" layoutY="13.0" prefHeight="25.0" prefWidth="102.0" text="Moon Page">
+<BorderPane xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.PageController">
+   <left>
+      <VBox alignment="BOTTOM_RIGHT" BorderPane.alignment="CENTER">
+         <children>
+            <VBox alignment="TOP_CENTER" spacing="10.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Label alignment="CENTER" prefHeight="25.0" prefWidth="102.0" text="Moon Page">
                      <font>
                         <Font name="System Bold" size="16.0" />
                      </font>
                      <effect>
                         <Glow />
                      </effect>
+                     <VBox.margin>
+                        <Insets bottom="50.0" top="50.0" />
+                     </VBox.margin>
                   </Label>
-               </AnchorPane>
-               <Label alignment="CENTER" layoutX="57.0" layoutY="67.0" prefHeight="17.0" prefWidth="96.0" style="-fx-background-radius: 10;" text="Username">
-                  <effect>
-                     <Bloom threshold="0.23" />
-                  </effect>
-               </Label>
-               <Button layoutX="137.0" layoutY="385.0" mnemonicParsing="false" style="-fx-background-color: #B47C48; -fx-background-radius: 20;" text="Log out" AnchorPane.bottomAnchor="25.666666666666686" />
-               <VBox layoutY="100.0" prefHeight="233.0" prefWidth="209.0" AnchorPane.leftAnchor="0.0">
-                  <Button prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Create a charge">
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="96.0" style="-fx-background-radius: 10;" text="Username">
                      <effect>
-                        <InnerShadow />
+                        <Bloom threshold="0.23" />
                      </effect>
-                  </Button>
+                     <VBox.margin>
+                        <Insets bottom="20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Button prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Create a charge" />
                   <Button prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Charge">
                      <VBox.margin>
-                        <Insets top="10.0" />
+                        <Insets />
                      </VBox.margin>
                      <effect>
                         <InnerShadow />
@@ -59,7 +54,7 @@
                   </Button>
                   <Button prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Residents">
                      <VBox.margin>
-                        <Insets top="10.0" />
+                        <Insets />
                      </VBox.margin>
                      <effect>
                         <InnerShadow />
@@ -67,7 +62,7 @@
                   </Button>
                   <Button alignment="CENTER" prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Static">
                      <VBox.margin>
-                        <Insets top="10.0" />
+                        <Insets />
                      </VBox.margin>
                      <effect>
                         <InnerShadow>
@@ -77,153 +72,147 @@
                         </InnerShadow>
                      </effect>
                   </Button>
-               </VBox>
-            </AnchorPane>
-         </left>
-         <center>
-            <AnchorPane prefHeight="405.0" prefWidth="445.0" BorderPane.alignment="CENTER">
-               <AnchorPane prefHeight="400.0" prefWidth="440.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                  <VBox alignment="TOP_CENTER" layoutX="12.0" prefHeight="516.0" prefWidth="741.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <Label alignment="CENTER" text="List of fees">
-                        <opaqueInsets>
-                           <Insets bottom="10.0" left="10.0" right="10.0" />
-                        </opaqueInsets>
-                        <font>
-                           <Font size="20.0" />
-                        </font>
-                     </Label>
-                     <Label prefHeight="17.0" prefWidth="475.0" text="Lưu ý: Các dịch vụ phải được gán cho từng khách để khi tính tiền sẽ có tiền dịch vụ đó.">
-                        <VBox.margin>
-                           <Insets bottom="10.0" />
-                        </VBox.margin></Label>
-                     <HBox prefHeight="31.0" prefWidth="551.0">
-                        <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="84.0" style="-fx-background-color: #9CE97D;" text="Add service">
-                           <effect>
-                              <InnerShadow />
-                           </effect>
-                        </Button>
-                        <Button mnemonicParsing="false" style="-fx-background-color: #D86A51;" text="Delete">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                           <effect>
-                              <InnerShadow />
-                           </effect>
-                        </Button>
-                     </HBox>
-                     <TableView maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="403.0" prefWidth="753.0">
-                        <columns>
-                           <TableColumn prefWidth="44.66668701171875" />
-                           <TableColumn prefWidth="159.33335876464844" text="Name" />
-                           <TableColumn prefWidth="104.6666259765625" text="Service" />
-                           <TableColumn prefWidth="114.66671752929688" text="Price(VND)" />
-                           <TableColumn prefWidth="111.33331298828125" text="Voluntariness" />
-                        </columns>
-                     </TableView>
-                     <HBox prefHeight="43.0" prefWidth="551.0">
-                        <Button mnemonicParsing="false" text="Before" />
-                        <Button alignment="CENTER" mnemonicParsing="false" text="After">
-                           <opaqueInsets>
-                              <Insets />
-                           </opaqueInsets>
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                        </Button>
-                     </HBox>
-                  </VBox>
-               </AnchorPane>
-               <AnchorPane layoutX="61.0" layoutY="58.0" prefHeight="516.0" prefWidth="752.6666666666666" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                  <VBox alignment="TOP_CENTER" layoutX="14.0" layoutY="-0.6666666666666666" prefHeight="516.0" prefWidth="739.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Thu phí" />
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </VBox>
+            <Button mnemonicParsing="false" style="-fx-background-color: #B47C48; -fx-background-radius: 20;" text="Log out">
+               <VBox.margin>
+                  <Insets bottom="10.0" right="10.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <AnchorPane BorderPane.alignment="CENTER">
+         <VBox alignment="TOP_CENTER" layoutX="14.0" prefHeight="516.0" prefWidth="739.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Thu phí" />
+            <HBox alignment="CENTER_LEFT" spacing="5.0">
+               <children>
+                  <Label text="Hạn nộp" />
+                  <DatePicker fx:id="datePicker" />
+   
+                  
+                                 <Label text="Tháng thu phí" textAlignment="CENTER" wrapText="true" />
+                  <ComboBox>
+                     <items>
+                        <FXCollections fx:factory="observableArrayList">
+                           <String fx:value="Tháng 1" />
+                           <String fx:value="Tháng 2" />
+                           <String fx:value="Tháng 3" />
+                           <String fx:value="Tháng 4" />
+                           <String fx:value="Tháng 5" />
+                           <String fx:value="Tháng 6" />
+                           <String fx:value="Tháng 7" />
+                           <String fx:value="Tháng 8" />
+                           <String fx:value="Tháng 9" />
+                           <String fx:value="Tháng 10" />
+                           <String fx:value="Tháng 11" />
+                           <String fx:value="Tháng 12" />
+                        </FXCollections>
+                     </items>
+                  </ComboBox>
+   
+                                 <Label text="Nhà" />
+                  <ComboBox>
+                     <items>
+                        <FXCollections fx:factory="observableArrayList">
+                           <String fx:value="Tất cả" />
+                        </FXCollections>
+                     </items>
+                  </ComboBox>
+   
+                                 <Button text="Xem" />
+               </children>
+            </HBox>
+            <VBox alignment="TOP_CENTER">
+               <children>
+      
+                              <!-- Ghi chú -->
+                  <Label style="-fx-font-weight: bold;" text="Lưu ý:" />
+                  <Label text="- Bạn phải thực hiện việc 'Thêm khách' ở chức năng 'Phòng'..." wrapText="true" />
+               </children>
+            </VBox>
 
-                     <!-- Lựa chọn tháng, kỳ, nhà -->
-                     <GridPane hgap="10" vgap="10">
-                        <Label text="Hạn nộp" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                        <DatePicker fx:id="datePicker" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <!-- Các nút chức năng -->
+            <HBox spacing="10">
+               <Button style="-fx-background-color: #337ab7; -fx-text-fill: white;" text="Tính">
+                  <HBox.margin>
+                     <Insets />
+                  </HBox.margin>
+               </Button>
+               <Button style="-fx-background-color: #5bc0de; -fx-text-fill: white;" text="Thêm khoản thu " />
+               <Button style="-fx-background-color: #f0ad4e; -fx-text-fill: white;" text="In danh sách" />
+               <Button style="-fx-background-color: #5cb85c; -fx-text-fill: white;" text="Thu tiền" />
+               <Button style="-fx-background-color: #d9534f; -fx-text-fill: white;" text="Xóa" />
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </HBox>
 
-
-                        <Label prefHeight="29.0" prefWidth="75.0" text="Tháng thu phí" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                        <ComboBox GridPane.columnIndex="3" GridPane.rowIndex="0">
-                           <items>
-                              <FXCollections fx:factory="observableArrayList">
-                                 <String fx:value="Tháng 1" />
-                                 <String fx:value="Tháng 2" />
-                                 <String fx:value="Tháng 3" />
-                                 <String fx:value="Tháng 4" />
-                                 <String fx:value="Tháng 5" />
-                                 <String fx:value="Tháng 6" />
-                                 <String fx:value="Tháng 7" />
-                                 <String fx:value="Tháng 8" />
-                                 <String fx:value="Tháng 9" />
-                                 <String fx:value="Tháng 10" />
-                                 <String fx:value="Tháng 11" />
-                                 <String fx:value="Tháng 12" />
-                              </FXCollections>
-                           </items>
-                        </ComboBox>
-
-                        <Label text="Nhà" GridPane.columnIndex="4" GridPane.rowIndex="0" />
-                        <ComboBox GridPane.columnIndex="5" GridPane.rowIndex="0">
-                           <items>
-                              <FXCollections fx:factory="observableArrayList">
-                                 <String fx:value="Tất cả" />
-                              </FXCollections>
-                           </items>
-                        </ComboBox>
-
-                        <Button text="Xem" GridPane.columnIndex="6" GridPane.rowIndex="0" />
-                        <columnConstraints>
-                           <ColumnConstraints />
-                           <ColumnConstraints />
-                           <ColumnConstraints />
-                           <ColumnConstraints />
-                           <ColumnConstraints />
-                           <ColumnConstraints />
-                           <ColumnConstraints />
-                        </columnConstraints>
-                        <rowConstraints>
-                           <RowConstraints />
-                        </rowConstraints>
-                     </GridPane>
-
-                     <!-- Ghi chú -->
-                     <Label style="-fx-font-weight: bold;" text="Lưu ý:" />
-                     <Label maxWidth="500" text="- Bạn phải thực hiện việc 'Thêm khách' ở chức năng 'Phòng'..." wrapText="true">
-                        <VBox.margin>
-                           <Insets bottom="10.0" />
-                        </VBox.margin></Label>
-
-                     <!-- Các nút chức năng -->
-                     <HBox prefHeight="41.0" prefWidth="739.0" spacing="10">
-                        <Button style="-fx-background-color: #337ab7; -fx-text-fill: white;" text="Tính">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin></Button>
-                        <Button style="-fx-background-color: #5bc0de; -fx-text-fill: white;" text="Thêm khoản thu " />
-                        <Button style="-fx-background-color: #f0ad4e; -fx-text-fill: white;" text="In danh sách" />
-                        <Button style="-fx-background-color: #5cb85c; -fx-text-fill: white;" text="Thu tiền" />
-                        <Button style="-fx-background-color: #d9534f; -fx-text-fill: white;" text="Xóa" />
-                     </HBox>
-
-                     <!-- Bảng dữ liệu -->
-                     <TableView prefHeight="300" prefWidth="748.0">
-                        <columns>
-                           <TableColumn text="Nhà" />
-                           <TableColumn text="Phòng" />
-                           <TableColumn text="Tên khách" />
-                           <TableColumn text="Số tiền (VNĐ)" />
-                           <TableColumn text="Đã trả (VNĐ)" />
-                           <TableColumn text="Còn lại (VNĐ)" />
-                        </columns>
-                        <items>
-                           <FXCollections fx:factory="observableArrayList" />
-                        </items>
-                     </TableView>
-                  </VBox>
-               </AnchorPane>
-            </AnchorPane>
-         </center>
-      </BorderPane>
-   </AnchorPane>
-</StackPane>
+                        <!-- Bảng dữ liệu -->
+            <TableView VBox.vgrow="ALWAYS">
+               <columns>
+                  <TableColumn prefWidth="86.0" text="Nhà" />
+                  <TableColumn minWidth="0.0" prefWidth="74.0" text="Phòng" />
+                  <TableColumn text="Tên khách" />
+                  <TableColumn prefWidth="107.0" text="Số tiền (VNĐ)" />
+                  <TableColumn prefWidth="92.0" text="Đã trả (VNĐ)" />
+                  <TableColumn prefWidth="103.0" text="Còn lại (VNĐ)" />
+               </columns>
+               <items>
+                  <FXCollections fx:factory="observableArrayList" />
+               </items>
+            </TableView>
+         </VBox>
+         <VBox alignment="TOP_CENTER" layoutX="12.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Label alignment="CENTER" text="List of fees">
+               <opaqueInsets>
+                  <Insets bottom="10.0" left="10.0" right="10.0" />
+               </opaqueInsets>
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Label text="Lưu ý: Các dịch vụ phải được gán cho từng khách để khi tính tiền sẽ có tiền dịch vụ đó.">
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </Label>
+            <HBox>
+               <Button mnemonicParsing="false" prefHeight="25.0" text="Add service" />
+               <Button mnemonicParsing="false" style="-fx-background-color: #D86A51;" text="Delete">
+                  <HBox.margin>
+                     <Insets left="10.0" />
+                  </HBox.margin>
+                  <effect>
+                     <InnerShadow />
+                  </effect>
+               </Button>
+            </HBox>
+            <TableView maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="403.0" prefWidth="753.0">
+               <columns>
+                  <TableColumn prefWidth="44.66668701171875" />
+                  <TableColumn prefWidth="159.33335876464844" text="Name" />
+                  <TableColumn prefWidth="104.6666259765625" text="Service" />
+                  <TableColumn prefWidth="114.66671752929688" text="Price(VND)" />
+                  <TableColumn prefWidth="111.33331298828125" text="Voluntariness" />
+               </columns>
+            </TableView>
+            <HBox prefHeight="43.0" prefWidth="551.0">
+               <Button mnemonicParsing="false" text="Before" />
+               <Button alignment="CENTER" mnemonicParsing="false" text="After">
+                  <opaqueInsets>
+                     <Insets />
+                  </opaqueInsets>
+                  <HBox.margin>
+                     <Insets left="10.0" />
+                  </HBox.margin>
+               </Button>
+            </HBox>
+         </VBox>
+      </AnchorPane>
+   </center>
+</BorderPane>
