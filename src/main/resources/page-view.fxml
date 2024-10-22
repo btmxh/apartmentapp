@@ -18,24 +18,29 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.PageController">
+<BorderPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.PageController">
    <left>
-      <VBox alignment="BOTTOM_RIGHT" BorderPane.alignment="CENTER">
+      <VBox alignment="BOTTOM_RIGHT" style="-fx-background-color: #DBBCC3;" BorderPane.alignment="CENTER">
          <children>
-            <VBox alignment="TOP_CENTER" spacing="10.0" VBox.vgrow="ALWAYS">
+            <VBox alignment="TOP_CENTER" spacing="10.0" style="-: #fcd303;" VBox.vgrow="ALWAYS">
                <children>
-                  <Label alignment="CENTER" prefHeight="25.0" prefWidth="102.0" text="Moon Page">
+                  <Label alignment="CENTER" text="Moon Page">
                      <font>
-                        <Font name="System Bold" size="16.0" />
+                        <Font name="System Bold" size="23.0" />
                      </font>
                      <effect>
                         <Glow />
                      </effect>
                      <VBox.margin>
-                        <Insets bottom="50.0" top="50.0" />
+                        <Insets bottom="20.0" top="50.0" />
                      </VBox.margin>
                   </Label>
-                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="96.0" style="-fx-background-radius: 10;" text="Username">
+                  <Label text="Welcome">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER" style="-fx-background-radius: 10;" text="Username">
                      <effect>
                         <Bloom threshold="0.23" />
                      </effect>
@@ -43,8 +48,11 @@
                         <Insets bottom="20.0" />
                      </VBox.margin>
                   </Label>
-                  <Button prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Create a charge" />
-                  <Button prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Charge">
+                  <Button fx:id="createchargeButton" prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Create a charge">
+                     <effect>
+                        <InnerShadow />
+                     </effect></Button>
+                  <Button fx:id="chargeButton" prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Charge">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
@@ -52,7 +60,7 @@
                         <InnerShadow />
                      </effect>
                   </Button>
-                  <Button prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Residents">
+                  <Button fx:id="residentsButton" prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Residents">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
@@ -60,7 +68,7 @@
                         <InnerShadow />
                      </effect>
                   </Button>
-                  <Button alignment="CENTER" prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Static">
+                  <Button fx:id="staticButton" alignment="CENTER" prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Static">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
@@ -77,7 +85,7 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
             </VBox>
-            <Button mnemonicParsing="false" style="-fx-background-color: #B47C48; -fx-background-radius: 20;" text="Log out">
+            <Button fx:id="logoutBotton" mnemonicParsing="false" style="-fx-background-color: #B47C48; -fx-background-radius: 20;" text="Log out">
                <VBox.margin>
                   <Insets bottom="10.0" right="10.0" />
                </VBox.margin>
@@ -87,7 +95,7 @@
    </left>
    <center>
       <AnchorPane BorderPane.alignment="CENTER">
-         <VBox alignment="TOP_CENTER" layoutX="14.0" prefHeight="516.0" prefWidth="739.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <VBox alignment="TOP_CENTER" layoutX="14.0" prefHeight="516.0" prefWidth="739.0" spacing="10.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Thu phí" />
             <HBox alignment="CENTER_LEFT" spacing="5.0">
                <children>
@@ -167,8 +175,8 @@
                </items>
             </TableView>
          </VBox>
-         <VBox alignment="TOP_CENTER" layoutX="12.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <Label alignment="CENTER" text="List of fees">
+         <VBox alignment="TOP_CENTER" layoutX="12.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Label alignment="CENTER" text="Danh sách khoản thu">
                <opaqueInsets>
                   <Insets bottom="10.0" left="10.0" right="10.0" />
                </opaqueInsets>
@@ -194,14 +202,14 @@
             </HBox>
             <TableView maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="403.0" prefWidth="753.0">
                <columns>
-                  <TableColumn prefWidth="44.66668701171875" />
-                  <TableColumn prefWidth="159.33335876464844" text="Name" />
-                  <TableColumn prefWidth="104.6666259765625" text="Service" />
-                  <TableColumn prefWidth="114.66671752929688" text="Price(VND)" />
-                  <TableColumn prefWidth="111.33331298828125" text="Voluntariness" />
+                  <TableColumn prefWidth="44.66668701171875" text="STT" />
+                  <TableColumn prefWidth="159.33335876464844" text="Tên" />
+                  <TableColumn prefWidth="104.6666259765625" text="Dịch vụ" />
+                  <TableColumn prefWidth="114.66671752929688" text="Giá(VND)" />
+                  <TableColumn prefWidth="111.33331298828125" text="Tình nguyện" />
                </columns>
             </TableView>
-            <HBox prefHeight="43.0" prefWidth="551.0">
+            <HBox>
                <Button mnemonicParsing="false" text="Before" />
                <Button alignment="CENTER" mnemonicParsing="false" text="After">
                   <opaqueInsets>
