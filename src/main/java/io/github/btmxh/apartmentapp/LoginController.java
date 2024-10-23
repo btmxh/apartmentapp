@@ -27,6 +27,9 @@ public class LoginController {
     @FXML
     private Hyperlink clicktoRegister;
 
+    @FXML
+    private Button loginButton;
+
     public void loginButtonOnActive(ActionEvent event) {
 
         String username = usernameTextField.getText();
@@ -56,7 +59,7 @@ public class LoginController {
     @FXML
     public void initialize() {
         // Add a button click handler to navigate to the registration page
-        clicktoRegister.setOnAction(event -> {
+        clicktoRegister.setOnAction(_ -> {
             try {
                 Region registerRoot = FXMLLoader.load(getClass().getResource("/register-view.fxml"));
                 Stage stage = (Stage) clicktoRegister.getScene().getWindow();
@@ -65,6 +68,12 @@ public class LoginController {
                 logger.fatal("Error loading FXML file", e);
                 Announcement.show("Error","Unable to reach sign up page", "FXML loading error: " + e.getMessage());
             }
+        });
+        loginButton.setOnMouseEntered(_ -> {
+            loginButton.setStyle("-fx-background-color: #b8919a; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;");
+        });
+        loginButton.setOnMouseExited(_ -> {
+            loginButton.setStyle("-fx-background-color: #DBBCC3; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;");
         });
     }
 }

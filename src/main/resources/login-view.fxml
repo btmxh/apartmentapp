@@ -31,7 +31,7 @@
    </VBox>
    <Label fx:id="loginMessageLabel" alignment="CENTER" />
 
-   <Button onAction="#loginButtonOnActive" prefWidth="200" style="-fx-background-color: #DBBCC3; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;" text="Sign in">
+   <Button fx:id="loginButton" onAction="#loginButtonOnActive" prefWidth="200" style="-fx-background-color: #DBBCC3; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;" text="Sign in">
       <VBox.margin>
          <Insets />
       </VBox.margin></Button>

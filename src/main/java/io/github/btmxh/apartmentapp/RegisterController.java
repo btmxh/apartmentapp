@@ -1,5 +1,6 @@
 package io.github.btmxh.apartmentapp;
 
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -7,6 +8,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,8 +41,20 @@ public class RegisterController {
 
     @FXML
     private void initialize() {
-        signUpButton.setOnAction(event -> handleSignUp());
-        returnLogin.setOnAction(event -> handleCancel());
+        signUpButton.setOnAction(_ -> handleSignUp());
+        returnLogin.setOnAction(_ -> handleCancel());
+        returnLogin.setOnMouseEntered(_ -> {
+            returnLogin.setStyle("-fx-background-color: #b8919a; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;");
+        });
+        signUpButton.setOnMouseEntered(_ -> {
+            signUpButton.setStyle("-fx-background-color: #b8919a; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;");
+        });
+        signUpButton.setOnMouseExited(_ -> {
+            signUpButton.setStyle("-fx-background-color: #DBBCC3; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;");
+        });
+        returnLogin.setOnMouseExited(_ -> {
+            returnLogin.setStyle("-fx-background-color: #DBBCC3; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;");
+        });
     }
 
     private static boolean validateEmail(String email){
