@@ -11,14 +11,13 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.effect.Bloom?>
 <?import javafx.scene.effect.Glow?>
-<?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.PageController">
+<BorderPane xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.PageController">
    <left>
       <VBox alignment="BOTTOM_RIGHT" style="-fx-background-color: #DBBCC3;" BorderPane.alignment="CENTER">
          <children>
@@ -48,44 +47,28 @@
                         <Insets bottom="20.0" />
                      </VBox.margin>
                   </Label>
-                  <Button fx:id="createchargeButton" prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Create a charge">
-                     <effect>
-                        <InnerShadow />
-                     </effect></Button>
-                  <Button fx:id="chargeButton" prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Charge">
+                  <Button fx:id="createchargeButton" prefHeight="40.0" prefWidth="209.0" text="Create a charge" />
+                  <Button fx:id="chargeButton" prefHeight="40.0" prefWidth="209.0" text="Charge">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
-                     <effect>
-                        <InnerShadow />
-                     </effect>
                   </Button>
-                  <Button fx:id="residentsButton" prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Residents">
+                  <Button fx:id="residentsButton" prefHeight="40.0" prefWidth="209.0" text="Residents">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
-                     <effect>
-                        <InnerShadow />
-                     </effect>
                   </Button>
-                  <Button fx:id="staticButton" alignment="CENTER" prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Static">
+                  <Button fx:id="staticButton" alignment="CENTER" prefHeight="40.0" prefWidth="209.0" text="Static">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
-                     <effect>
-                        <InnerShadow>
-                           <input>
-                              <InnerShadow />
-                           </input>
-                        </InnerShadow>
-                     </effect>
                   </Button>
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
             </VBox>
-            <Button fx:id="logoutBotton" mnemonicParsing="false" style="-fx-background-color: #d49961; -fx-background-radius: 20;" text="Log out">
+            <Button fx:id="logoutBotton" mnemonicParsing="false" text="Log out">
                <VBox.margin>
                   <Insets bottom="10.0" right="10.0" />
                </VBox.margin>
@@ -105,31 +88,10 @@
                   
                                  <Label text="Tháng thu phí" textAlignment="CENTER" wrapText="true" />
                   <ComboBox>
-                     <items>
-                        <FXCollections fx:factory="observableArrayList">
-                           <String fx:value="Tháng 1" />
-                           <String fx:value="Tháng 2" />
-                           <String fx:value="Tháng 3" />
-                           <String fx:value="Tháng 4" />
-                           <String fx:value="Tháng 5" />
-                           <String fx:value="Tháng 6" />
-                           <String fx:value="Tháng 7" />
-                           <String fx:value="Tháng 8" />
-                           <String fx:value="Tháng 9" />
-                           <String fx:value="Tháng 10" />
-                           <String fx:value="Tháng 11" />
-                           <String fx:value="Tháng 12" />
-                        </FXCollections>
-                     </items>
                   </ComboBox>
    
                                  <Label text="Nhà" />
                   <ComboBox>
-                     <items>
-                        <FXCollections fx:factory="observableArrayList">
-                           <String fx:value="Tất cả" />
-                        </FXCollections>
-                     </items>
                   </ComboBox>
    
                                  <Button text="Xem" />
@@ -146,15 +108,15 @@
 
                         <!-- Các nút chức năng -->
             <HBox spacing="10">
-               <Button style="-fx-background-color: #337ab7; -fx-text-fill: white;" text="Tính">
+               <Button text="Tính">
                   <HBox.margin>
                      <Insets />
                   </HBox.margin>
                </Button>
-               <Button style="-fx-background-color: #5bc0de; -fx-text-fill: white;" text="Thêm khoản thu " />
-               <Button style="-fx-background-color: #f0ad4e; -fx-text-fill: white;" text="In danh sách" />
-               <Button style="-fx-background-color: #5cb85c; -fx-text-fill: white;" text="Thu tiền" />
-               <Button style="-fx-background-color: #d9534f; -fx-text-fill: white;" text="Xóa" />
+               <Button text="Thêm khoản thu " />
+               <Button text="In danh sách" />
+               <Button text="Thu tiền" />
+               <Button text="Xóa" />
                <padding>
                   <Insets left="10.0" />
                </padding>
@@ -191,13 +153,10 @@
             </Label>
             <HBox>
                <Button mnemonicParsing="false" prefHeight="25.0" text="Add service" />
-               <Button mnemonicParsing="false" style="-fx-background-color: #f0818f;" text="Delete">
+               <Button mnemonicParsing="false" text="Delete">
                   <HBox.margin>
                      <Insets left="10.0" />
                   </HBox.margin>
-                  <effect>
-                     <InnerShadow />
-                  </effect>
                </Button>
             </HBox>
             <TableView maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="403.0" prefWidth="753.0">
@@ -221,6 +180,9 @@
                </Button>
             </HBox>
          </VBox>
+         <BorderPane.margin>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </BorderPane.margin>
       </AnchorPane>
    </center>
 </BorderPane>
