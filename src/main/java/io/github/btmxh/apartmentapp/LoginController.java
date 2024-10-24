@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.print.attribute.standard.PageRanges;
 import java.sql.SQLException;
 
 public class LoginController {
@@ -44,7 +45,15 @@ public class LoginController {
             DatabaseConnection dbc = DatabaseConnection.getInstance();
             try {
                 if (dbc.login(username, password)) {
-                    loginMessageLabel.setText("Login successfully!");
+                    User.getInstance().setUsername(username);
+                    try {
+                        Region homepage = FXMLLoader.load(getClass().getResource("/page-view.fxml"));
+                        Stage stage = (Stage) loginButton.getScene().getWindow();
+                        stage.getScene().setRoot(homepage);
+                    } catch (Exception e) {
+                        logger.fatal("Error loading FXML file", e);
+                        Announcement.show("Error","Unable to reach homepage", "FXML loading error: " + e.getMessage());
+                    }
                 } else {
                     loginMessageLabel.setText("The Username or Password is incorrect. Try again!");
                 }
