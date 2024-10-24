@@ -4,98 +4,120 @@
 <?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Bloom?>
 <?import javafx.scene.effect.Glow?>
 <?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.PageController">
    <left>
-      <VBox alignment="BOTTOM_RIGHT" style="-fx-background-color: #DBBCC3;" BorderPane.alignment="CENTER">
-         <children>
-            <VBox alignment="TOP_CENTER" spacing="10.0" style="-: #fcd303;" VBox.vgrow="ALWAYS">
-               <children>
-                  <Label alignment="CENTER" text="Moon Page">
-                     <font>
-                        <Font name="System Bold" size="23.0" />
-                     </font>
-                     <effect>
-                        <Glow />
-                     </effect>
-                     <VBox.margin>
-                        <Insets bottom="20.0" top="50.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Label text="Welcome">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                  </Label>
-                  <Label alignment="CENTER" style="-fx-background-radius: 10;" text="Username">
-                     <effect>
-                        <Bloom threshold="0.23" />
-                     </effect>
-                     <VBox.margin>
-                        <Insets bottom="20.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Button fx:id="createchargeButton" prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Create a charge">
-                     <effect>
-                        <InnerShadow />
-                     </effect></Button>
-                  <Button fx:id="chargeButton" prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Charge">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                     <effect>
-                        <InnerShadow />
-                     </effect>
-                  </Button>
-                  <Button fx:id="residentsButton" prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Residents">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                     <effect>
-                        <InnerShadow />
-                     </effect>
-                  </Button>
-                  <Button fx:id="staticButton" alignment="CENTER" prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Static">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                     <effect>
-                        <InnerShadow>
-                           <input>
-                              <InnerShadow />
-                           </input>
-                        </InnerShadow>
-                     </effect>
-                  </Button>
-               </children>
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
-            </VBox>
-            <Button fx:id="logoutBotton" mnemonicParsing="false" style="-fx-background-color: #d49961; -fx-background-radius: 20;" text="Log out">
+      <VBox alignment="BOTTOM_RIGHT" prefHeight="516.0" prefWidth="229.33333333333334" style="-fx-background-color: #DBBCC3;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER">
+         <VBox alignment="TOP_CENTER" spacing="10.0" style="-: #fcd303;" VBox.vgrow="ALWAYS">
+            <padding>
+               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </padding>
+            <Label alignment="CENTER" text="Moon Page">
+               <font>
+                  <Font name="System Bold" size="23.0" />
+               </font>
+               <effect>
+                  <Glow level="0.85" />
+               </effect>
                <VBox.margin>
-                  <Insets bottom="10.0" right="10.0" />
+                  <Insets bottom="20.0" top="50.0" />
                </VBox.margin>
+            </Label>
+            <Label text="Welcome">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" style="-fx-background-radius: 10;" text="Quản trị viên">
+               <effect>
+                  <Bloom threshold="0.23" />
+               </effect>
+               <VBox.margin>
+                  <Insets bottom="20.0" />
+               </VBox.margin>
+            </Label>
+            <Button fx:id="createchargeButton" layoutX="20.0" layoutY="211.0" prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Tạo khoản thu">
+               <effect>
+                  <InnerShadow />
+               </effect>
             </Button>
-         </children>
+            <Button fx:id="chargeButton" prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Thu phí">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <effect>
+                  <InnerShadow />
+               </effect>
+            </Button>
+            <Button fx:id="residentsButton" prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Nhân khẩu">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <effect>
+                  <InnerShadow />
+               </effect>
+            </Button>
+            <Button fx:id="staticButton" alignment="CENTER" prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Thống kê">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <effect>
+                  <InnerShadow>
+                     <input>
+                        <InnerShadow />
+                     </input>
+                  </InnerShadow>
+               </effect>
+            </Button>
+            <Button fx:id="chargeButton1" layoutX="20.0" layoutY="261.0" prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Nhận góp ý">
+               <effect>
+                  <InnerShadow />
+               </effect>
+            </Button>
+            <Button fx:id="chargeButton11" layoutX="20.0" layoutY="411.0" prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Thông tin hộ gia đình">
+               <effect>
+                  <InnerShadow />
+               </effect>
+            </Button>
+            <Button fx:id="chargeButton111" layoutX="20.0" layoutY="445.0" prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Nạp phí">
+               <effect>
+                  <InnerShadow />
+               </effect>
+            </Button>
+            <Button fx:id="chargeButton1111" layoutX="20.0" layoutY="463.0" prefHeight="40.0" prefWidth="209.0" style="-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;" text="Góp ý">
+               <effect>
+                  <InnerShadow />
+               </effect>
+            </Button>
+         </VBox>
+         <Button fx:id="logoutBotton" mnemonicParsing="false" style="-fx-background-color: #d49961; -fx-background-radius: 20;" text="Đăng xuất">
+            <VBox.margin>
+               <Insets bottom="10.0" right="10.0" />
+            </VBox.margin>
+         </Button>
       </VBox>
    </left>
    <center>
       <AnchorPane BorderPane.alignment="CENTER">
-         <VBox alignment="TOP_CENTER" layoutX="14.0" prefHeight="516.0" prefWidth="739.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <VBox alignment="TOP_CENTER" layoutX="14.0" prefHeight="516.0" prefWidth="739.0" spacing="10.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Thu phí" />
             <HBox alignment="CENTER_LEFT" spacing="5.0">
                <children>
@@ -190,8 +212,8 @@
                </VBox.margin>
             </Label>
             <HBox>
-               <Button mnemonicParsing="false" prefHeight="25.0" text="Add service" />
-               <Button mnemonicParsing="false" style="-fx-background-color: #f0818f;" text="Delete">
+               <Button mnemonicParsing="false" prefHeight="25.0" text="Thêm khoản thu" />
+               <Button mnemonicParsing="false" style="-fx-background-color: #f0818f;" text="Xóa">
                   <HBox.margin>
                      <Insets left="10.0" />
                   </HBox.margin>
@@ -199,6 +221,9 @@
                      <InnerShadow />
                   </effect>
                </Button>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
             </HBox>
             <TableView maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="403.0" prefWidth="753.0">
                <columns>
@@ -219,7 +244,72 @@
                      <Insets left="10.0" />
                   </HBox.margin>
                </Button>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
             </HBox>
+         </VBox>
+         <VBox prefHeight="572.6666666666666" prefWidth="753.3333333333334" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+               <Label text="Thông tin hộ gia đình:">
+                  <font>
+                     <Font name="System Bold" size="26.0" />
+                  </font>
+                  <VBox.margin>
+                     <Insets left="10.0" top="10.0" />
+                  </VBox.margin>
+               </Label>
+               <GridPane hgap="10" vgap="10">
+                  <padding>
+                     <Insets bottom="10" left="10" right="10" top="10" />
+                  </padding>
+                  <children>
+                     <Label text="Số phòng:" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <font>
+                           <Font size="14.0" />
+                        </font>
+                     </Label>
+                     <TextField fx:id="headNameField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                     <Label text="Tên chủ hộ:" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <font>
+                           <Font size="14.0" />
+                        </font>
+                     </Label>
+                     <TextField fx:id="addressField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                     <Label text="Số điện thoại chủ hộ: " GridPane.columnIndex="0" GridPane.rowIndex="2">
+                        <font>
+                           <Font size="14.0" />
+                        </font>
+                     </Label>
+                     <TextField fx:id="phoneNumberField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                     <Label text="Số lượng thành viên: " GridPane.columnIndex="0" GridPane.rowIndex="3">
+                        <font>
+                           <Font size="14.0" />
+                        </font>
+                     </Label>
+                     <TextField fx:id="membersCountField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                     <Label text="Tình trạng nơi ở: " GridPane.columnIndex="0" GridPane.rowIndex="4">
+                        <font>
+                           <Font size="14.0" />
+                        </font>
+                     </Label>
+                     <Button fx:id="saveButton" onAction="#handleSave" text="Save" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+                     <ChoiceBox prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  </children>
+                  <columnConstraints>
+                     <ColumnConstraints />
+                     <ColumnConstraints />
+                  </columnConstraints>
+                  <rowConstraints>
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints maxHeight="81.33332316080731" minHeight="26.666661580403655" prefHeight="26.666661580403655" />
+                     <RowConstraints maxHeight="86.00000508626303" minHeight="30.66667683919269" prefHeight="86.00000508626303" />
+                  </rowConstraints>
+               </GridPane>
+            </children>
          </VBox>
       </AnchorPane>
    </center>
