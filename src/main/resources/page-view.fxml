@@ -77,12 +77,12 @@
    </left>
    <center>
       <AnchorPane BorderPane.alignment="CENTER">
-         <VBox alignment="TOP_CENTER" layoutX="14.0" prefHeight="516.0" prefWidth="739.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <VBox fx:id="contentVBox" alignment="TOP_CENTER" layoutX="14.0" prefHeight="516.0" prefWidth="739.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Thu phí" />
             <HBox alignment="CENTER_LEFT" spacing="5.0">
                <children>
                   <Label text="Hạn nộp" />
-                  <DatePicker fx:id="datePicker" />
+                  <DatePicker />
    
                   
                                  <Label text="Tháng thu phí" textAlignment="CENTER" wrapText="true" />

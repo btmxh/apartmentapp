@@ -1,10 +1,13 @@
 package io.github.btmxh.apartmentapp;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,10 +35,22 @@ public class PageController {
     private Label usernameLabel;
 
     @FXML
+    private VBox contentVBox;
+
+    @FXML
     public void initialize() {
 
+        ObjectProperty<Boolean> isVisibleContentVBox = new SimpleObjectProperty<>(false);
+        contentVBox.visibleProperty().bind(isVisibleContentVBox);
+
         usernameLabel.setText(User.getInstance().getUsername());
+
+        chargeButton.setOnAction(_ -> {
+           isVisibleContentVBox.set(!isVisibleContentVBox.get());
+        });
+
         logoutButton.setOnAction(_ -> handleLogout());
+
         // Sự kiện khi mouse đi qua (hover vào button)
         createchargeButton.setOnMouseEntered(_ -> createchargeButton.setStyle("-fx-text-fill: #333; -fx-background-color: #b8919a; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;"));
 
