@@ -1,26 +1,20 @@
 package io.github.btmxh.apartmentapp;
 
-import javafx.beans.property.SimpleStringProperty;
+import java.beans.ConstructorProperties;
 import javafx.beans.property.StringProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 
 public class User {
-    private static User instance;
-    private String username;
 
-    private User() {}
+    private final StringProperty username = new SimpleStringProperty();
 
-    public static User getInstance() {
-        if (instance == null) {
-            instance = new User();
-        }
-        return instance;
+    @ConstructorProperties({"username"})
+    public User(String username) {
+        this.username.set(username);
     }
 
-    public String getUsername() {
+    public StringProperty getUsername() {
         return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 }

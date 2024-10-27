@@ -46,7 +46,7 @@
                         <Insets bottom="20.0" />
                      </VBox.margin>
                   </Label>
-                  <Button fx:id="createchargeButton" prefHeight="40.0" prefWidth="209.0" text="Create a charge" />
+                  <Button fx:id="createChargeButton" prefHeight="40.0" prefWidth="209.0" text="Create a charge" />
                   <Button fx:id="chargeButton" prefHeight="40.0" prefWidth="209.0" text="Charge">
                      <VBox.margin>
                         <Insets />
@@ -77,7 +77,7 @@
    </left>
    <center>
       <AnchorPane BorderPane.alignment="CENTER">
-         <VBox fx:id="contentVBox" alignment="TOP_CENTER" layoutX="14.0" prefHeight="516.0" prefWidth="739.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <VBox fx:id="chargeVBox" alignment="TOP_CENTER" layoutX="14.0" prefHeight="516.0" prefWidth="739.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Thu phí" />
             <HBox alignment="CENTER_LEFT" spacing="5.0">
                <children>
@@ -86,7 +86,7 @@
    
                   
                                  <Label text="Tháng thu phí" textAlignment="CENTER" wrapText="true" />
-                  <ComboBox>
+                  <ComboBox fx:id="monthComboBox">
                   </ComboBox>
    
                                  <Label text="Nhà" />
@@ -136,7 +136,7 @@
                </items>
             </TableView>
          </VBox>
-         <VBox alignment="TOP_CENTER" layoutX="12.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <VBox fx:id="createChargeVBox" alignment="TOP_CENTER" layoutX="12.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Label alignment="CENTER" text="Danh sách khoản thu">
                <opaqueInsets>
                   <Insets bottom="10.0" left="10.0" right="10.0" />
