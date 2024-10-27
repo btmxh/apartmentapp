@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
 <?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -17,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.PageController">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.PageController">
    <left>
       <VBox alignment="BOTTOM_RIGHT" style="-fx-background-color: #DBBCC3;" BorderPane.alignment="CENTER">
          <children>
@@ -39,7 +38,7 @@
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Label alignment="CENTER" style="-fx-background-radius: 10;" text="Username">
+                  <Label fx:id="usernameLabel" alignment="CENTER" style="-fx-background-radius: 10;" text="Username">
                      <effect>
                         <Bloom threshold="0.23" />
                      </effect>
@@ -47,7 +46,7 @@
                         <Insets bottom="20.0" />
                      </VBox.margin>
                   </Label>
-                  <Button fx:id="createchargeButton" prefHeight="40.0" prefWidth="209.0" text="Create a charge" />
+                  <Button fx:id="createChargeButton" prefHeight="40.0" prefWidth="209.0" text="Create a charge" />
                   <Button fx:id="chargeButton" prefHeight="40.0" prefWidth="209.0" text="Charge">
                      <VBox.margin>
                         <Insets />
@@ -68,7 +67,7 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
             </VBox>
-            <Button fx:id="logoutBotton" mnemonicParsing="false" text="Log out">
+            <Button fx:id="logoutButton" mnemonicParsing="false" text="Log out">
                <VBox.margin>
                   <Insets bottom="10.0" right="10.0" />
                </VBox.margin>
@@ -78,16 +77,16 @@
    </left>
    <center>
       <AnchorPane BorderPane.alignment="CENTER">
-         <VBox alignment="TOP_CENTER" layoutX="14.0" prefHeight="516.0" prefWidth="739.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <VBox fx:id="chargeVBox" alignment="TOP_CENTER" layoutX="14.0" prefHeight="516.0" prefWidth="739.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Thu phí" />
             <HBox alignment="CENTER_LEFT" spacing="5.0">
                <children>
                   <Label text="Hạn nộp" />
-                  <DatePicker fx:id="datePicker" />
+                  <DatePicker />
    
                   
                                  <Label text="Tháng thu phí" textAlignment="CENTER" wrapText="true" />
-                  <ComboBox>
+                  <ComboBox fx:id="monthComboBox">
                   </ComboBox>
    
                                  <Label text="Nhà" />
@@ -137,7 +136,7 @@
                </items>
             </TableView>
          </VBox>
-         <VBox alignment="TOP_CENTER" layoutX="12.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <VBox fx:id="createChargeVBox" alignment="TOP_CENTER" layoutX="12.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Label alignment="CENTER" text="Danh sách khoản thu">
                <opaqueInsets>
                   <Insets bottom="10.0" left="10.0" right="10.0" />

@@ -44,7 +44,19 @@ public class LoginController {
             DatabaseConnection dbc = DatabaseConnection.getInstance();
             try {
                 if (dbc.login(username, password)) {
-                    loginMessageLabel.setText("Login successfully!");
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/page-view.fxml"));
+                        Region homepage = loader.load();
+                        User user = new User(username);
+                        PageController pageController = loader.getController();
+                        pageController.setUser(user);
+                        Stage stage = (Stage) loginButton.getScene().getWindow();
+                        stage.getScene().setRoot(homepage);
+
+                    } catch (Exception e) {
+                        logger.fatal("Error loading FXML file", e);
+                        Announcement.show("Error","Unable to reach homepage", "FXML loading error: " + e.getMessage());
+                    }
                 } else {
                     loginMessageLabel.setText("The Username or Password is incorrect. Try again!");
                 }
