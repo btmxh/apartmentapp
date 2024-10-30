@@ -1,0 +1,15 @@
+.root {
+    -fx-background-color: linear-gradient(to bottom, #7d7c7c, #f7f7f7,);
+}
+
+.button {
+    -fx-background-radius: 15;
+    -fx-padding: 8px 15px;
+    -fx-border-color: transparent;
+    -fx-border-width: 2;
+    -fx-border-radius: 15;
+}
+
+.button:hover {
+    -fx-background-color: #d4cfcf;
+}

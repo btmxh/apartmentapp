@@ -18,61 +18,59 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.PageController">
    <left>
-      <VBox alignment="BOTTOM_RIGHT" style="-fx-background-color: #DBBCC3;" BorderPane.alignment="CENTER">
-         <children>
-            <VBox alignment="TOP_CENTER" spacing="10.0" style="-: #fcd303;" VBox.vgrow="ALWAYS">
-               <children>
-                  <Label alignment="CENTER" text="Moon Page">
-                     <font>
-                        <Font name="System Bold" size="23.0" />
-                     </font>
-                     <effect>
-                        <Glow />
-                     </effect>
-                     <VBox.margin>
-                        <Insets bottom="20.0" top="50.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Label text="Welcome">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="usernameLabel" alignment="CENTER" style="-fx-background-radius: 10;" text="Username">
-                     <effect>
-                        <Bloom threshold="0.23" />
-                     </effect>
-                     <VBox.margin>
-                        <Insets bottom="20.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Button fx:id="createChargeButton" prefHeight="40.0" prefWidth="209.0" style="-fx-background-radius: 5;" text="Tạo khoản thu" />
-                  <Button fx:id="chargeButton" prefHeight="40.0" prefWidth="209.0" style="-fx-background-radius: 5;" text="Thu phí">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </Button>
-                  <Button fx:id="residentsButton" prefHeight="40.0" prefWidth="209.0" style="-fx-background-radius: 5;" text="Cấp &amp; Gỡ quyền">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </Button>
-                  <Button fx:id="staticButton" alignment="CENTER" prefHeight="40.0" prefWidth="209.0" style="-fx-background-radius: 5;" text="Thống kê">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </Button>
-               </children>
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
-            </VBox>
-            <Button fx:id="logoutButton" mnemonicParsing="false" style="-fx-background-radius: 5;" text="Đăng xuất">
-               <VBox.margin>
-                  <Insets bottom="10.0" right="10.0" />
-               </VBox.margin>
-            </Button>
-         </children>
+      <VBox alignment="BOTTOM_RIGHT" BorderPane.alignment="CENTER">
+         <VBox alignment="TOP_CENTER" spacing="10.0" style="-: #fcd303;" VBox.vgrow="ALWAYS">
+            <children>
+               <Label alignment="CENTER" text="Moon Page">
+                  <font>
+                     <Font name="System Bold" size="23.0" />
+                  </font>
+                  <effect>
+                     <Glow />
+                  </effect>
+                  <VBox.margin>
+                     <Insets bottom="20.0" top="50.0" />
+                  </VBox.margin>
+               </Label>
+               <Label text="Welcome">
+                  <font>
+                     <Font name="System Bold" size="14.0" />
+                  </font>
+               </Label>
+               <Label fx:id="usernameLabel" alignment="CENTER" style="-fx-background-radius: 10;" text="Username">
+                  <effect>
+                     <Bloom threshold="0.23" />
+                  </effect>
+                  <VBox.margin>
+                     <Insets bottom="20.0" />
+                  </VBox.margin>
+               </Label>
+               <Button fx:id="createChargeButton" prefHeight="40.0" prefWidth="209.0" text="Tạo khoản thu" />
+               <Button fx:id="chargeButton" prefHeight="40.0" prefWidth="209.0" text="Thu phí">
+                  <VBox.margin>
+                     <Insets />
+                  </VBox.margin>
+               </Button>
+               <Button fx:id="residentsButton" prefHeight="40.0" prefWidth="209.0" text="Cấp quyền">
+                  <VBox.margin>
+                     <Insets />
+                  </VBox.margin>
+               </Button>
+               <Button fx:id="staticButton" alignment="CENTER" prefHeight="40.0" prefWidth="209.0" text="Thống kê">
+                  <VBox.margin>
+                     <Insets />
+                  </VBox.margin>
+               </Button>
+            </children>
+            <padding>
+               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </padding>
+         </VBox>
+         <Button fx:id="logoutButton" mnemonicParsing="false" text="Đăng xuất">
+            <VBox.margin>
+               <Insets bottom="10.0" right="10.0" />
+            </VBox.margin>
+         </Button>
       </VBox>
    </left>
    <center>
@@ -136,8 +134,8 @@
                </items>
             </TableView>
          </VBox>
-         <VBox fx:id="createChargeVBox" alignment="TOP_CENTER" layoutX="12.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <Label alignment="CENTER" text="Danh sách khoản thu">
+         <VBox fx:id="createChargeVBox" alignment="TOP_CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Label alignment="CENTER" style="-fx-text-fill: #fcf7f7;" text="Danh sách khoản thu">
                <opaqueInsets>
                   <Insets bottom="10.0" left="10.0" right="10.0" />
                </opaqueInsets>
@@ -145,7 +143,7 @@
                   <Font size="20.0" />
                </font>
             </Label>
-            <Label text="Lưu ý: Các dịch vụ phải được gán cho từng khách để khi tính tiền sẽ có tiền dịch vụ đó.">
+            <Label style="-fx-text-fill: #fcf7f7;" text="Lưu ý: Các dịch vụ phải được gán cho từng khách để khi tính tiền sẽ có tiền dịch vụ đó.">
                <VBox.margin>
                   <Insets bottom="10.0" />
                </VBox.margin>
@@ -179,7 +177,7 @@
                </Button>
             </HBox>
          </VBox>
-         <VBox alignment="TOP_CENTER" prefHeight="516.0" prefWidth="753.3333333333334" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <VBox alignment="TOP_CENTER" prefHeight="516.0" prefWidth="753.3333333333334" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Cấp quyền">
                   <opaqueInsets>
