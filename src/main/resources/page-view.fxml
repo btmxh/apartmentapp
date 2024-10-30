@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.PageController">
+<BorderPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.PageController">
    <left>
       <VBox alignment="BOTTOM_RIGHT" style="-fx-background-color: #DBBCC3;" BorderPane.alignment="CENTER">
          <children>
@@ -46,18 +46,18 @@
                         <Insets bottom="20.0" />
                      </VBox.margin>
                   </Label>
-                  <Button fx:id="createChargeButton" prefHeight="40.0" prefWidth="209.0" text="Create a charge" />
-                  <Button fx:id="chargeButton" prefHeight="40.0" prefWidth="209.0" text="Charge">
+                  <Button fx:id="createChargeButton" prefHeight="40.0" prefWidth="209.0" style="-fx-background-radius: 5;" text="Tạo khoản thu" />
+                  <Button fx:id="chargeButton" prefHeight="40.0" prefWidth="209.0" style="-fx-background-radius: 5;" text="Thu phí">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="residentsButton" prefHeight="40.0" prefWidth="209.0" text="Residents">
+                  <Button fx:id="residentsButton" prefHeight="40.0" prefWidth="209.0" style="-fx-background-radius: 5;" text="Cấp &amp; Gỡ quyền">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="staticButton" alignment="CENTER" prefHeight="40.0" prefWidth="209.0" text="Static">
+                  <Button fx:id="staticButton" alignment="CENTER" prefHeight="40.0" prefWidth="209.0" style="-fx-background-radius: 5;" text="Thống kê">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
@@ -67,7 +67,7 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
             </VBox>
-            <Button fx:id="logoutButton" mnemonicParsing="false" text="Log out">
+            <Button fx:id="logoutButton" mnemonicParsing="false" style="-fx-background-radius: 5;" text="Đăng xuất">
                <VBox.margin>
                   <Insets bottom="10.0" right="10.0" />
                </VBox.margin>
@@ -77,7 +77,7 @@
    </left>
    <center>
       <AnchorPane BorderPane.alignment="CENTER">
-         <VBox fx:id="chargeVBox" alignment="TOP_CENTER" layoutX="14.0" prefHeight="516.0" prefWidth="739.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <VBox fx:id="chargeVBox" alignment="TOP_CENTER" layoutX="14.0" prefHeight="516.0" prefWidth="739.0" spacing="10.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Thu phí" />
             <HBox alignment="CENTER_LEFT" spacing="5.0">
                <children>
@@ -178,6 +178,29 @@
                   </HBox.margin>
                </Button>
             </HBox>
+         </VBox>
+         <VBox alignment="TOP_CENTER" prefHeight="516.0" prefWidth="753.3333333333334" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+               <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Cấp quyền">
+                  <opaqueInsets>
+                     <Insets />
+                  </opaqueInsets>
+                  <padding>
+                     <Insets bottom="5.0" />
+                  </padding>
+               </Label>
+               <TableView prefHeight="451.3333333333333" prefWidth="753.3333333333334">
+                  <columns>
+                     <TableColumn prefWidth="78.66669976711273" text="Số thứ tự" />
+                     <TableColumn minWidth="0.0" prefWidth="144.66669464111328" text="Tên tài khoản" />
+                     <TableColumn prefWidth="123.33326721191406" text="Mật khẩu" />
+                     <TableColumn prefWidth="72.66668701171875" text="Vai trò" />
+                  </columns>
+                  <items>
+                     <FXCollections fx:factory="observableArrayList" />
+                  </items>
+               </TableView>
+            </children>
          </VBox>
          <BorderPane.margin>
             <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
