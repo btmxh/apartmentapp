@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.PageController">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.PageController">
    <left>
       <VBox alignment="BOTTOM_RIGHT" BorderPane.alignment="CENTER">
          <VBox alignment="TOP_CENTER" spacing="10.0" style="-: #fcd303;" VBox.vgrow="ALWAYS">
@@ -177,7 +177,7 @@
                </Button>
             </HBox>
          </VBox>
-         <VBox alignment="TOP_CENTER" prefHeight="516.0" prefWidth="753.3333333333334" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <VBox alignment="TOP_CENTER" prefHeight="516.0" prefWidth="753.3333333333334" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Cấp quyền">
                   <opaqueInsets>
@@ -189,10 +189,9 @@
                </Label>
                <TableView prefHeight="451.3333333333333" prefWidth="753.3333333333334">
                   <columns>
-                     <TableColumn prefWidth="78.66669976711273" text="Số thứ tự" />
-                     <TableColumn minWidth="0.0" prefWidth="144.66669464111328" text="Tên tài khoản" />
-                     <TableColumn prefWidth="123.33326721191406" text="Mật khẩu" />
-                     <TableColumn prefWidth="72.66668701171875" text="Vai trò" />
+                     <TableColumn prefWidth="49.0" text="STT" />
+                     <TableColumn minWidth="0.0" prefWidth="492.0" text="Tên tài khoản" />
+                     <TableColumn prefWidth="212.0" text="Vai trò" />
                   </columns>
                   <items>
                      <FXCollections fx:factory="observableArrayList" />
