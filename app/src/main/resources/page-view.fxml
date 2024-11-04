@@ -187,11 +187,11 @@
                      <Insets bottom="5.0" />
                   </padding>
                </Label>
-               <TableView prefHeight="451.3333333333333" prefWidth="753.3333333333334">
+               <TableView fx:id="usersTableView" prefHeight="451.3333333333333" prefWidth="753.3333333333334">
                   <columns>
-                     <TableColumn prefWidth="49.0" text="STT" />
-                     <TableColumn minWidth="0.0" prefWidth="492.0" text="Tên tài khoản" />
-                     <TableColumn prefWidth="212.0" text="Vai trò" />
+                     <TableColumn fx:id="useridTableColumn" prefWidth="49.0" text="STT" />
+                     <TableColumn fx:id="usernameTableColumn" minWidth="0.0" prefWidth="492.0" text="Tên tài khoản" />
+                     <TableColumn fx:id="userroleTableColumn" prefWidth="212.0" text="Vai trò" />
                   </columns>
                   <items>
                      <FXCollections fx:factory="observableArrayList" />

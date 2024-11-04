@@ -7,6 +7,8 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.SQLException;
 import io.github.cdimascio.dotenv.Dotenv;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.util.stream.Collectors;
@@ -156,5 +158,20 @@ public class DatabaseConnection
             st.execute("DROP TABLE IF EXISTS users");
             logger.info("Successfully reset database");
         }
+    }
+
+    public ObservableList<User> getUserList() throws SQLException {
+        ObservableList<User> userList = FXCollections.observableArrayList();
+        String querry = "SELECT user_id, user_name, user_role FROM users;";
+        try (Statement s = connection.createStatement();
+            ResultSet rs = s.executeQuery(querry)) {
+            while (rs.next()) {
+                int id = rs.getInt("user_id");
+                String name = rs.getString("user_name");
+                String role = rs.getString("user_role");
+                userList.add(new User(id, name, role));
+            }
+        }
+        return userList;
     }
 }

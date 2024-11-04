@@ -47,7 +47,7 @@ public class LoginController {
                     try {
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/page-view.fxml"));
                         Region homepage = loader.load();
-                        User user = new User(username);
+                        CurrentUser user = new CurrentUser(username);
                         PageController pageController = loader.getController();
                         pageController.setUser(user);
                         Stage stage = (Stage) loginButton.getScene().getWindow();

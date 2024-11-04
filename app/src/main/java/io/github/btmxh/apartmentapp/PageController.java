@@ -7,14 +7,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.sql.SQLException;
 
 public class PageController {
 
@@ -54,7 +55,32 @@ public class PageController {
     private ComboBox<Integer> monthComboBox;
 
     @FXML
+    private TableView<User> usersTableView;
+
+    @FXML
+    private TableColumn<User, Integer> useridTableColumn;
+
+    @FXML
+    private TableColumn<User, String> usernameTableColumn;
+
+    @FXML
+    private TableColumn<User, String> userroleTableColumn;
+
+    @FXML
     public void initialize() {
+
+        DatabaseConnection dc = DatabaseConnection.getInstance();
+        useridTableColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        usernameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        userroleTableColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
+        try {
+            ObservableList<User> userList = dc.getUserList();
+            usersTableView.setItems(userList);
+        }
+        catch (SQLException e) {
+            logger.warn("Error during executing SQL statement", e);
+            Announcement.show("Error", "Unable to get user list","Database connection error: " + e.getMessage());
+        }
 
         ObjectProperty<Section> section = new SimpleObjectProperty<>(Section.DEFAULT);
 
@@ -123,7 +149,7 @@ public class PageController {
         }
     }
 
-    public void setUser(User user) {
+    public void setUser(CurrentUser user) {
         usernameLabel.textProperty().bind(user.getUsername());
     }
 }
