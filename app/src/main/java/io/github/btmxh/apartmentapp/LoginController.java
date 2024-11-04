@@ -71,7 +71,7 @@ public class LoginController {
     @FXML
     public void initialize() {
         // Add a button click handler to navigate to the registration page
-        clicktoRegister.setOnAction(_ -> {
+        clicktoRegister.setOnAction(_e -> {
             try {
                 Region registerRoot = FXMLLoader.load(getClass().getResource("/register-view.fxml"));
                 Stage stage = (Stage) clicktoRegister.getScene().getWindow();
@@ -81,10 +81,10 @@ public class LoginController {
                 Announcement.show("Error","Unable to reach sign up page", "FXML loading error: " + e.getMessage());
             }
         });
-        loginButton.setOnMouseEntered(_ -> {
+        loginButton.setOnMouseEntered(_e -> {
             loginButton.setStyle("-fx-background-color: #b8919a; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;");
         });
-        loginButton.setOnMouseExited(_ -> {
+        loginButton.setOnMouseExited(_e -> {
             loginButton.setStyle("-fx-background-color: #DBBCC3; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;");
         });
     }

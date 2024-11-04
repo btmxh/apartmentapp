@@ -12,12 +12,5 @@ repositories {
 }
 
 dependencies {
-    implementation project(':')
-}
-
-tasks.named("run") {
-    workingDir = rootDir
-    onlyIf {
-        project.name == rootProject.name
-    }
+    implementation project(':app')
 }
