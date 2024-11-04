@@ -1,3 +1,4 @@
 rootProject.name = 'apartmentapp'
 include 'resetdb'
+include 'app'
 

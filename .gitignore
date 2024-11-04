@@ -42,7 +42,7 @@ bin/
 .DS_Store
 
 # Ignore environment variable file
-.env
+app/.env
 
 # Ignore .idea configs
 /.idea/

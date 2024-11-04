@@ -41,18 +41,18 @@ public class RegisterController {
 
     @FXML
     private void initialize() {
-        signUpButton.setOnAction(_ -> handleSignUp());
-        returnLogin.setOnAction(_ -> handleCancel());
-        returnLogin.setOnMouseEntered(_ -> {
+        signUpButton.setOnAction(_e -> handleSignUp());
+        returnLogin.setOnAction(_e -> handleCancel());
+        returnLogin.setOnMouseEntered(_e -> {
             returnLogin.setStyle("-fx-background-color: #b8919a; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;");
         });
-        signUpButton.setOnMouseEntered(_ -> {
+        signUpButton.setOnMouseEntered(_e -> {
             signUpButton.setStyle("-fx-background-color: #b8919a; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;");
         });
-        signUpButton.setOnMouseExited(_ -> {
+        signUpButton.setOnMouseExited(_e -> {
             signUpButton.setStyle("-fx-background-color: #DBBCC3; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;");
         });
-        returnLogin.setOnMouseExited(_ -> {
+        returnLogin.setOnMouseExited(_e -> {
             returnLogin.setStyle("-fx-background-color: #DBBCC3; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;");
         });
     }
