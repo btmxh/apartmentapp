@@ -81,29 +81,29 @@
                <children>
                   <Label text="Hạn nộp" />
                   <DatePicker />
-   
-                  
-                                 <Label text="Tháng thu phí" textAlignment="CENTER" wrapText="true" />
+
+
+                  <Label text="Tháng thu phí" textAlignment="CENTER" wrapText="true" />
                   <ComboBox fx:id="monthComboBox">
                   </ComboBox>
-   
-                                 <Label text="Nhà" />
+
+                  <Label text="Nhà" />
                   <ComboBox>
                   </ComboBox>
-   
-                                 <Button text="Xem" />
+
+                  <Button text="Xem" />
                </children>
             </HBox>
             <VBox alignment="TOP_CENTER">
                <children>
-      
-                              <!-- Ghi chú -->
+
+                  <!-- Ghi chú -->
                   <Label style="-fx-font-weight: bold;" text="Lưu ý:" />
                   <Label text="- Bạn phải thực hiện việc 'Thêm khách' ở chức năng 'Phòng'..." wrapText="true" />
                </children>
             </VBox>
 
-                        <!-- Các nút chức năng -->
+            <!-- Các nút chức năng -->
             <HBox spacing="10">
                <Button text="Tính">
                   <HBox.margin>
@@ -119,7 +119,7 @@
                </padding>
             </HBox>
 
-                        <!-- Bảng dữ liệu -->
+            <!-- Bảng dữ liệu -->
             <TableView VBox.vgrow="ALWAYS">
                <columns>
                   <TableColumn prefWidth="86.0" text="Nhà" />

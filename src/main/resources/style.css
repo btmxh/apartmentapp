@@ -1,5 +1,9 @@
 .root {
-    -fx-background-color: linear-gradient(to bottom, #7d7c7c, #f7f7f7,);
+    -fx-background-color: linear-gradient(to bottom, #7d7c7c, #f7f7f7, #e0e0e0);
+}
+
+.text {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 2, 0, 0, 2);
 }
 
 .button {
@@ -8,8 +12,13 @@
     -fx-border-color: transparent;
     -fx-border-width: 2;
     -fx-border-radius: 15;
+    transition: background-color 0.3s ease-in-out;
 }
 
 .button:hover {
     -fx-background-color: #d4cfcf;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    transition: all 0.2s ease-in-out;
 }
+
