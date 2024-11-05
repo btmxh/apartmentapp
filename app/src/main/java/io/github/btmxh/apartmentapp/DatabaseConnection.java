@@ -39,6 +39,14 @@ public class DatabaseConnection
                     .collect (Collectors.joining(", "));
             return "Enum(" + roleEnum + ")";
         }
+
+        public static ObservableList<String> getRoleList() {
+            ObservableList<String> roleList = FXCollections.observableArrayList();
+            for (Role r: Role.values()) {
+                roleList.add(r.getSQLName());
+            }
+            return roleList;
+        }
     }
 
     private DatabaseConnection() {
@@ -162,9 +170,9 @@ public class DatabaseConnection
 
     public ObservableList<User> getUserList() throws SQLException {
         ObservableList<User> userList = FXCollections.observableArrayList();
-        String querry = "SELECT user_id, user_name, user_role FROM users;";
+        String query = "SELECT user_id, user_name, user_role FROM users;";
         try (Statement s = connection.createStatement();
-            ResultSet rs = s.executeQuery(querry)) {
+            ResultSet rs = s.executeQuery(query)) {
             while (rs.next()) {
                 int id = rs.getInt("user_id");
                 String name = rs.getString("user_name");

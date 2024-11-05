@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -24,8 +25,13 @@ public class PageController {
     private enum Section {
         CREATECHARGE,
         CHARGE,
+        GRANTPERMISSION,
         DEFAULT
     }
+
+    private int currentPage = 0;
+    private static final int ROWS_PER_PAGE = 10;
+    private ObservableList<User> userList;
 
     @FXML
     private Button createChargeButton;
@@ -67,15 +73,32 @@ public class PageController {
     private TableColumn<User, String> userroleTableColumn;
 
     @FXML
+    private Button pageBeforeButton;
+
+    @FXML
+    private Button pageAfterButton;
+
+    @FXML
+    private VBox grantPermissionVBox;
+
+    @FXML
     public void initialize() {
 
         DatabaseConnection dc = DatabaseConnection.getInstance();
         useridTableColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         usernameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         userroleTableColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
+        ObservableList<String> roleList = DatabaseConnection.Role.getRoleList();
+        userroleTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn(roleList));
+        usersTableView.setEditable(true);
+        userroleTableColumn.setOnEditCommit(event -> {
+            User user = event.getRowValue();
+            user.setRole(event.getNewValue());
+
+        });
         try {
-            ObservableList<User> userList = dc.getUserList();
-            usersTableView.setItems(userList);
+            userList = dc.getUserList();
+            updateUsersTableView();
         }
         catch (SQLException e) {
             logger.warn("Error during executing SQL statement", e);
@@ -98,9 +121,32 @@ public class PageController {
                 )
         );
 
+        grantPermissionVBox.visibleProperty().bind(
+                Bindings.createBooleanBinding(
+                        () -> section.get() == Section.GRANTPERMISSION,
+                        section
+                )
+        );
+
+        pageBeforeButton.setOnAction(_e -> {
+            if (currentPage > 0) {
+                currentPage--;
+                updateUsersTableView();
+            }
+        });
+
+        pageAfterButton.setOnAction(_e -> {
+            if ((currentPage + 1) * ROWS_PER_PAGE < userList.size()) {
+                currentPage++;
+                updateUsersTableView();
+            }
+        });
+
         createChargeButton.setOnAction(_e -> section.set(Section.CREATECHARGE));
 
         chargeButton.setOnAction(_e -> section.set(Section.CHARGE));
+
+        residentsButton.setOnAction(_e -> section.set(Section.GRANTPERMISSION));
 
         ObservableList<Integer> months = FXCollections.observableArrayList(
                 1, 2, 3, 4, 5, 6,
@@ -151,6 +197,12 @@ public class PageController {
 
     public void setUser(CurrentUser user) {
         usernameLabel.textProperty().bind(user.getUsername());
+    }
+
+    private void updateUsersTableView() {
+        int fromIndex = currentPage * ROWS_PER_PAGE;
+        int toIndex = Math.min(fromIndex + ROWS_PER_PAGE, userList.size());
+        usersTableView.setItems(FXCollections.observableArrayList(userList.subList(fromIndex, toIndex)));
     }
 }
 

@@ -177,8 +177,21 @@
                </Button>
             </HBox>
          </VBox>
-         <VBox alignment="TOP_CENTER" prefHeight="516.0" prefWidth="753.3333333333334" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <VBox fx:id="grantPermissionVBox" alignment="TOP_CENTER" prefHeight="516.0" prefWidth="753.3333333333334" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
+               <HBox>
+                  <children>
+                     <Button fx:id="pageBeforeButton" mnemonicParsing="false" text="Before" />
+                     <Button fx:id="pageAfterButton" alignment="CENTER" mnemonicParsing="false" text="After">
+                        <opaqueInsets>
+                           <Insets />
+                        </opaqueInsets>
+                        <HBox.margin>
+                           <Insets left="10.0" />
+                        </HBox.margin>
+                     </Button>
+                  </children>
+               </HBox>
                <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Cấp quyền">
                   <opaqueInsets>
                      <Insets />
