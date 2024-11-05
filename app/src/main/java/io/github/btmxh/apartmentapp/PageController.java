@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -15,12 +16,16 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import io.github.btmxh.apartmentapp.DatabaseConnection.Role;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 
 public class PageController {
 
     private static final Logger logger = LogManager.getLogger();
+
+    private static final int ROWS_PER_PAGE = 10;
 
     private enum Section {
         CREATECHARGE,
@@ -28,10 +33,6 @@ public class PageController {
         GRANTPERMISSION,
         DEFAULT
     }
-
-    private int currentPage = 0;
-    private static final int ROWS_PER_PAGE = 10;
-    private ObservableList<User> userList;
 
     @FXML
     private Button createChargeButton;
@@ -70,40 +71,36 @@ public class PageController {
     private TableColumn<User, String> usernameTableColumn;
 
     @FXML
-    private TableColumn<User, String> userroleTableColumn;
-
-    @FXML
-    private Button pageBeforeButton;
-
-    @FXML
-    private Button pageAfterButton;
+    private TableColumn<User, Role> userroleTableColumn;
 
     @FXML
     private VBox grantPermissionVBox;
 
     @FXML
+    private Pagination usersPagination;
+
+    @FXML
     public void initialize() {
 
-        DatabaseConnection dc = DatabaseConnection.getInstance();
         useridTableColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         usernameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         userroleTableColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
-        ObservableList<String> roleList = DatabaseConnection.Role.getRoleList();
+        ObservableList<Role> roleList = FXCollections.observableArrayList(Role.values());
         userroleTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn(roleList));
         usersTableView.setEditable(true);
         userroleTableColumn.setOnEditCommit(event -> {
             User user = event.getRowValue();
             user.setRole(event.getNewValue());
-
+            DatabaseConnection dc = DatabaseConnection.getInstance();
+            try {
+                dc.setRole(user.getName(), event.getNewValue());
+            }
+            catch (SQLException e) {
+                logger.warn("Error during executing SQL statement", e);
+                Announcement.show("Error", "Unable to set user role", "Database connection error: " + e.getMessage());
+            }
         });
-        try {
-            userList = dc.getUserList();
-            updateUsersTableView();
-        }
-        catch (SQLException e) {
-            logger.warn("Error during executing SQL statement", e);
-            Announcement.show("Error", "Unable to get user list","Database connection error: " + e.getMessage());
-        }
+        usersPagination.setPageFactory(this::createPage);
 
         ObjectProperty<Section> section = new SimpleObjectProperty<>(Section.DEFAULT);
 
@@ -128,20 +125,6 @@ public class PageController {
                 )
         );
 
-        pageBeforeButton.setOnAction(_e -> {
-            if (currentPage > 0) {
-                currentPage--;
-                updateUsersTableView();
-            }
-        });
-
-        pageAfterButton.setOnAction(_e -> {
-            if ((currentPage + 1) * ROWS_PER_PAGE < userList.size()) {
-                currentPage++;
-                updateUsersTableView();
-            }
-        });
-
         createChargeButton.setOnAction(_e -> section.set(Section.CREATECHARGE));
 
         chargeButton.setOnAction(_e -> section.set(Section.CHARGE));
@@ -153,7 +136,6 @@ public class PageController {
                 7, 8, 9, 10, 11, 12
         );
         monthComboBox.setItems(months);
-
 
         logoutButton.setOnAction(_e -> handleLogout());
 
@@ -199,10 +181,18 @@ public class PageController {
         usernameLabel.textProperty().bind(user.getUsername());
     }
 
-    private void updateUsersTableView() {
-        int fromIndex = currentPage * ROWS_PER_PAGE;
-        int toIndex = Math.min(fromIndex + ROWS_PER_PAGE, userList.size());
-        usersTableView.setItems(FXCollections.observableArrayList(userList.subList(fromIndex, toIndex)));
+    private TableView<User> createPage(int pageIndex) {
+        int start = pageIndex * ROWS_PER_PAGE;
+        DatabaseConnection dc = DatabaseConnection.getInstance();
+        try {
+            ObservableList<User> userList = dc.getUserList(ROWS_PER_PAGE, start);
+            usersTableView.setItems(userList);
+        }
+        catch (SQLException e) {
+            logger.warn("Error during executing SQL statement", e);
+            Announcement.show("Error", "Unable to get user list", "Database connection error: " + e.getMessage());
+        }
+        return usersTableView;
     }
 }
 

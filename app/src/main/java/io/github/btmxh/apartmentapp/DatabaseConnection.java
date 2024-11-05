@@ -40,12 +40,13 @@ public class DatabaseConnection
             return "Enum(" + roleEnum + ")";
         }
 
-        public static ObservableList<String> getRoleList() {
-            ObservableList<String> roleList = FXCollections.observableArrayList();
-            for (Role r: Role.values()) {
-                roleList.add(r.getSQLName());
+        public static Role getRole(String sqlName) {
+            for (Role role : Role.values()) {
+                if (role.sqlName.equals(sqlName)) {
+                    return role;
+                }
             }
-            return roleList;
+            throw new IllegalArgumentException("Unknown value: " + sqlName);
         }
     }
 
@@ -168,18 +169,27 @@ public class DatabaseConnection
         }
     }
 
-    public ObservableList<User> getUserList() throws SQLException {
+    public ObservableList<User> getUserList(int limit, int offset) throws SQLException {
         ObservableList<User> userList = FXCollections.observableArrayList();
-        String query = "SELECT user_id, user_name, user_role FROM users;";
+        String query = "SELECT user_id, user_name, user_role FROM users LIMIT " + limit + " OFFSET " + offset;
         try (Statement s = connection.createStatement();
             ResultSet rs = s.executeQuery(query)) {
             while (rs.next()) {
                 int id = rs.getInt("user_id");
                 String name = rs.getString("user_name");
                 String role = rs.getString("user_role");
-                userList.add(new User(id, name, role));
+                userList.add(new User(id, name, Role.getRole(role)));
             }
         }
         return userList;
+    }
+
+    public void setRole(String username, Role role) throws SQLException {
+        String query = "UPDATE users SET user_role = ? WHERE user_name = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, role.getSQLName());
+            ps.setString(2, username);
+            ps.executeUpdate();
+        }
     }
 }
