@@ -94,6 +94,7 @@ public class PageController {
             DatabaseConnection dc = DatabaseConnection.getInstance();
             try {
                 dc.setRole(user.getName(), event.getNewValue());
+                user.setRole(event.getNewValue());
             }
             catch (SQLException e) {
                 logger.warn("Error during executing SQL statement", e);
