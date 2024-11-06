@@ -7,19 +7,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.ComboBoxTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import io.github.btmxh.apartmentapp.DatabaseConnection.Role;
-
+import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Arrays;
+import java.util.Objects;
 
 public class PageController {
 
@@ -62,18 +58,6 @@ public class PageController {
     private ComboBox<Integer> monthComboBox;
 
     @FXML
-    private TableView<User> usersTableView;
-
-    @FXML
-    private TableColumn<User, Integer> useridTableColumn;
-
-    @FXML
-    private TableColumn<User, String> usernameTableColumn;
-
-    @FXML
-    private TableColumn<User, Role> userroleTableColumn;
-
-    @FXML
     private VBox grantPermissionVBox;
 
     @FXML
@@ -81,27 +65,7 @@ public class PageController {
 
     @FXML
     public void initialize() {
-
-        useridTableColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        usernameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        userroleTableColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
-        ObservableList<Role> roleList = FXCollections.observableArrayList(Role.values());
-        userroleTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn(roleList));
-        usersTableView.setEditable(true);
-        userroleTableColumn.setOnEditCommit(event -> {
-            User user = event.getRowValue();
-            user.setRole(event.getNewValue());
-            DatabaseConnection dc = DatabaseConnection.getInstance();
-            try {
-                dc.setRole(user.getName(), event.getNewValue());
-                user.setRole(event.getNewValue());
-            }
-            catch (SQLException e) {
-                logger.warn("Error during executing SQL statement", e);
-                Announcement.show("Error", "Unable to set user role", "Database connection error: " + e.getMessage());
-            }
-        });
-        usersPagination.setPageFactory(this::createPage);
+        usersPagination.setPageFactory(this::createUserTable);
 
         ObjectProperty<Section> section = new SimpleObjectProperty<>(Section.DEFAULT);
 
@@ -182,18 +146,24 @@ public class PageController {
         usernameLabel.textProperty().bind(user.getUsername());
     }
 
-    private TableView<User> createPage(int pageIndex) {
-        int start = pageIndex * ROWS_PER_PAGE;
+    private TableView<User> createUserTable(int pageIndex) {
         DatabaseConnection dc = DatabaseConnection.getInstance();
         try {
-            ObservableList<User> userList = dc.getUserList(ROWS_PER_PAGE, start);
-            usersTableView.setItems(userList);
-        }
-        catch (SQLException e) {
+            var loader = new FXMLLoader(Objects.requireNonNull(PageController.class.getResource("/role-table.fxml")));
+            int start = pageIndex * ROWS_PER_PAGE;
+            var  userList = dc.getUserList(ROWS_PER_PAGE, pageIndex * ROWS_PER_PAGE);
+            TableView<User> table = loader.load();
+            RoleTableController controller = loader.getController();
+            controller.setUserData(start, userList);
+            return table;
+        } catch (SQLException e) {
             logger.warn("Error during executing SQL statement", e);
             Announcement.show("Error", "Unable to get user list", "Database connection error: " + e.getMessage());
+        } catch (IOException e) {
+            logger.fatal("Error loading FXML file", e);
+            Announcement.show("Error", "Unable to load FXML role table", "Detailed error: " + e.getMessage());
         }
-        return usersTableView;
+        return null;
     }
 }
 

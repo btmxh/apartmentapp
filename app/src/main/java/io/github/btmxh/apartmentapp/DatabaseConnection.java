@@ -11,6 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Arrays;
 
@@ -26,6 +27,10 @@ public class DatabaseConnection
         private String sqlName;
         Role(String sqlName) {
             this.sqlName = sqlName;
+        }
+
+        public static List<Role> nonAdminRoles() {
+            return Arrays.stream(Role.values()).filter(r -> r != ADMIN).toList();
         }
 
         public String getSQLName() {

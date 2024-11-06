@@ -188,17 +188,7 @@
                      <Insets bottom="5.0" />
                   </padding>
                </Label>
-               <TableView fx:id="usersTableView" prefHeight="500.0" prefWidth="754.0">
-                  <columns>
-                     <TableColumn fx:id="useridTableColumn" prefWidth="49.0" text="STT" />
-                     <TableColumn fx:id="usernameTableColumn" minWidth="0.0" prefWidth="492.0" text="Tên tài khoản" />
-                     <TableColumn fx:id="userroleTableColumn" prefWidth="212.0" text="Vai trò" />
-                  </columns>
-                  <items>
-                     <FXCollections fx:factory="observableArrayList" />
-                  </items>
-               </TableView>
-               <Pagination fx:id="usersPagination" prefHeight="200.0" prefWidth="200.0" />
+               <Pagination fx:id="usersPagination" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
             </children>
          </VBox>
          <BorderPane.margin>
