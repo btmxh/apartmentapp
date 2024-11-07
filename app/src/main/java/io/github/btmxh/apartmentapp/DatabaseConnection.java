@@ -197,4 +197,17 @@ public class DatabaseConnection
             ps.executeUpdate();
         }
     }
+
+    public int getNumUsers() throws SQLException {
+        String query = "SELECT COUNT(*) FROM users";
+        try (Statement s = connection.createStatement();
+            ResultSet rs = s.executeQuery(query)) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            else {
+                return 0;
+            }
+        }
+    }
 }

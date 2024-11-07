@@ -13,6 +13,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Objects;
@@ -65,6 +67,8 @@ public class PageController {
 
     @FXML
     public void initialize() {
+
+        setNumPages();
         usersPagination.setPageFactory(this::createUserTable);
 
         ObjectProperty<Section> section = new SimpleObjectProperty<>(Section.DEFAULT);
@@ -164,6 +168,18 @@ public class PageController {
             Announcement.show("Error", "Unable to load FXML role table", "Detailed error: " + e.getMessage());
         }
         return null;
+    }
+
+    private void setNumPages() {
+        DatabaseConnection dc = DatabaseConnection.getInstance();
+        try {
+            int numUsers = dc.getNumUsers();
+            usersPagination.setPageCount(numUsers / ROWS_PER_PAGE + 1);
+        }
+        catch (SQLException e) {
+            logger.warn("Error during executing SQL statement", e);
+            Announcement.show("Error", "Unable to get number of users", "Database connection error: " + e.getMessage());
+        }
     }
 }
 
