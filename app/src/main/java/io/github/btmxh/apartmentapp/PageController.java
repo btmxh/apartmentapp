@@ -155,7 +155,7 @@ public class PageController {
         try {
             var loader = new FXMLLoader(Objects.requireNonNull(PageController.class.getResource("/role-table.fxml")));
             int start = pageIndex * ROWS_PER_PAGE;
-            var  userList = dc.getUserList(ROWS_PER_PAGE, pageIndex * ROWS_PER_PAGE);
+            var  userList = dc.getNonAdminUserList(ROWS_PER_PAGE, pageIndex * ROWS_PER_PAGE);
             TableView<User> table = loader.load();
             RoleTableController controller = loader.getController();
             controller.setUserData(start, userList);
@@ -174,7 +174,7 @@ public class PageController {
         DatabaseConnection dc = DatabaseConnection.getInstance();
         try {
             int numUsers = dc.getNumUsers();
-            usersPagination.setPageCount(numUsers / ROWS_PER_PAGE + 1);
+            usersPagination.setPageCount((numUsers + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE);
         }
         catch (SQLException e) {
             logger.warn("Error during executing SQL statement", e);

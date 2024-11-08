@@ -34,9 +34,6 @@ public class RoleTableController {
 
     public void onRoleEdit(TableColumn.CellEditEvent<User, DatabaseConnection.Role> event) {
         User user = event.getRowValue();
-        if (user.getRole() == DatabaseConnection.Role.ADMIN) {
-            return;
-        }
         DatabaseConnection dc = DatabaseConnection.getInstance();
         try {
             dc.setRole(user.getName(), event.getNewValue());

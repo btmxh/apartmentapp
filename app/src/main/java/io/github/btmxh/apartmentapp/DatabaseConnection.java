@@ -174,9 +174,9 @@ public class DatabaseConnection
         }
     }
 
-    public ObservableList<User> getUserList(int limit, int offset) throws SQLException {
+    public ObservableList<User> getNonAdminUserList(int limit, int offset) throws SQLException {
         ObservableList<User> userList = FXCollections.observableArrayList();
-        String query = "SELECT user_id, user_name, user_role FROM users LIMIT " + limit + " OFFSET " + offset;
+        String query = "SELECT user_id, user_name, user_role FROM users WHERE user_role != '" + Role.ADMIN.getSQLName() + "' LIMIT " + limit + " OFFSET " + offset;
         try (Statement s = connection.createStatement();
             ResultSet rs = s.executeQuery(query)) {
             while (rs.next()) {
