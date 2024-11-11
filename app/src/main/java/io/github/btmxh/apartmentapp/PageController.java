@@ -7,22 +7,28 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.xml.crypto.Data;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Objects;
+
 public class PageController {
 
     private static final Logger logger = LogManager.getLogger();
 
+    private static final int ROWS_PER_PAGE = 10;
+
     private enum Section {
         CREATECHARGE,
         CHARGE,
+        GRANTPERMISSION,
         DEFAULT
     }
 
@@ -54,7 +60,16 @@ public class PageController {
     private ComboBox<Integer> monthComboBox;
 
     @FXML
+    private VBox grantPermissionVBox;
+
+    @FXML
+    private Pagination usersPagination;
+
+    @FXML
     public void initialize() {
+
+        setNumPages();
+        usersPagination.setPageFactory(this::createUserTable);
 
         ObjectProperty<Section> section = new SimpleObjectProperty<>(Section.DEFAULT);
 
@@ -72,16 +87,24 @@ public class PageController {
                 )
         );
 
+        grantPermissionVBox.visibleProperty().bind(
+                Bindings.createBooleanBinding(
+                        () -> section.get() == Section.GRANTPERMISSION,
+                        section
+                )
+        );
+
         createChargeButton.setOnAction(_e -> section.set(Section.CREATECHARGE));
 
         chargeButton.setOnAction(_e -> section.set(Section.CHARGE));
+
+        residentsButton.setOnAction(_e -> section.set(Section.GRANTPERMISSION));
 
         ObservableList<Integer> months = FXCollections.observableArrayList(
                 1, 2, 3, 4, 5, 6,
                 7, 8, 9, 10, 11, 12
         );
         monthComboBox.setItems(months);
-
 
         logoutButton.setOnAction(_e -> handleLogout());
 
@@ -123,8 +146,40 @@ public class PageController {
         }
     }
 
-    public void setUser(User user) {
+    public void setUser(CurrentUser user) {
         usernameLabel.textProperty().bind(user.getUsername());
+    }
+
+    private TableView<User> createUserTable(int pageIndex) {
+        DatabaseConnection dc = DatabaseConnection.getInstance();
+        try {
+            var loader = new FXMLLoader(Objects.requireNonNull(PageController.class.getResource("/role-table.fxml")));
+            int start = pageIndex * ROWS_PER_PAGE;
+            var  userList = dc.getNonAdminUserList(ROWS_PER_PAGE, pageIndex * ROWS_PER_PAGE);
+            TableView<User> table = loader.load();
+            RoleTableController controller = loader.getController();
+            controller.setUserData(start, userList);
+            return table;
+        } catch (SQLException e) {
+            logger.warn("Error during executing SQL statement", e);
+            Announcement.show("Error", "Unable to get user list", "Database connection error: " + e.getMessage());
+        } catch (IOException e) {
+            logger.fatal("Error loading FXML file", e);
+            Announcement.show("Error", "Unable to load FXML role table", "Detailed error: " + e.getMessage());
+        }
+        return null;
+    }
+
+    private void setNumPages() {
+        DatabaseConnection dc = DatabaseConnection.getInstance();
+        try {
+            int numUsers = dc.getNumUsers();
+            usersPagination.setPageCount((numUsers + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE);
+        }
+        catch (SQLException e) {
+            logger.warn("Error during executing SQL statement", e);
+            Announcement.show("Error", "Unable to get number of users", "Database connection error: " + e.getMessage());
+        }
     }
 }
 

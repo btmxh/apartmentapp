@@ -1,20 +1,31 @@
 package io.github.btmxh.apartmentapp;
 
-import java.beans.ConstructorProperties;
-import javafx.beans.property.StringProperty;
-import javafx.beans.property.SimpleStringProperty;
-
+import io.github.btmxh.apartmentapp.DatabaseConnection.Role;
 
 public class User {
+    private int id;
+    private String name;
+    private Role role;
 
-    private final StringProperty username = new SimpleStringProperty();
-
-    @ConstructorProperties({"username"})
-    public User(String username) {
-        this.username.set(username);
+    public User(int id, String name, Role role) {
+        this.id = id;
+        this.name = name;
+        this.role = role;
     }
 
-    public StringProperty getUsername() {
-        return username;
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
