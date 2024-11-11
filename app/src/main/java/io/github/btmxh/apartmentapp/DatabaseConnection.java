@@ -7,8 +7,11 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.SQLException;
 import io.github.cdimascio.dotenv.Dotenv;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Arrays;
 
@@ -26,6 +29,10 @@ public class DatabaseConnection
             this.sqlName = sqlName;
         }
 
+        public static List<Role> nonAdminRoles() {
+            return Arrays.stream(Role.values()).filter(r -> r != ADMIN).toList();
+        }
+
         public String getSQLName() {
             return sqlName;
         }
@@ -36,6 +43,15 @@ public class DatabaseConnection
                     .map(role -> "'" + role + "'")
                     .collect (Collectors.joining(", "));
             return "Enum(" + roleEnum + ")";
+        }
+
+        public static Role getRole(String sqlName) {
+            for (Role role : Role.values()) {
+                if (role.sqlName.equals(sqlName)) {
+                    return role;
+                }
+            }
+            throw new IllegalArgumentException("Unknown value: " + sqlName);
         }
     }
 
@@ -155,6 +171,43 @@ public class DatabaseConnection
         try(final var st = connection.createStatement()) {
             st.execute("DROP TABLE IF EXISTS users");
             logger.info("Successfully reset database");
+        }
+    }
+
+    public ObservableList<User> getNonAdminUserList(int limit, int offset) throws SQLException {
+        ObservableList<User> userList = FXCollections.observableArrayList();
+        String query = "SELECT user_id, user_name, user_role FROM users WHERE user_role != '" + Role.ADMIN.getSQLName() + "' LIMIT " + limit + " OFFSET " + offset;
+        try (Statement s = connection.createStatement();
+            ResultSet rs = s.executeQuery(query)) {
+            while (rs.next()) {
+                int id = rs.getInt("user_id");
+                String name = rs.getString("user_name");
+                String role = rs.getString("user_role");
+                userList.add(new User(id, name, Role.getRole(role)));
+            }
+        }
+        return userList;
+    }
+
+    public void setRole(String username, Role role) throws SQLException {
+        String query = "UPDATE users SET user_role = ? WHERE user_name = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, role.getSQLName());
+            ps.setString(2, username);
+            ps.executeUpdate();
+        }
+    }
+
+    public int getNumUsers() throws SQLException {
+        String query = "SELECT COUNT(*) FROM users";
+        try (Statement s = connection.createStatement();
+            ResultSet rs = s.executeQuery(query)) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            else {
+                return 0;
+            }
         }
     }
 }

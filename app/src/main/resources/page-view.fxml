@@ -6,6 +6,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Pagination?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.effect.Bloom?>
@@ -177,7 +178,7 @@
                </Button>
             </HBox>
          </VBox>
-         <VBox alignment="TOP_CENTER" prefHeight="516.0" prefWidth="753.3333333333334" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <VBox fx:id="grantPermissionVBox" alignment="TOP_CENTER" prefHeight="516.0" prefWidth="753.3333333333334" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Cấp quyền">
                   <opaqueInsets>
@@ -187,16 +188,7 @@
                      <Insets bottom="5.0" />
                   </padding>
                </Label>
-               <TableView prefHeight="451.3333333333333" prefWidth="753.3333333333334">
-                  <columns>
-                     <TableColumn prefWidth="49.0" text="STT" />
-                     <TableColumn minWidth="0.0" prefWidth="492.0" text="Tên tài khoản" />
-                     <TableColumn prefWidth="212.0" text="Vai trò" />
-                  </columns>
-                  <items>
-                     <FXCollections fx:factory="observableArrayList" />
-                  </items>
-               </TableView>
+               <Pagination fx:id="usersPagination" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
             </children>
          </VBox>
          <BorderPane.margin>

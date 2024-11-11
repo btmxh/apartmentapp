@@ -5,12 +5,12 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 
-public class User {
+public class CurrentUser {
 
     private final StringProperty username = new SimpleStringProperty();
 
     @ConstructorProperties({"username"})
-    public User(String username) {
+    public CurrentUser(String username) {
         this.username.set(username);
     }
 
