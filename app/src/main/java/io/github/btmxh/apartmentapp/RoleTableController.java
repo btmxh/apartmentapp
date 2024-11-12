@@ -38,7 +38,7 @@ public class RoleTableController {
                             try {
                                 DatabaseConnection.getInstance().removeUser(user.getId());
                             } catch (SQLException ex) {
-                                logger.warn("Unable to remove user " + user.getId(), ex);
+                                logger.warn("Không thể xóa người dùng " + user.getId(), ex);
                             }
                         }
                         updateUsers.run();
@@ -54,8 +54,8 @@ public class RoleTableController {
             dc.setRole(user.getName(), event.getNewValue());
             user.setRole(event.getNewValue());
         } catch (SQLException e) {
-            logger.warn("Error during executing SQL statement", e);
-            Announcement.show("Error", "Unable to set user role", "Database connection error: " + e.getMessage());
+            logger.warn("Lỗi khi thực hiện câu lệnh SQL", e);
+            Announcement.show("Lỗi", "Không thể thiết lập vai trò người dùng", "Lỗi kết nối cơ sở dữ liệu: " + e.getMessage());
         }
     }
 

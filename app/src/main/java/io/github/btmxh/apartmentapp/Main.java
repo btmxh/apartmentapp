@@ -17,7 +17,7 @@ public class Main extends Application {
     public void start(Stage stage) {
         try {
             // Log info message
-            LOGGER.info("Starting the application");
+            LOGGER.info("Khởi chạy ứng dụng");
 
             // Load FXML
             Parent root;
@@ -31,28 +31,28 @@ public class Main extends Application {
             stage.show();
 
             // Log success
-            LOGGER.info("Application started successfully");
+            LOGGER.info("Ứng dụng đã khởi chạy thành công");
         } catch (Exception e) {
             // Log any exceptions
-            LOGGER.error("Error during application startup", e);
+            LOGGER.error("Lỗi trong quá trình khởi chạy ứng dụng", e);
         }
     }
 
     public static void main(String[] args) {
         // Create a table for users
-        LOGGER.debug("Connecting to DB");
+        LOGGER.debug("Kết nối với Cơ sở dữ liệu");
         DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
         databaseConnection.createUsersTable();
         databaseConnection.createServiceFeeTable();
         databaseConnection.createPaymentsTable();
 
         // Log the application start
-        LOGGER.debug("Launching the application");
+        LOGGER.debug("Khởi chạy ứng dụng");
         launch(args);
         // Log the application end
         databaseConnection.disconnect();
-        LOGGER.debug("Disconnected from Database");
-        LOGGER.debug("Application shutdown");
+        LOGGER.debug("Đã ngắt kết nối khỏi Cơ sở dữ liệu");
+        LOGGER.debug("Tắt ứng dụng");
 
     }
 }

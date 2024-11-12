@@ -77,35 +77,35 @@ public class RegisterController {
 
     public static String validateSignUpInfo(String username, String password, String email, String phoneNumber, String reenteredPassword) {
         if (username.isEmpty()) {
-            return "Username must not be empty";
+            return "Tên người dùng không được để trống!";
         }
 
         if (password.isEmpty()) {
-            return "Password must not be empty";
+            return "Mật khẩu không được để trống!";
         }
 
         if(email.isEmpty()) {
-            return "Email must not be empty";
+            return "Email không được để trống!";
         }
 
         if(phoneNumber.isEmpty()) {
-            return "Phone number must not be empty";
+            return "Số điện thoại không được để trống!";
         }
 
         if(!validateEmail(email)) {
-            return "Invalid email: " + email;
+            return "Email không hợp lệ: " + email;
         }
 
         if(!validatePhoneNumber(phoneNumber)) {
-            return "Invalid phone number: " + phoneNumber;
+            return "Số điện thoại không hợp lệ: " + phoneNumber;
         }
 
         if (reenteredPassword.isEmpty()) {
-            return "Please reenter password";
+            return "Vui lòng nhập lại mật khẩu!";
         }
 
         if (!password.equals(reenteredPassword)) {
-            return "Password does not match";
+            return "Mật khẩu không khớp!";
         }
 
         return null;
@@ -120,7 +120,7 @@ public class RegisterController {
 
         String failReason = validateSignUpInfo(username, password, email, phoneNumber, reenteredPassword);
         if(failReason != null) {
-            Announcement.show("Error","Invalid sign up information", failReason);
+            Announcement.show("Lỗi","Thông tin đăng ký không hợp lệ!", failReason);
             return;
         }
 
@@ -132,17 +132,17 @@ public class RegisterController {
         DatabaseConnection dbc = DatabaseConnection.getInstance();
         try {
             if (dbc.signup(username, email, phoneNumber, password)) {
-                Announcement.show("Successful!", "Successful Registration", "Successful registered user " + username);
+                Announcement.show("Thành công!", "Đăng ký thành công", "Người dùng đã đăng ký thành công " + username);
                 if (dbc.getRole(username).equals("admin")) {
-                    Announcement.show("Information", "Your account is an administrator.", "The administrator account has special privileges, such as giving permissions to other accounts.");
+                    Announcement.show("Thông tin", "Tài khoản của bạn là quản trị viên.", "Tài khoản quản trị viên có các quyền đặc biệt, chẳng hạn như cấp quyền cho các tài khoản khác.");
                 }
             } else {
-                Announcement.show("Error", "Registration Error","Username " + username + " has already been taken. Please choose another username");
+                Announcement.show("Lỗi", "Lỗi đăng ký","Tên người dùng " + username + " đã được sử dụng. Vui lòng chọn tên người dùng khác!");
             }
         }
         catch (SQLException e) {
-            logger.warn("Error during executing SQL statement", e);
-            Announcement.show("Error", "Unable to sign up","Database Connection Error: " + e.getMessage());
+            logger.warn("Lỗi khi thực hiện câu lệnh SQL", e);
+            Announcement.show("Lỗi", "Không thể đăng ký","Lỗi kết nối cơ sở dữ liệu: " + e.getMessage());
         }
     }
 
@@ -159,8 +159,8 @@ public class RegisterController {
             stage.getScene().setRoot(loginPage);
 
         } catch (Exception e) {
-            logger.error("Error during loading FXML file", e);
-            Announcement.show("Error","Unable to reach sign in page", "FXML loading error: " + e.getMessage());
+            logger.error("Lỗi khi tải tệp FXML", e);
+            Announcement.show("Lỗi","Không thể truy cập vào trang đăng nhập!", "FXML loading error: " + e.getMessage());
         }
     }
 }

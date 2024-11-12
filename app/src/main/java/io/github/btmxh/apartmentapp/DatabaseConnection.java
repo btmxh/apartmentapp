@@ -80,7 +80,7 @@ public class DatabaseConnection {
                     return role;
                 }
             }
-            throw new IllegalArgumentException("Unknown value: " + sqlName);
+            throw new IllegalArgumentException("Giá trị không xác định: " + sqlName);
         }
     }
 
@@ -94,9 +94,9 @@ public class DatabaseConnection {
                 url = "jdbc:mysql://localhost:3306/apartment";
             }
             connection = DriverManager.getConnection(url, username, password);
-            logger.info("Successfully connected to Database!");
+            logger.info("Kết nối thành công tới Cơ sở dữ liệu");
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to connect to database", e);
+            throw new RuntimeException("Không thể kết nối với Cơ sở dữ liệu", e);
         }
     }
 
@@ -111,7 +111,7 @@ public class DatabaseConnection {
         try {
             connection.close();
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to disconnect from Database", e);
+            throw new RuntimeException("Không thể ngắt kết nối khỏi Cơ sở dữ liệu", e);
         }
     }
 
@@ -128,9 +128,9 @@ public class DatabaseConnection {
                 "user_role " + roleEnum + " NOT NULL);";
         try (Statement statement = connection.createStatement()) {
             statement.execute(sql_createUsersTable);
-            logger.info("Successfully created a table for users!");
+            logger.info("Đã tạo thành công bảng cho người dùng!");
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to create users table on database", e);
+            throw new RuntimeException("Không thể tạo bảng người dùng trên cơ sở dữ liệu!", e);
         }
     }
 
@@ -143,9 +143,9 @@ public class DatabaseConnection {
                 """;
         try (Statement statement = connection.createStatement()) {
             statement.execute(sql);
-            logger.info("Successfully created a table for service fees!");
+            logger.info("Đã tạo thành công bảng phí dịch vụ!");
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to create service fees table on database", e);
+            throw new RuntimeException("Không thể tạo bảng phí dịch vụ trên cơ sở dữ liệu", e);
         }
     }
 
@@ -160,9 +160,9 @@ public class DatabaseConnection {
                 """;
         try (Statement statement = connection.createStatement()) {
             statement.execute(sql);
-            logger.info("Successfully created a table for payments!");
+            logger.info("Đã tạo thành công bảng thanh toán!");
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to create payments table on database", e);
+            throw new RuntimeException("Không thể tạo bảng thanh toán trên cơ sở dữ liệu", e);
         }
     }
 
@@ -200,7 +200,7 @@ public class DatabaseConnection {
                     mapper.writeValue(pos, formula.toJSON());
                     st.setBinaryStream(2, pis);
                     if(st.executeUpdate() == 0) {
-                        throw new RuntimeException("Error inserting service fee to DB");
+                        throw new RuntimeException("Lỗi khi chèn phí dịch vụ vào DB");
                     }
                     try(var rs = st.getGeneratedKeys()) {
                         rs.next();

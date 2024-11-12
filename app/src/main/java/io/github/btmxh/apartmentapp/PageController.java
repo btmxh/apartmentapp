@@ -102,8 +102,8 @@ public class PageController {
             Stage stage = (Stage) logoutButton.getScene().getWindow();
             stage.getScene().setRoot(loginPage);
         } catch (Exception e) {
-            logger.fatal("Error loading FXML file", e);
-            Announcement.show("Error","Unable to reach sign up page", "FXML loading error: " + e.getMessage());
+            logger.fatal("Lỗi khi tải tệp FXML", e);
+            Announcement.show("Lỗi","Không thể truy cập trang đăng ký!", "Lỗi tải FXML:" + e.getMessage());
         }
     }
 
@@ -122,11 +122,11 @@ public class PageController {
             controller.setUserData(start, userList, this::updateUsers);
             return table;
         } catch (SQLException e) {
-            logger.warn("Error during executing SQL statement", e);
-            Announcement.show("Error", "Unable to get user list", "Database connection error: " + e.getMessage());
+            logger.warn("Lỗi khi thực hiện câu lệnh SQL", e);
+            Announcement.show("Lỗi", "Không thể lấy được danh sách người dùng!", "Lỗi kết nối cơ sở dữ liệu: " + e.getMessage());
         } catch (IOException e) {
-            logger.fatal("Error loading FXML file", e);
-            Announcement.show("Error", "Unable to load FXML role table", "Detailed error: " + e.getMessage());
+            logger.fatal("Lỗi khi tải tệp FXML", e);
+            Announcement.show("Lỗi", "Không thể tải bảng vai trò FXML!", "Lỗi chi tiết: " + e.getMessage());
         }
         return null;
     }
@@ -142,15 +142,14 @@ public class PageController {
             controller.setUserData(start, FXCollections.observableArrayList(fees), this::updateServiceFees);
             return table;
         } catch (SQLException e) {
-            logger.warn("Error during executing SQL statement", e);
-            Announcement.show("Error", "Unable to get service fee list", "Database connection error: " + e.getMessage());
+            logger.warn("Lỗi khi thực thi lệnh SQL", e);
+            Announcement.show("Lỗi", "Không thể lấy được danh sách phí dịch vụ!", "Lỗi kết nối cơ sở dữ liệu: " + e.getMessage());
         } catch (IOException e) {
-            logger.fatal("Error loading FXML file", e);
-            Announcement.show("Error", "Unable to load FXML service fee table", "Detailed error: " + e.getMessage());
+            logger.fatal("Lỗi khi tải tệp FXML", e);
+            Announcement.show("Lỗi", "Không thể tải bảng phí dịch vụ FXML!", "Lỗi chi tiết: " + e.getMessage());
         } catch (CompileException e) {
-            logger.fatal("Error recompiling service fee formula", e);
-            Announcement.show("Error", "Unable to load FXML service fee table", "Detailed error: " + e.getMessage());
-
+            logger.fatal("Lỗi khi biên dịch lại công thức phí dịch vụ!", e);
+            Announcement.show("Lỗi", "Không thể tải bảng phí dịch vụ FXML!", "Lỗi chi tiết: " + e.getMessage());
         }
         return null;
     }
@@ -160,8 +159,8 @@ public class PageController {
             usersPagination.setPageCount((DatabaseConnection.getInstance().getNumNonAdminUsers() + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE);
             serviceFeePagination.setPageCount((DatabaseConnection.getInstance().getNumServiceFees() + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE);
         } catch (SQLException e) {
-            logger.warn("Error during executing SQL statement", e);
-            Announcement.show("Error", "Unable to get number of users", "Database connection error: " + e.getMessage());
+            logger.warn("Lỗi khi thực hiện câu lệnh SQL", e);
+            Announcement.show("Lỗi", "Không thể lấy được số lượng người dùng!", "Lỗi kết nối cơ sở dữ liệu: " + e.getMessage());
         }
     }
 
@@ -184,8 +183,8 @@ public class PageController {
             AddServiceFeeController.open(((Node) event.getSource()).getScene().getWindow(), null);
             updateServiceFees();
         } catch (IOException e) {
-            logger.fatal("Error loading FXML file", e);
-            Announcement.show("Error", "Unable to load FXML of service fee dialog", "Detailed error: " + e.getMessage());
+            logger.fatal("Lỗi khi tải tệp FXML", e);
+            Announcement.show("Lỗi", "Không thể tải FXML của hộp thoại phí dịch vụ!", "Lỗi chi tiết: " + e.getMessage());
         }
     }
 }

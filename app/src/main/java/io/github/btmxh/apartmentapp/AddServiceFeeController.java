@@ -56,18 +56,18 @@ public class AddServiceFeeController {
                 final var varTerm = c.getTerminal();
 
                 if (variables.put(varName, varTerm) != null) {
-                    Announcement.show("Error", "Duplicate variable found", "Variable " + varName + " occurs twice in variable declaration.");
+                    Announcement.show("Lỗi", "Biến trùng lặp được tìm thấy", "Biến " + varName + " xảy ra hai lần khi khai báo biến");
                     return;
                 }
             } catch (IllegalArgumentException ex) {
-                Announcement.show("Error", "Invalid variable name/value", ex.getMessage());
+                Announcement.show("Lỗi", "Tên/giá trị biến không hợp lệ", ex.getMessage());
                 return;
             }
         }
         try {
             formula = new ServiceFee.Formula(formulaExpr, variables);
         } catch (CompileException ex) {
-            Announcement.show("Error", "Unable to parse fee expression", ex.getMessage());
+            Announcement.show("Lỗi", "Không thể phân tích biểu thức phí", ex.getMessage());
             return;
         }
 
@@ -76,7 +76,7 @@ public class AddServiceFeeController {
                 DatabaseConnection.getInstance().updateServiceFee(fee, name, formula);
             } catch (SQLException | IOException ex) {
                 logger.warn("Unable to add service fee", ex);
-                Announcement.show("Error", "Unable to add service fee", ex.getMessage());
+                Announcement.show("Lỗi", "Không thể thêm phí dịch vụ", ex.getMessage());
                 return;
             }
         }
@@ -94,7 +94,7 @@ public class AddServiceFeeController {
             variableBox.getChildren().add(content);
         } catch (Exception e) {
             logger.fatal("Error loading FXML file", e);
-            Announcement.show("Error", "Unable to load FXML for fee variable", "Detailed error: " + e.getMessage());
+            Announcement.show("Lỗi", "Không thể tải FXML cho biến phí", "Lỗi chi tiết: " + e.getMessage());
         }
     }
 

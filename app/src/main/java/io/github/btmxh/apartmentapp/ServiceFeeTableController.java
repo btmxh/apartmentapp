@@ -73,8 +73,8 @@ public class ServiceFeeTableController {
         try {
             DatabaseConnection.getInstance().updateServiceFee(e.getRowValue(), e.getNewValue(), null);
         } catch (SQLException | IOException ex) {
-            logger.warn("Error during executing SQL statement", ex);
-            Announcement.show("Error", "Unable to update service fee name", "Database connection error: " + ex.getMessage());
+            logger.warn("Lỗi khi thực hiện câu lệnh SQL", ex);
+            Announcement.show("Lỗi", "Không thể cập nhật tên phí dịch vụ!", "Lỗi kết nối cơ sở dữ liệu: " + ex.getMessage());
         }
     }
 }

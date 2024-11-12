@@ -19,7 +19,7 @@ public class AddServiceFeeVarController {
     public String getName() {
         final var name = nameField.getText().trim();
         if (name.isEmpty()) {
-            throw new IllegalArgumentException("Variable name is empty");
+            throw new IllegalArgumentException("Tên biến trống");
         }
 
         return name;
@@ -31,7 +31,7 @@ public class AddServiceFeeVarController {
             final var value = Double.parseDouble(valueStr);
             return new ServiceFee.ConstFormulaTerminal(value);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid variable value: " + valueStr);
+            throw new IllegalArgumentException("Giá trị biến không hợp lệ:" + valueStr);
         }
     }
 
