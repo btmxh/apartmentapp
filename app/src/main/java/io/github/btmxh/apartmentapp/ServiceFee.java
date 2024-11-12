@@ -107,7 +107,7 @@ public class ServiceFee {
                 return new ConstFormulaTerminal(json.doubleValue());
             }
 
-            throw new IllegalArgumentException("Invalid formula terminal");
+            throw new IllegalArgumentException("Công thức đầu cuối không hợp lệ");
         }
 
         public static Formula fromJSON(JsonNode json) throws JsonProcessingException, CompileException {

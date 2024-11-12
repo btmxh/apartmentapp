@@ -35,7 +35,7 @@ public class LoginController {
         String password = passwordPasswordField.getText();
 
         if (username.isBlank() || password.isBlank()) {
-            loginMessageLabel.setText("Username and password cannot be empty!");
+            loginMessageLabel.setText("Tên người dùng và mật khẩu không được để trống!");
             usernameTextField.setText("");
             passwordPasswordField.setText("");
         }
@@ -53,16 +53,16 @@ public class LoginController {
                         stage.getScene().setRoot(homepage);
 
                     } catch (Exception e) {
-                        logger.fatal("Error loading FXML file", e);
-                        Announcement.show("Error","Unable to reach homepage", "FXML loading error: " + e.getMessage());
+                        logger.fatal("Lỗi khi tải tệp FXML", e);
+                        Announcement.show("Lỗi","Không thể truy cập trang chủ!", "Lỗi tải FXML: " + e.getMessage());
                     }
                 } else {
-                    loginMessageLabel.setText("The Username or Password is incorrect. Try again!");
+                    loginMessageLabel.setText("Tên người dùng hoặc mật khẩu không đúng. Hãy thử lại!");
                 }
             }
             catch (SQLException e) {
-                logger.warn("Error during executing SQL statement", e);
-                Announcement.show("Error", "Unable to log in","Database connection error: " + e.getMessage());
+                logger.warn("Lỗi khi thực hiện câu lệnh SQL", e);
+                Announcement.show("Lỗi", "Không thể đăng nhập!","Lỗi kết nối cơ sở dữ liệu:" + e.getMessage());
             }
         }
     }
@@ -77,7 +77,7 @@ public class LoginController {
                 stage.getScene().setRoot(registerRoot);
             } catch (Exception e) {
                 logger.fatal("Error loading FXML file", e);
-                Announcement.show("Error","Unable to reach sign up page", "FXML loading error: " + e.getMessage());
+                Announcement.show("Lỗi","Không thể truy cập trang đăng ký!", "Lỗi tải FXML: " + e.getMessage());
             }
         });
         loginButton.setOnMouseEntered(_e -> {
