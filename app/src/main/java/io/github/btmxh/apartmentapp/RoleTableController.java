@@ -4,11 +4,10 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.StringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,12 +23,28 @@ public class RoleTableController {
     private TableColumn<User, String> usernameCol;
     @FXML
     private TableColumn<User, DatabaseConnection.Role> roleCol;
+    private Runnable updateUsers;
 
     public void initialize() {
         numCol.setCellValueFactory(feat -> new ReadOnlyObjectWrapper<>(feat.getValue()));
         usernameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         roleCol.setCellValueFactory(new PropertyValueFactory<>("role"));
-        roleCol.setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableList(DatabaseConnection.Role.nonAdminRoles())));
+        roleCol.setCellFactory(ComboBoxTableCell.forTableColumn(Utils.readOnlyStringConverter(DatabaseConnection.Role::getDisplayName), FXCollections.observableList(DatabaseConnection.Role.nonAdminRoles())));
+        table.setContextMenu(new ContextMenu(
+                new MenuItem("Remove") {{
+                    setOnAction(e -> {
+                        final var selected = table.getSelectionModel().getSelectedItems();
+                        for(final var user : selected) {
+                            try {
+                                DatabaseConnection.getInstance().removeUser(user.getId());
+                            } catch (SQLException ex) {
+                                logger.warn("Unable to remove user " + user.getId(), ex);
+                            }
+                        }
+                        updateUsers.run();
+                    });
+                }}
+        ));
     }
 
     public void onRoleEdit(TableColumn.CellEditEvent<User, DatabaseConnection.Role> event) {
@@ -44,19 +59,9 @@ public class RoleTableController {
         }
     }
 
-    public void setUserData(int start, ObservableList<User> userList) {
-        numCol.setCellFactory(col -> new TableCell<>() {
-            @Override
-            protected void updateItem(User user, boolean b) {
-                super.updateItem(user, b);
-
-                if (getTableRow() != null && user != null) {
-                    setText((getTableRow().getIndex() + 1 + start) + "");
-                } else {
-                    setText("");
-                }
-            }
-        });
+    public void setUserData(int start, ObservableList<User> userList, Runnable updateUsers) {
+        Utils.initNoColumn(numCol, start);
         table.setItems(userList);
+        this.updateUsers = updateUsers;
     }
 }

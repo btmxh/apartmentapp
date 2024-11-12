@@ -31,7 +31,6 @@ public class LoginController {
     private Button loginButton;
 
     public void loginButtonOnActive(ActionEvent event) {
-
         String username = usernameTextField.getText();
         String password = passwordPasswordField.getText();
 
@@ -73,7 +72,7 @@ public class LoginController {
         // Add a button click handler to navigate to the registration page
         clicktoRegister.setOnAction(_e -> {
             try {
-                Region registerRoot = FXMLLoader.load(getClass().getResource("/register-view.fxml"));
+                Region registerRoot = Utils.fxmlLoader("/register-view.fxml").load();
                 Stage stage = (Stage) clicktoRegister.getScene().getWindow();
                 stage.getScene().setRoot(registerRoot);
             } catch (Exception e) {

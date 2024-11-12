@@ -4,8 +4,11 @@
 
 <TableView fx:id="table" editable="true" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.RoleTableController">
    <columns>
-      <TableColumn fx:id="numCol" prefWidth="38.0" text="STT" />
-      <TableColumn fx:id="usernameCol" prefWidth="476.0" text="Tên tài khoản" />
-      <TableColumn fx:id="roleCol" onEditCommit="#onRoleEdit" prefWidth="85.0" text="Vai trò" />
+      <TableColumn fx:id="numCol" editable="false" prefWidth="38.0" sortable="false" text="STT" />
+      <TableColumn fx:id="usernameCol" editable="false" prefWidth="428.0" sortable="false" text="Tên tài khoản" />
+      <TableColumn fx:id="roleCol" onEditCommit="#onRoleEdit" prefWidth="133.0" sortable="false" text="Vai trò" />
    </columns>
+   <placeholder>
+      <Label text="Không có thông tin" />
+   </placeholder>
 </TableView>

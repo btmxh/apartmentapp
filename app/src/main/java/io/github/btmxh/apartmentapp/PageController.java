@@ -1,22 +1,24 @@
 package io.github.btmxh.apartmentapp;
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.commons.compiler.CompileException;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.Month;
 import java.util.Objects;
 
 public class PageController {
@@ -29,6 +31,7 @@ public class PageController {
         CREATECHARGE,
         CHARGE,
         GRANTPERMISSION,
+        STATISTICS,
         DEFAULT
     }
 
@@ -57,87 +60,45 @@ public class PageController {
     private VBox chargeVBox;
 
     @FXML
-    private ComboBox<Integer> monthComboBox;
+    private ComboBox<Month> monthComboBox;
 
     @FXML
     private VBox grantPermissionVBox;
 
     @FXML
+    private VBox statisticsVBox;
+
+    @FXML
     private Pagination usersPagination;
 
     @FXML
-    public void initialize() {
+    private Pagination serviceFeePagination;
 
+    private final ObjectProperty<Section> section = new SimpleObjectProperty<>(Section.DEFAULT);
+
+    private void bindSection(Section sect, Node content, Button button) {
+        button.setOnAction(_e -> section.set(sect));
+        content.visibleProperty().bind(section.isEqualTo(sect));
+    }
+
+    @FXML
+    public void initialize() {
         setNumPages();
         usersPagination.setPageFactory(this::createUserTable);
+        serviceFeePagination.setPageFactory(this::createServiceFeeTable);
 
-        ObjectProperty<Section> section = new SimpleObjectProperty<>(Section.DEFAULT);
-
-        createChargeVBox.visibleProperty().bind(
-                Bindings.createBooleanBinding(
-                        () -> section.get() == Section.CREATECHARGE,
-                        section
-                )
-        );
-
-        chargeVBox.visibleProperty().bind(
-                Bindings.createBooleanBinding(
-                        () -> section.get() == Section.CHARGE,
-                        section
-                )
-        );
-
-        grantPermissionVBox.visibleProperty().bind(
-                Bindings.createBooleanBinding(
-                        () -> section.get() == Section.GRANTPERMISSION,
-                        section
-                )
-        );
-
-        createChargeButton.setOnAction(_e -> section.set(Section.CREATECHARGE));
-
-        chargeButton.setOnAction(_e -> section.set(Section.CHARGE));
-
-        residentsButton.setOnAction(_e -> section.set(Section.GRANTPERMISSION));
-
-        ObservableList<Integer> months = FXCollections.observableArrayList(
-                1, 2, 3, 4, 5, 6,
-                7, 8, 9, 10, 11, 12
-        );
-        monthComboBox.setItems(months);
+        bindSection(Section.CREATECHARGE, createChargeVBox, createChargeButton);
+        bindSection(Section.CHARGE, chargeVBox, chargeButton);
+        bindSection(Section.GRANTPERMISSION, grantPermissionVBox, residentsButton);
+        bindSection(Section.STATISTICS, statisticsVBox, staticButton);
+        Utils.initMonthComboBox(monthComboBox);
 
         logoutButton.setOnAction(_e -> handleLogout());
-
-        // Sự kiện khi mouse đi qua (hover vào button)
-        createChargeButton.setOnMouseEntered(_e -> createChargeButton.setStyle("-fx-text-fill: #333; -fx-background-color: #b8919a; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;"));
-
-        // Sự kiện khi mouse rời khỏi button
-        createChargeButton.setOnMouseExited(_e -> createChargeButton.setStyle("-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;"));
-
-        chargeButton.setOnMouseEntered(_e -> chargeButton.setStyle("-fx-text-fill: #333; -fx-background-color: #b8919a; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;"));
-
-        chargeButton.setOnMouseExited(_e -> chargeButton.setStyle("-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;"));
-
-        residentsButton.setOnMouseEntered(_e -> residentsButton.setStyle("-fx-text-fill: #333; -fx-background-color: #b8919a; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;"));
-
-        residentsButton.setOnMouseExited(_e -> residentsButton.setStyle("-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;"));
-
-        residentsButton.setOnMouseEntered(_e -> residentsButton.setStyle("-fx-text-fill: #333; -fx-background-color: #b8919a; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;"));
-
-        residentsButton.setOnMouseExited(_e -> residentsButton.setStyle("-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;"));
-
-        staticButton.setOnMouseEntered(_e -> staticButton.setStyle("-fx-text-fill: #333; -fx-background-color: #b8919a; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;"));
-
-        staticButton.setOnMouseExited(_e -> staticButton.setStyle("-fx-text-fill: #333; -fx-background-color: transparent; -fx-font-size: 14px; -fx-border-color: #9F6E3F; -fx-border-radius: 10;"));
-
-        logoutButton.setOnMouseEntered(_e -> logoutButton.setStyle("-fx-background-color: #c79361; -fx-background-radius: 20;"));
-
-        logoutButton.setOnMouseExited(_e -> logoutButton.setStyle("-fx-background-color: #B47C48; -fx-background-radius: 20;"));
     }
 
     private void handleLogout() {
         try {
-            Region loginPage = FXMLLoader.load(getClass().getResource("/login-view.fxml"));
+            Region loginPage = Utils.fxmlLoader("/login-view.fxml").load();
             Stage stage = (Stage) logoutButton.getScene().getWindow();
             stage.getScene().setRoot(loginPage);
         } catch (Exception e) {
@@ -158,7 +119,7 @@ public class PageController {
             var  userList = dc.getNonAdminUserList(ROWS_PER_PAGE, pageIndex * ROWS_PER_PAGE);
             TableView<User> table = loader.load();
             RoleTableController controller = loader.getController();
-            controller.setUserData(start, userList);
+            controller.setUserData(start, userList, this::updateUsers);
             return table;
         } catch (SQLException e) {
             logger.warn("Error during executing SQL statement", e);
@@ -170,15 +131,61 @@ public class PageController {
         return null;
     }
 
-    private void setNumPages() {
+    private TableView<ServiceFee> createServiceFeeTable(int pageIndex) {
         DatabaseConnection dc = DatabaseConnection.getInstance();
         try {
-            int numUsers = dc.getNumUsers();
-            usersPagination.setPageCount((numUsers + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE);
+            var loader = new FXMLLoader(Objects.requireNonNull(PageController.class.getResource("/service-fee-table.fxml")));
+            int start = pageIndex * ROWS_PER_PAGE;
+            var fees = dc.getServiceFees(ROWS_PER_PAGE, pageIndex * ROWS_PER_PAGE);
+            TableView<ServiceFee> table = loader.load();
+            ServiceFeeTableController controller = loader.getController();
+            controller.setUserData(start, FXCollections.observableArrayList(fees), this::updateServiceFees);
+            return table;
+        } catch (SQLException e) {
+            logger.warn("Error during executing SQL statement", e);
+            Announcement.show("Error", "Unable to get service fee list", "Database connection error: " + e.getMessage());
+        } catch (IOException e) {
+            logger.fatal("Error loading FXML file", e);
+            Announcement.show("Error", "Unable to load FXML service fee table", "Detailed error: " + e.getMessage());
+        } catch (CompileException e) {
+            logger.fatal("Error recompiling service fee formula", e);
+            Announcement.show("Error", "Unable to load FXML service fee table", "Detailed error: " + e.getMessage());
+
         }
-        catch (SQLException e) {
+        return null;
+    }
+
+    private void setNumPages() {
+        try {
+            usersPagination.setPageCount((DatabaseConnection.getInstance().getNumNonAdminUsers() + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE);
+            serviceFeePagination.setPageCount((DatabaseConnection.getInstance().getNumServiceFees() + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE);
+        } catch (SQLException e) {
             logger.warn("Error during executing SQL statement", e);
             Announcement.show("Error", "Unable to get number of users", "Database connection error: " + e.getMessage());
+        }
+    }
+
+    private void updateServiceFees() {
+        int page = serviceFeePagination.getCurrentPageIndex();
+        setNumPages();
+        serviceFeePagination.setPageFactory(this::createServiceFeeTable);
+        serviceFeePagination.setCurrentPageIndex(Math.min(page, serviceFeePagination.getPageCount() - 1));
+    }
+
+    private void updateUsers() {
+        int page = usersPagination.getCurrentPageIndex();
+        setNumPages();
+        usersPagination.setPageFactory(this::createUserTable);
+        usersPagination.setCurrentPageIndex(Math.min(page, usersPagination.getPageCount() - 1));
+    }
+
+    public void addServiceFee(ActionEvent event) {
+        try {
+            AddServiceFeeController.open(((Node) event.getSource()).getScene().getWindow(), null);
+            updateServiceFees();
+        } catch (IOException e) {
+            logger.fatal("Error loading FXML file", e);
+            Announcement.show("Error", "Unable to load FXML of service fee dialog", "Detailed error: " + e.getMessage());
         }
     }
 }

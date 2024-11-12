@@ -12,12 +12,16 @@ jar {
     manifest {
         attributes 'Main-Class': "io.github.btmxh.apartmentapp.Launcher"
     }
-
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+//
+//    from {
+//        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+//    }
+//
+//    from { (configurations.runtimeClasspath).collect { it.isDirectory() ? it : zipTree(it) } } {
+//        exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+//    }
+//
+//    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 javafx {
@@ -40,6 +44,10 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-api:${log4j-api.version}'
     runtimeOnly 'org.apache.logging.log4j:log4j-core'
     implementation 'io.github.cdimascio:dotenv-java:3.0.0'
+    implementation 'org.codehaus.janino:janino:3.1.12'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.1'
+
+
 
     runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:win"
     runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:linux"
