@@ -14,7 +14,7 @@
       <Insets bottom="50" left="50" right="50" top="50" />
    </padding>
 
-   <Label style="-fx-text-fill: #000000;" text="Sign in">
+   <Label style="-fx-text-fill: #000000;" text="Đăng nhập">
       <font>
          <Font name="System Bold" size="36.0" />
       </font>
@@ -26,15 +26,15 @@
    </VBox>
 
    <VBox alignment="CENTER_LEFT" maxWidth="350.0" prefWidth="300.0" spacing="5">
-      <Label text="Password" />
+      <Label text="Mật khẩu" />
       <PasswordField fx:id="passwordPasswordField" maxWidth="350.0" prefWidth="300" />
    </VBox>
    <Label fx:id="loginMessageLabel" alignment="CENTER" />
 
-   <Button fx:id="loginButton" defaultButton="true" onAction="#loginButtonOnActive" prefWidth="200" style="-fx-background-color: #DBBCC3; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;" text="Sign in">
+   <Button fx:id="loginButton" defaultButton="true" onAction="#loginButtonOnActive" prefWidth="200" style="-fx-background-color: #DBBCC3; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;" text="Đăng nhập">
       <VBox.margin>
          <Insets />
       </VBox.margin></Button>
 
-   <Hyperlink fx:id="clicktoRegister" style="-fx-text-fill: #303D4F;" text="If you don't have an account, click here" underline="true" />
+   <Hyperlink fx:id="clicktoRegister" style="-fx-text-fill: #303D4F;" text="Nếu bạn chưa có tài khoản, click vào đây" underline="true" />
 </VBox>
