@@ -8,14 +8,14 @@
    <children>
       <BorderPane>
          <left>
-            <Label text="Name" BorderPane.alignment="CENTER" />
+            <Label text="Tên" BorderPane.alignment="CENTER" />
          </left>
          <right>
-            <Button mnemonicParsing="false" onAction="#removeSelf" text="Remove" BorderPane.alignment="CENTER" />
+            <Button mnemonicParsing="false" onAction="#removeSelf" text="Xóa" BorderPane.alignment="CENTER" />
          </right>
       </BorderPane>
       <TextField fx:id="nameField" />
-      <Label layoutX="10.0" layoutY="10.0" text="Value" />
+      <Label layoutX="10.0" layoutY="10.0" text="Giá trị" />
       <TextField fx:id="valueField" layoutX="10.0" layoutY="28.0" />
    </children>
    <padding>

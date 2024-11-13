@@ -13,14 +13,14 @@
       <Insets bottom="50" left="50" right="50" top="50" />
    </padding>
 
-   <Label style="-fx-text-fill: #000000;" text="Sign Up">
+   <Label style="-fx-text-fill: #000000;" text="Đăng kí">
       <font>
          <Font name="System Bold" size="36.0" />
       </font>
    </Label>
 
    <VBox alignment="CENTER_LEFT" maxWidth="350.0" prefWidth="300.0" spacing="5">
-      <Label text="Username" />
+      <Label text="Tên đăng nhập" />
       <TextField fx:id="usernameRegTextField" maxWidth="400.0" prefWidth="300" />
    </VBox>
 
@@ -32,21 +32,21 @@
    </VBox>
    <VBox alignment="CENTER_LEFT" layoutX="60.0" layoutY="201.0" maxWidth="350.0" prefWidth="300.0" spacing="5">
       <children>
-         <Label text="Phone number" />
+         <Label text="Số điện thoại" />
          <TextField fx:id="phoneNumberRegTextField" maxWidth="400.0" prefWidth="300" />
       </children>
    </VBox>
 
    <VBox alignment="CENTER_LEFT" maxWidth="350.0" prefWidth="300.0" spacing="5">
-      <Label text="Password" />
+      <Label text="Mật khẩu" />
       <PasswordField fx:id="passwordRegPasswordField" maxWidth="400.0" prefWidth="300" />
    </VBox>
 
    <VBox alignment="CENTER_LEFT" maxWidth="350.0" prefWidth="300.0" spacing="5">
-      <Label text="Re-enter Password" />
+      <Label text="Nhập lại mật khẩu" />
       <PasswordField fx:id="repasswordRegPasswordField" maxWidth="400.0" prefWidth="300" />
    </VBox>
 
-   <Button fx:id="signUpButton" defaultButton="true" prefWidth="200" style="-fx-background-color: #DBBCC3; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;" text="Sign up" />
-   <Button fx:id="returnLogin" prefWidth="200" style="-fx-background-color: #DBBCC3; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;" text="Cancel" />
+   <Button fx:id="signUpButton" defaultButton="true" prefWidth="200" style="-fx-background-color: #DBBCC3; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;" text="Đăng kí" />
+   <Button fx:id="returnLogin" prefWidth="200" style="-fx-background-color: #DBBCC3; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;" text="Bỏ qua" />
 </VBox>
