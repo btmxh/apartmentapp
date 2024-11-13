@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id 'application'
     id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
@@ -20,4 +19,9 @@ test {
 
 tasks.register("resetDatabase") {
     dependsOn(":resetdb:run")
+}
+
+tasks.register("fillDatabase") {
+    dependsOn(":resetdb:run")
+    dependsOn(":filldb:run")
 }

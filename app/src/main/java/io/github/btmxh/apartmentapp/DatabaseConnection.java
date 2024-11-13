@@ -1,32 +1,57 @@
 package io.github.btmxh.apartmentapp;
 
+import java.io.*;
 import java.sql.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.SQLException;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.cdimascio.dotenv.Dotenv;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.commons.compiler.CompileException;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Arrays;
 
-public class DatabaseConnection
-{
+public class DatabaseConnection {
     private static DatabaseConnection instance;
     private Connection connection;
     private static final Logger logger = LogManager.getLogger(DatabaseConnection.class);
-    public enum Role {
-        ADMIN("admin"),
-        RESIDENT("resident");
 
-        private String sqlName;
-        Role(String sqlName) {
+    public void removeUser(int id) throws SQLException {
+        try(var st = connection.prepareStatement("DELETE FROM users WHERE user_id = ?")) {
+            st.setInt(1, id);
+            st.executeUpdate();
+        }
+    }
+
+    public void removeServiceFee(int id) throws SQLException {
+        try(var st = connection.prepareStatement("DELETE FROM service_fees WHERE fee_id = ?")) {
+            st.setInt(1, id);
+            st.executeUpdate();
+        }
+    }
+
+    public enum Role {
+        ADMIN("admin", "Quản trị viên"),
+        RESIDENT("resident", "Người dân");
+
+        private final String sqlName;
+        private final String displayName;
+
+        Role(String sqlName, String displayName) {
             this.sqlName = sqlName;
+            this.displayName = displayName;
         }
 
         public static List<Role> nonAdminRoles() {
@@ -37,11 +62,15 @@ public class DatabaseConnection
             return sqlName;
         }
 
+        public String getDisplayName() {
+            return displayName;
+        }
+
         public static String getRoleEnum() {
             String roleEnum = Arrays.stream(Role.values())
                     .map(Role::getSQLName)
                     .map(role -> "'" + role + "'")
-                    .collect (Collectors.joining(", "));
+                    .collect(Collectors.joining(", "));
             return "Enum(" + roleEnum + ")";
         }
 
@@ -51,7 +80,7 @@ public class DatabaseConnection
                     return role;
                 }
             }
-            throw new IllegalArgumentException("Unknown value: " + sqlName);
+            throw new IllegalArgumentException("Giá trị không xác định: " + sqlName);
         }
     }
 
@@ -65,11 +94,12 @@ public class DatabaseConnection
                 url = "jdbc:mysql://localhost:3306/apartment";
             }
             connection = DriverManager.getConnection(url, username, password);
-            logger.info("Successfully connected to Database!");
-        } catch(SQLException e) {
-            throw new RuntimeException("Unable to connect to database", e);
+            logger.info("Kết nối thành công tới Cơ sở dữ liệu");
+        } catch (SQLException e) {
+            throw new RuntimeException("Không thể kết nối với Cơ sở dữ liệu", e);
         }
     }
+
     public static DatabaseConnection getInstance() {
         if (instance == null) {
             instance = new DatabaseConnection();
@@ -80,9 +110,8 @@ public class DatabaseConnection
     public void disconnect() {
         try {
             connection.close();
-        }
-        catch (SQLException e) {
-            throw new RuntimeException("Unable to disconnect from Database", e);
+        } catch (SQLException e) {
+            throw new RuntimeException("Không thể ngắt kết nối khỏi Cơ sở dữ liệu", e);
         }
     }
 
@@ -99,10 +128,99 @@ public class DatabaseConnection
                 "user_role " + roleEnum + " NOT NULL);";
         try (Statement statement = connection.createStatement()) {
             statement.execute(sql_createUsersTable);
-            logger.info("Successfully created a table for users!");
-        } catch(SQLException e) {
-            throw new RuntimeException("Unable to create users table on database", e);
+            logger.info("Đã tạo thành công bảng cho người dùng!");
+        } catch (SQLException e) {
+            throw new RuntimeException("Không thể tạo bảng người dùng trên cơ sở dữ liệu!", e);
         }
+    }
+
+    public void createServiceFeeTable() {
+        String sql = """
+                CREATE TABLE IF NOT EXISTS service_fees (
+                fee_id INT PRIMARY KEY AUTO_INCREMENT,
+                fee_name VARCHAR(50) NOT NULL,
+                fee_formula_json JSON NOT NULL);
+                """;
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(sql);
+            logger.info("Đã tạo thành công bảng phí dịch vụ!");
+        } catch (SQLException e) {
+            throw new RuntimeException("Không thể tạo bảng phí dịch vụ trên cơ sở dữ liệu", e);
+        }
+    }
+
+    public void createPaymentsTable() {
+        String sql = """
+                CREATE TABLE IF NOT EXISTS payments (
+                fee_id INT NOT NULL,
+                user_id INT NOT NULL,
+                amount INT NOT NULL,
+                commit_timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (fee_id, user_id));
+                """;
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(sql);
+            logger.info("Đã tạo thành công bảng thanh toán!");
+        } catch (SQLException e) {
+            throw new RuntimeException("Không thể tạo bảng thanh toán trên cơ sở dữ liệu", e);
+        }
+    }
+
+    private static final ObjectMapper mapper = new ObjectMapper();
+
+    private static JsonNode getJson(ResultSet rs, String key) throws IOException, SQLException {
+        return mapper.readTree(rs.getBinaryStream(key));
+    }
+
+    public List<ServiceFee> getServiceFees(int limit, int offset) throws IOException, CompileException, SQLException {
+        final var fees = new ArrayList<ServiceFee>();
+        try(var st = connection.prepareStatement("SELECT fee_id, fee_name, fee_formula_json FROM service_fees LIMIT ? OFFSET ?")) {
+            st.setInt(1, limit);
+            st.setInt(2, offset);
+            final var rs = st.executeQuery();
+            while(rs.next()) {
+                final var id = rs.getInt("fee_id");
+                final var name = rs.getString("fee_name");
+                final var formula = getJson(rs, "fee_formula_json");
+                final var fee = new ServiceFee(id, name, ServiceFee.Formula.fromJSON(formula));
+                fees.add(fee);
+            }
+        }
+        return fees;
+    }
+
+    public void updateServiceFee(ServiceFee fee, String name, ServiceFee.Formula formula) throws SQLException, IOException {
+        name = name != null? name : fee.getName();
+        formula = formula != null? formula : fee.getFormula();
+
+        if(fee.getId() == ServiceFee.NULL_ID) {
+            try(var st = connection.prepareStatement("INSERT INTO service_fees (fee_name, fee_formula_json) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+                st.setString(1, name);
+                try(var pis = new PipedInputStream(); var pos = new PipedOutputStream(pis)) {
+                    mapper.writeValue(pos, formula.toJSON());
+                    st.setBinaryStream(2, pis);
+                    if(st.executeUpdate() == 0) {
+                        throw new RuntimeException("Lỗi khi chèn phí dịch vụ vào DB");
+                    }
+                    try(var rs = st.getGeneratedKeys()) {
+                        rs.next();
+                        fee.setId(rs.getInt(1));
+                    }
+                }
+            }
+        } else {
+            try(var st = connection.prepareStatement("UPDATE service_fees SET fee_name = ?, fee_formula_json = ? WHERE fee_id = ?")) {
+                st.setString(1, fee.getName());
+                st.setInt(3, fee.getId());
+                try(var pis = new PipedInputStream(); var pos = new PipedOutputStream(pis)) {
+                    mapper.writeValue(pos, fee.getFormula().toJSON());
+                    st.setBinaryStream(2, pis);
+                    st.executeUpdate();
+                }
+            }
+        }
+        fee.setName(name);
+        fee.setFormula(formula);
     }
 
     public boolean login(String username, String password) throws SQLException {
@@ -125,8 +243,7 @@ public class DatabaseConnection
             try (ResultSet rs = ps1.executeQuery()) {
                 if (rs.next()) {
                     return false;
-                }
-                else {
+                } else {
                     String role = isFirstAccount() ? Role.ADMIN.getSQLName() : Role.RESIDENT.getSQLName();
                     String sql2 = "INSERT INTO users (user_name, user_email, user_phone_number, user_password, user_role) VALUES (?, ?, ?, ?, ?);";
                     try (PreparedStatement ps2 = connection.prepareStatement(sql2)) {
@@ -150,8 +267,7 @@ public class DatabaseConnection
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return rs.getString("user_role");
-                }
-                else {
+                } else {
                     return "";
                 }
             }
@@ -161,15 +277,17 @@ public class DatabaseConnection
     public boolean isFirstAccount() throws SQLException {
         String sql = "SELECT * FROM users;";
         try (Statement s = connection.createStatement();
-            ResultSet rs = s.executeQuery(sql)) {
+             ResultSet rs = s.executeQuery(sql)) {
 
             return !rs.next();
         }
     }
 
     public void resetDatabase() throws SQLException {
-        try(final var st = connection.createStatement()) {
+        try (final var st = connection.createStatement()) {
             st.execute("DROP TABLE IF EXISTS users");
+            st.execute("DROP TABLE IF EXISTS service_fees");
+            st.execute("DROP TABLE IF EXISTS payments");
             logger.info("Successfully reset database");
         }
     }
@@ -178,7 +296,7 @@ public class DatabaseConnection
         ObservableList<User> userList = FXCollections.observableArrayList();
         String query = "SELECT user_id, user_name, user_role FROM users WHERE user_role != '" + Role.ADMIN.getSQLName() + "' LIMIT " + limit + " OFFSET " + offset;
         try (Statement s = connection.createStatement();
-            ResultSet rs = s.executeQuery(query)) {
+             ResultSet rs = s.executeQuery(query)) {
             while (rs.next()) {
                 int id = rs.getInt("user_id");
                 String name = rs.getString("user_name");
@@ -198,14 +316,25 @@ public class DatabaseConnection
         }
     }
 
-    public int getNumUsers() throws SQLException {
-        String query = "SELECT COUNT(*) FROM users";
+    public int getNumNonAdminUsers() throws SQLException {
+        String query = "SELECT COUNT(*) FROM users WHERE user_role != '" + Role.ADMIN.getSQLName() + "'";
         try (Statement s = connection.createStatement();
-            ResultSet rs = s.executeQuery(query)) {
+             ResultSet rs = s.executeQuery(query)) {
             if (rs.next()) {
                 return rs.getInt(1);
+            } else {
+                return 0;
             }
-            else {
+        }
+    }
+
+    public int getNumServiceFees() throws SQLException {
+        String query = "SELECT COUNT(*) FROM service_fees";
+        try (Statement s = connection.createStatement();
+             ResultSet rs = s.executeQuery(query)) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            } else {
                 return 0;
             }
         }

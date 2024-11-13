@@ -14,3 +14,5 @@ repositories {
 dependencies {
     implementation project(':app')
 }
+
+tasks.run.workingDir = project(':app').projectDir
