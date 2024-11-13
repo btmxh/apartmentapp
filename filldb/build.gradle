@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+}
+
+application {
+    mainClass = "io.github.btmxh.apartmentapp.filldb.Main"
+}
+
+javafx {
+    version = "22.0.1"
+    modules = ['javafx.controls', 'javafx.fxml']
+}
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':app')
+    implementation 'org.codehaus.janino:janino:3.1.12'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.run.mustRunAfter(":resetdb:run")
+tasks.run.workingDir = project(':app').projectDir

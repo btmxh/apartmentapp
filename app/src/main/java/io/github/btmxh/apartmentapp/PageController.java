@@ -160,7 +160,7 @@ public class PageController {
             serviceFeePagination.setPageCount((DatabaseConnection.getInstance().getNumServiceFees() + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE);
         } catch (SQLException e) {
             logger.warn("Lỗi khi thực hiện câu lệnh SQL", e);
-            Announcement.show("Lỗi", "Không thể lấy được số lượng người dùng!", "Lỗi kết nối cơ sở dữ liệu: " + e.getMessage());
+            Announcement.show("Lỗi", "Không thể truy cập cơ sở dữ liệu!", e.getMessage());
         }
     }
 

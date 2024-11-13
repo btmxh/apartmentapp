@@ -58,3 +58,14 @@
 .var-box {
   -fx-border-color: black;
 }
+
+.auth-button {
+  -fx-background-color: #DBBCC3;
+  -fx-text-fill: #303D4F;
+  -fx-border-radius: 15;
+  -fx-background-radius: 15;
+}
+
+.auth-button:hover {
+  -fx-background-color: #b8919a;
+}

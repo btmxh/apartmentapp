@@ -56,7 +56,7 @@ public class AddServiceFeeController {
                 final var varTerm = c.getTerminal();
 
                 if (variables.put(varName, varTerm) != null) {
-                    Announcement.show("Lỗi", "Biến trùng lặp được tìm thấy", "Biến " + varName + " xảy ra hai lần khi khai báo biến");
+                    Announcement.show("Lỗi", "Xuất hiện biến trùng lặp", "Biến " + varName + " xuất hiện hai lần trong khai báo biến");
                     return;
                 }
             } catch (IllegalArgumentException ex) {
@@ -67,7 +67,7 @@ public class AddServiceFeeController {
         try {
             formula = new ServiceFee.Formula(formulaExpr, variables);
         } catch (CompileException ex) {
-            Announcement.show("Lỗi", "Không thể phân tích biểu thức phí", ex.getMessage());
+            Announcement.show("Lỗi", "Không thể phân tích biểu thức tính phí", ex.getMessage());
             return;
         }
 
@@ -76,7 +76,7 @@ public class AddServiceFeeController {
                 DatabaseConnection.getInstance().updateServiceFee(fee, name, formula);
             } catch (SQLException | IOException ex) {
                 logger.warn("Unable to add service fee", ex);
-                Announcement.show("Lỗi", "Không thể thêm phí dịch vụ", ex.getMessage());
+                Announcement.show("Lỗi", "Không thể thêm phí dịch vụ vào CSDL", ex.getMessage());
                 return;
             }
         }
@@ -94,7 +94,7 @@ public class AddServiceFeeController {
             variableBox.getChildren().add(content);
         } catch (Exception e) {
             logger.fatal("Error loading FXML file", e);
-            Announcement.show("Lỗi", "Không thể tải FXML cho biến phí", "Lỗi chi tiết: " + e.getMessage());
+            Announcement.show("Lỗi", "Không thể tải FXML cho giao diện thêm biến phí", e.getMessage());
         }
     }
 

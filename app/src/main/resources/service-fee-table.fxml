@@ -5,8 +5,8 @@
 <TableView fx:id="table" editable="true" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.ServiceFeeTableController">
     <columns>
         <TableColumn fx:id="noCol" editable="false" prefWidth="39.0" sortable="false" text="STT" />
-        <TableColumn fx:id="nameCol" onEditCommit="#updateFeeName" prefWidth="111.0" sortable="false" text="Name" />
-        <TableColumn fx:id="progressCol" editable="false" prefWidth="111.0" sortable="false" text="No. Payments" />
+        <TableColumn fx:id="nameCol" onEditCommit="#updateFeeName" prefWidth="111.0" sortable="false" text="Tên khoản thu" />
+        <TableColumn fx:id="progressCol" editable="false" prefWidth="111.0" sortable="false" text="Số lần thu phí" />
         <TableColumn fx:id="viewCol" editable="false" prefWidth="111.0" sortable="false" />
     </columns>
    <columnResizePolicy>

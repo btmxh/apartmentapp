@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.LoginController">
+<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.LoginController">
    <padding>
       <Insets bottom="50" left="50" right="50" top="50" />
    </padding>
@@ -31,7 +31,7 @@
    </VBox>
    <Label fx:id="loginMessageLabel" alignment="CENTER" />
 
-   <Button fx:id="loginButton" defaultButton="true" onAction="#loginButtonOnActive" prefWidth="200" style="-fx-background-color: #DBBCC3; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;" text="Đăng nhập">
+   <Button fx:id="loginButton" defaultButton="true" onAction="#loginButtonOnActive" prefWidth="200" styleClass="auth-button" stylesheets="@style.css" text="Đăng nhập">
       <VBox.margin>
          <Insets />
       </VBox.margin></Button>

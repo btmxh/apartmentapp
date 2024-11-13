@@ -9,9 +9,9 @@
       <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="section-title" stylesheets="@style.css" text="Thêm khoản phí" textAlignment="CENTER" />
       <Label text="Tên" />
       <TextField fx:id="nameField" />
-      <Label text="Cách thức" />
+      <Label text="Công thức" />
       <TextField fx:id="formulaField" />
-      <Label text="Dịch vụ" />
+      <Label text="Biến" />
       <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
         <content>
             <VBox spacing="10.0">
@@ -27,7 +27,7 @@
       </ScrollPane>
       <ButtonBar>
         <buttons>
-            <Button mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+            <Button mnemonicParsing="false" onAction="#cancel" text="Huỷ" />
           <Button mnemonicParsing="false" onAction="#submit" text="OK" />
         </buttons>
       </ButtonBar>

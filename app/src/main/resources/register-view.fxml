@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="600.0" maxWidth="406.0" spacing="20.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.RegisterController">
+<VBox alignment="CENTER" maxHeight="600.0" maxWidth="406.0" spacing="20.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.RegisterController">
    <padding>
       <Insets bottom="50" left="50" right="50" top="50" />
    </padding>
@@ -47,6 +47,6 @@
       <PasswordField fx:id="repasswordRegPasswordField" maxWidth="400.0" prefWidth="300" />
    </VBox>
 
-   <Button fx:id="signUpButton" defaultButton="true" prefWidth="200" style="-fx-background-color: #DBBCC3; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;" text="Đăng kí" />
-   <Button fx:id="returnLogin" prefWidth="200" style="-fx-background-color: #DBBCC3; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;" text="Bỏ qua" />
+   <Button fx:id="signUpButton" defaultButton="true" prefWidth="200" styleClass="auth-button" stylesheets="@style.css" text="Đăng kí" />
+   <Button fx:id="returnLogin" prefWidth="200" styleClass="auth-button" stylesheets="@style.css" text="Bỏ qua" />
 </VBox>
