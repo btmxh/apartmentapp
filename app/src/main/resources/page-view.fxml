@@ -110,12 +110,14 @@
                <rowConstraints>
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
                   <TextField fx:id="roomSearch" promptText="Tìm kiếm theo phòng" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label prefWidth="64.0" text="Phòng" GridPane.rowIndex="1" />
                   <TextField fx:id="feeSearch" promptText="Tìm kiếm theo khoản thu" GridPane.columnIndex="1" />
                   <Label text="Khoản thu" />
+                  <Button mnemonicParsing="false" text="Thu phí" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" onAction="#addPayment" />
                </children>
             </GridPane>
             <Pagination fx:id="paymentTable" VBox.vgrow="ALWAYS" />

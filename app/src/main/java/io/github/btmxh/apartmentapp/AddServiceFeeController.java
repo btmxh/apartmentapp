@@ -40,7 +40,7 @@ public class AddServiceFeeController {
     private Stage stage;
 
     public void initialize() {
-        valueField.disableProperty().bind(constAmount.selectedProperty());
+        valueField.disableProperty().bind(constAmount.selectedProperty().not());
     }
 
     public void cancel(ActionEvent e) {
@@ -55,13 +55,15 @@ public class AddServiceFeeController {
                 return;
             }
 
-            int amount;
-            try {
-                amount = Integer.parseInt(valueField.getText().trim());
-            } catch (NumberFormatException ex) {
-                logger.warn("Unable to parse fee amount", ex);
-                Announcement.show("Giá trị không hợp lệ", "Số tiền không đúng định dạng", "Vui lòng nhập số tiền hợp lệ (chỉ bao gồm số).");
-                return;
+            int amount = -1;
+            if(constAmount.isSelected()) {
+                try {
+                    amount = Integer.parseInt(valueField.getText().trim());
+                } catch (NumberFormatException ex) {
+                    logger.warn("Unable to parse fee amount", ex);
+                    Announcement.show("Giá trị không hợp lệ", "Số tiền không đúng định dạng", "Vui lòng nhập số tiền hợp lệ (chỉ bao gồm số).");
+                    return;
+                }
             }
 
             final var startDate = startDatePicker.getValue();
@@ -84,9 +86,9 @@ public class AddServiceFeeController {
             fee.setName(nameField.getText());
             long oldAmount = fee.getAmount();
             if(constAmount.isSelected()) {
-                fee.setAmount(-1);
-            } else {
                 fee.setAmount(amount);
+            } else {
+                fee.setAmount(-1);
             }
             fee.setStartDate(startDate);
             fee.setDeadline(deadline);

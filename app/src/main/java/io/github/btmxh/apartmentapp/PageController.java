@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
@@ -167,9 +168,12 @@ public class PageController {
         try {
             Region loginPage = Utils.fxmlLoader("/login-view.fxml").load();
             Stage stage = (Stage) logoutButton.getScene().getWindow();
-            stage.getScene().setRoot(loginPage);
+            stage.close();
+            stage = new Stage();
+            stage.setScene(new Scene(loginPage));
             stage.setWidth(loginPage.getPrefWidth());
             stage.setHeight(loginPage.getPrefHeight());
+            stage.show();
         } catch (Exception e) {
             logger.fatal("Lỗi khi tải tệp FXML", e);
             Announcement.show("Lỗi","Không thể truy cập trang đăng ký!", "Lỗi tải FXML:" + e.getMessage());

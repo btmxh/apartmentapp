@@ -29,7 +29,6 @@ public class AddPaymentController {
     private final SimpleStringProperty room = new SimpleStringProperty(null);
 
     public void initialize() {
-        valueField.disableProperty().bind(fee.flatMap(f -> f == null ? new ReadOnlyLongWrapper(100) : f.amount()).map(v -> v.longValue() >= 0));
         roomField.setOnAction(e -> {
             try {
                 final var owner = DatabaseConnection.getInstance().getRoomOwner(roomField.getText());
@@ -104,11 +103,13 @@ public class AddPaymentController {
             this.fee.set(PickServiceFee.open(stage));
             if (this.fee.get() != null) {
                 feeName.setText(this.fee.get().getName());
+                valueField.setDisable(fee.get().getAmount() >= 0);
                 if(this.fee.get().getAmount() >= 0) {
                     valueField.setText(String.valueOf(this.fee.get().getAmount()));
                 }
             } else {
                 feeName.setText("Chưa có khoản thu");
+                valueField.setDisable(true);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

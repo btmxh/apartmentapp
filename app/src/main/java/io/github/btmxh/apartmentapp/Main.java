@@ -48,6 +48,7 @@ public class Main extends Application {
         databaseConnection.createUsersTable();
         databaseConnection.createServiceFeeTable();
         databaseConnection.createPaymentsTable();
+        databaseConnection.createCitizensTable();
 
         // Log the application start
         LOGGER.debug("Khởi chạy ứng dụng");

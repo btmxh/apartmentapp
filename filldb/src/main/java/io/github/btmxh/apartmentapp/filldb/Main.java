@@ -6,6 +6,8 @@ import io.github.btmxh.apartmentapp.ServiceFee;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Year;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.ThreadLocalRandom;
@@ -24,41 +26,39 @@ public class Main {
         db.signup("method123", "Phạm Nhật Minh",   "0987456321", "kizunamethod");
         db.signup("hat", "Hoàng Anh Tú", "0987452981", "hatxulemicu");
         final var fees = new ArrayList<ServiceFee>();
-        for(int m = 1; m <= LocalDate.now().getMonthValue(); ++m) {
+        for(int i = 10; i >= 0; --i) {
+            final var ym = YearMonth.now().minusMonths(i);
+            final var nextYm = ym.plusMonths(1);
+            final var m = ym.getMonthValue();
             fees.add(new ServiceFee(
                     -1,
                     "Tiền nhà tháng " + m,
                     ThreadLocalRandom.current().nextInt(40, 50) * 100000L,
-                    LocalDate.of(LocalDate.now().getYear(), m, 25),
-                    LocalDate.of(LocalDate.now().getYear(), m + 1, 5)
+                    ym.atDay(25), nextYm.atDay(5)
             ));
             fees.add(new ServiceFee(
                     -1,
                     "Tiền nước tháng " + m,
                     ThreadLocalRandom.current().nextInt(80, 120) * 1000L,
-                    LocalDate.of(LocalDate.now().getYear(), m, 25),
-                    LocalDate.of(LocalDate.now().getYear(), m + 1, 5)
+                    ym.atDay(25), nextYm.atDay(5)
             ));
             fees.add(new ServiceFee(
                     -1,
                     "Tiền gửi xe tháng " + m,
                     ThreadLocalRandom.current().nextInt(100, 200) * 1000L,
-                    LocalDate.of(LocalDate.now().getYear(), m, 25),
-                    LocalDate.of(LocalDate.now().getYear(), m + 1, 5)
+                    ym.atDay(25), nextYm.atDay(5)
             ));
             fees.add(new ServiceFee(
                     -1,
                     "Tiền dịch vụ tháng " + m,
                     ThreadLocalRandom.current().nextInt(100, 200) * 1000L,
-                    LocalDate.of(LocalDate.now().getYear(), m, 25),
-                    LocalDate.of(LocalDate.now().getYear(), m + 1, 5)
+                    ym.atDay(25), nextYm.atDay(5)
             ));
             fees.add(new ServiceFee(
                     -1,
                     "Tiền tình nguyện tháng " + m,
                     -1,
-                    LocalDate.of(LocalDate.now().getYear(), m, 25),
-                    LocalDate.of(LocalDate.now().getYear(), m + 1, 5)
+                    ym.atDay(25), nextYm.atDay(5)
             ));
         }
         for(final var fee : fees) {
