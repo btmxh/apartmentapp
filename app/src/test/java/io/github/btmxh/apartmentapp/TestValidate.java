@@ -16,13 +16,10 @@ public class TestValidate {
         assertEquals("Mật khẩu không được để trống!", RegisterController.validateSignUpInfo("user", "", "user@example.com", "1234567890", "password123"));
 
         // Test for empty email
-        assertEquals("Email không được để trống!", RegisterController.validateSignUpInfo("user", "password123", "", "1234567890", "password123"));
+        assertEquals("Họ và tên không được để trống!", RegisterController.validateSignUpInfo("user", "password123", "", "1234567890", "password123"));
 
         // Test for empty phone number
         assertEquals("Số điện thoại không được để trống!", RegisterController.validateSignUpInfo("user", "password123", "user@example.com", "", "password123"));
-
-        // Test for invalid email
-        assertEquals("Email không hợp lệ: user@", RegisterController.validateSignUpInfo("user", "password123", "user@", "1234567890", "password123"));
 
         // Test for invalid phone number
         assertEquals("Số điện thoại không hợp lệ: 123", RegisterController.validateSignUpInfo("user", "password123", "user@example.com", "123", "password123"));

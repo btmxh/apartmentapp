@@ -72,7 +72,7 @@ public class RegisterController {
             return "Mật khẩu không được để trống!";
         }
 
-        if(name.isEmpty()) {
+        if (name.isEmpty()) {
             return "Họ và tên không được để trống!";
         }
 
