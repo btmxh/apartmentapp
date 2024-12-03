@@ -1,5 +1,9 @@
 package io.github.btmxh.apartmentapp;
 
+import javafx.beans.property.Property;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.beans.value.WritableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
@@ -28,12 +32,6 @@ public class Utils {
 
     public static FXMLLoader fxmlLoader(String path) {
         return new FXMLLoader(Utils.class.getResource(path));
-    }
-
-    public static void initMonthComboBox(ComboBox<Month> monthBox) {
-        monthBox.setItems(FXCollections.observableArrayList(Month.values()));
-        monthBox.setValue(LocalDate.now().getMonth());
-        monthBox.setConverter(Utils.readOnlyStringConverter(m -> "Tháng " + m.getValue()));
     }
 
     public static <S, T> void initNoColumn(TableColumn<S, T> numCol, int offset) {

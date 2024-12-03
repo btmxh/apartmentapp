@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 
-<TableView fx:id="table" editable="true" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.ServiceFeeTableController">
+<TableView fx:id="table" editable="true" prefWidth="1172.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.ServiceFeeTableController">
     <columns>
-        <TableColumn fx:id="noCol" editable="false" prefWidth="39.0" sortable="false" text="STT" />
-        <TableColumn fx:id="nameCol" onEditCommit="#updateFeeName" prefWidth="111.0" sortable="false" text="Tên khoản thu" />
-        <TableColumn fx:id="progressCol" editable="false" prefWidth="111.0" sortable="false" text="Số lần thu phí" />
-        <TableColumn fx:id="viewCol" editable="false" prefWidth="111.0" sortable="false" />
+        <TableColumn fx:id="noCol" editable="false" maxWidth="409.0" prefWidth="50.0" sortable="false" text="STT" />
+        <TableColumn fx:id="nameCol" minWidth="0.0" onEditCommit="#updateFeeName" prefWidth="389.0" sortable="false" text="Tên khoản thu" />
+        <TableColumn fx:id="startDateCol" editable="false" prefWidth="184.0" sortable="false" text="Ngày bắt đầu thu" />
+      <TableColumn fx:id="deadlineCol" minWidth="0.0" prefWidth="194.0" sortable="false" text="Hạn cuối nộp" />
+      <TableColumn fx:id="progressCol" minWidth="0.0" prefWidth="271.0" sortable="false" text="Quá trình thu" />
     </columns>
    <columnResizePolicy>
       <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

@@ -4,12 +4,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.DoubleNode;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.util.Pair;
 import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.janino.ExpressionEvaluator;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -17,15 +20,31 @@ public class ServiceFee {
     public static final int NULL_ID = -1;
     private int id = NULL_ID;
     private final SimpleStringProperty name = new SimpleStringProperty();
-    private final SimpleObjectProperty<Formula> formula = new SimpleObjectProperty<>();
+    private final SimpleLongProperty amount = new SimpleLongProperty();
+    private final SimpleObjectProperty<LocalDate> startDate = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<LocalDate> deadline = new SimpleObjectProperty<>();
+    private int numReceived, numPending;
 
-    public ServiceFee() {
+    public ServiceFee(int id, String name, long amount, LocalDate startDate, LocalDate deadline, int numReceived, int numPending) {
+        this.id = id;
+        this.numReceived = numReceived;
+        this.numPending = numPending;
+        this.name.set(name);
+        this.amount.set(amount);
+        this.startDate.set(startDate);
+        this.deadline.set(deadline);
     }
 
-    public ServiceFee(int id, String name, Formula formula) {
-        this.id = id;
-        this.name.set(name);
-        this.formula.set(formula);
+    public ServiceFee(int id, String name, long amount, LocalDate startDate, LocalDate deadline) {
+        this(id, name, amount, startDate, deadline, 0, 0);
+    }
+
+    public int getNumReceived() {
+        return numReceived;
+    }
+
+    public int getNumPending() {
+        return numPending;
     }
 
     public int getId() {
@@ -44,12 +63,44 @@ public class ServiceFee {
         this.name.set(name);
     }
 
-    public Formula getFormula() {
-        return formula.get();
+    public SimpleStringProperty name() {
+        return name;
     }
 
-    public void setFormula(Formula formula) {
-        this.formula.set(formula);
+    public long getAmount() {
+        return amount.get();
+    }
+
+    public void setAmount(long value) {
+        amount.set(value);
+    }
+
+    public SimpleLongProperty amount() {
+        return amount;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate.get();
+    }
+
+    public SimpleObjectProperty<LocalDate> startDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate date) {
+        this.startDate.set(date);
+    }
+
+    public void setDeadline(LocalDate date) {
+        this.deadline.set(date);
+    }
+
+    public LocalDate getDeadline() {
+        return deadline.get();
+    }
+
+    public SimpleObjectProperty<LocalDate> deadline() {
+        return deadline;
     }
 
     public static final class Formula implements FormulaTerminal {

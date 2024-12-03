@@ -1,5 +1,6 @@
 package io.github.btmxh.apartmentapp;
 
+import atlantafx.base.theme.*;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -15,6 +16,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
+        Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
+
         try {
             // Log info message
             LOGGER.info("Khởi chạy ứng dụng");
@@ -25,8 +28,8 @@ public class Main extends Application {
 
             final var scene = new Scene(root);
             stage.setScene(scene);
-            stage.setMinWidth(360);
-            stage.setMinHeight(480);
+            stage.setMinWidth(1120);
+            stage.setMinHeight(645);
 
             stage.show();
 

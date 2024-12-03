@@ -3,6 +3,7 @@ package io.github.btmxh.apartmentapp;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
@@ -42,15 +43,19 @@ public class LoginController {
         else {
             DatabaseConnection dbc = DatabaseConnection.getInstance();
             try {
-                if (dbc.login(username, password)) {
+                User user = dbc.login(username, password);
+                if (user != null) {
                     try {
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/page-view.fxml"));
                         Region homepage = loader.load();
-                        CurrentUser user = new CurrentUser(username);
                         PageController pageController = loader.getController();
                         pageController.setUser(user);
                         Stage stage = (Stage) loginButton.getScene().getWindow();
-                        stage.getScene().setRoot(homepage);
+                        stage.close();
+
+                        stage = new Stage();
+                        stage.setScene(new Scene(homepage));
+                        stage.show();
 
                     } catch (Exception e) {
                         logger.fatal("Lỗi khi tải tệp FXML", e);
@@ -79,12 +84,6 @@ public class LoginController {
                 logger.fatal("Error loading FXML file", e);
                 Announcement.show("Lỗi","Không thể truy cập trang đăng ký!", "Lỗi tải FXML: " + e.getMessage());
             }
-        });
-        loginButton.setOnMouseEntered(_e -> {
-            loginButton.setStyle("-fx-background-color: #b8919a; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;");
-        });
-        loginButton.setOnMouseExited(_e -> {
-            loginButton.setStyle("-fx-background-color: #DBBCC3; -fx-text-fill: #303D4F; -fx-border-radius: 15; -fx-background-radius: 15;");
         });
     }
 }

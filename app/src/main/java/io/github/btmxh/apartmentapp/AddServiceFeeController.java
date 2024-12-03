@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -13,26 +15,32 @@ import javafx.stage.Window;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.commons.compiler.CompileException;
+
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
 public class AddServiceFeeController {
     private static final Logger logger = LogManager.getLogger();
+    @FXML
+    private CheckBox constAmount;
+    @FXML
+    private DatePicker deadlinePicker;
+    @FXML
+    private DatePicker startDatePicker;
 
     @FXML
     private TextField nameField;
     @FXML
-    private TextField formulaField;
-    @FXML
-    private VBox variableBox;
+    private TextField valueField;
 
     private ServiceFee fee;
     private Stage stage;
 
     public void initialize() {
-//        Utils.initMonthComboBox(monthBox);
+        valueField.disableProperty().bind(constAmount.selectedProperty());
     }
 
     public void cancel(ActionEvent e) {
@@ -40,75 +48,65 @@ public class AddServiceFeeController {
     }
 
     public void submit(ActionEvent e) {
-        final var name = nameField.getText();
-        final var formulaExpr = formulaField.getText();
-
-        final ServiceFee.Formula formula;
-        final Map<String, ServiceFee.FormulaTerminal> variables = new HashMap<>();
-        final var variableControllers = variableBox.getChildren().stream()
-                .map(Node::getUserData)
-                .filter(n -> n instanceof AddServiceFeeVarController)
-                .map(n -> (AddServiceFeeVarController) n)
-                .toList();
-        for (final var c : variableControllers) {
-            try {
-                final var varName = c.getName();
-                final var varTerm = c.getTerminal();
-
-                if (variables.put(varName, varTerm) != null) {
-                    Announcement.show("Lỗi", "Xuất hiện biến trùng lặp", "Biến " + varName + " xuất hiện hai lần trong khai báo biến");
-                    return;
-                }
-            } catch (IllegalArgumentException ex) {
-                Announcement.show("Lỗi", "Tên/giá trị biến không hợp lệ", ex.getMessage());
-                return;
-            }
-        }
         try {
-            formula = new ServiceFee.Formula(formulaExpr, variables);
-        } catch (CompileException ex) {
-            Announcement.show("Lỗi", "Không thể phân tích biểu thức tính phí", ex.getMessage());
-            return;
-        }
-
-        if(fee.getId() == ServiceFee.NULL_ID) {
-            try {
-                DatabaseConnection.getInstance().updateServiceFee(fee, name, formula);
-            } catch (SQLException | IOException ex) {
-                logger.warn("Unable to add service fee", ex);
-                Announcement.show("Lỗi", "Không thể thêm phí dịch vụ vào CSDL", ex.getMessage());
+            final var name = nameField.getText().trim();
+            if (name.isEmpty()) {
+                Announcement.show("Thiếu thông tin", "Tên khoản phí không được để trống", "Vui lòng nhập tên khoản phí.");
                 return;
             }
+
+            int amount;
+            try {
+                amount = Integer.parseInt(valueField.getText().trim());
+            } catch (NumberFormatException ex) {
+                logger.warn("Unable to parse fee amount", ex);
+                Announcement.show("Giá trị không hợp lệ", "Số tiền không đúng định dạng", "Vui lòng nhập số tiền hợp lệ (chỉ bao gồm số).");
+                return;
+            }
+
+            final var startDate = startDatePicker.getValue();
+            if (startDate == null) {
+                Announcement.show("Thiếu thông tin", "Ngày bắt đầu không được để trống", "Vui lòng chọn ngày bắt đầu thu.");
+                return;
+            }
+
+            final var deadline = deadlinePicker.getValue();
+            if (deadline == null) {
+                Announcement.show("Thiếu thông tin", "Hạn cuối không được để trống", "Vui lòng chọn hạn cuối.");
+                return;
+            }
+
+            if (!deadline.isAfter(startDate)) {
+                Announcement.show("Dữ liệu không hợp lệ", "Hạn cuối không hợp lệ", "Hạn cuối phải sau ngày bắt đầu. Vui lòng chọn lại.");
+                return;
+            }
+
+            fee.setName(nameField.getText());
+            long oldAmount = fee.getAmount();
+            if(constAmount.isSelected()) {
+                fee.setAmount(-1);
+            } else {
+                fee.setAmount(amount);
+            }
+            fee.setStartDate(startDate);
+            fee.setDeadline(deadline);
+            DatabaseConnection.getInstance().updateServiceFee(fee, oldAmount);
+        } catch (SQLException | IOException ex) {
+            logger.warn("Unable to add service fee", ex);
+            Announcement.show("Lỗi", "Không thể thêm phí dịch vụ vào CSDL", ex.getMessage());
+            return;
         }
 
         stage.close();
     }
 
-    private void newVariable(String name, ServiceFee.FormulaTerminal term) {
-        try {
-            final var loader = Utils.fxmlLoader("/add-service-fee-var.fxml");
-            final Node content = loader.load();
-            final AddServiceFeeVarController controller = loader.getController();
-            content.setUserData(controller);
-            controller.setTerminal(name, term);
-            variableBox.getChildren().add(content);
-        } catch (Exception e) {
-            logger.fatal("Error loading FXML file", e);
-            Announcement.show("Lỗi", "Không thể tải FXML cho giao diện thêm biến phí", e.getMessage());
-        }
-    }
-
-    public void addVariable(ActionEvent _e) {
-        newVariable("", null);
-    }
-
-    public static ServiceFee open(Window window, ServiceFee fee) throws IOException {
+    public static void open(Window window, ServiceFee fee) throws IOException {
         final var loader = Utils.fxmlLoader("/add-service-fee.fxml");
         final Parent content = loader.load();
         final AddServiceFeeController controller = loader.getController();
         final var stage = new Stage();
-        if(fee == null) {
-            fee = new ServiceFee(ServiceFee.NULL_ID, "", null);
+        if (fee == null) {
+            fee = new ServiceFee(ServiceFee.NULL_ID, "", -1, LocalDate.now(), LocalDate.now());
         }
 
         stage.initOwner(window);
@@ -117,20 +115,20 @@ public class AddServiceFeeController {
         controller.setStage(stage);
         controller.setServiceFee(fee);
         stage.showAndWait();
-        return controller.getServiceFee();
     }
 
     public void setServiceFee(ServiceFee fee) {
         this.fee = fee;
         nameField.setText(fee.getName());
-        formulaField.setText(fee.getFormula().getExpression());
-        for(final var v : fee.getFormula().getVariables()) {
-            newVariable(v.getKey(), v.getValue());
+        if(fee.getAmount() >= 0) {
+            valueField.setText(String.valueOf(fee.getAmount()));
+        } else {
+            valueField.setText("");
         }
-    }
+        constAmount.setSelected(fee.getAmount() < 0);
+        startDatePicker.setValue(fee.getStartDate());
+        deadlinePicker.setValue(fee.getDeadline());
 
-    private ServiceFee getServiceFee() {
-        return fee;
     }
 
     private void setStage(Stage stage) {

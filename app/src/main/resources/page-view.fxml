@@ -1,20 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Pagination?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Bloom?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.PageController">
+<BorderPane prefHeight="1080.0" prefWidth="1440.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.PageController">
    <left>
-      <VBox alignment="BOTTOM_RIGHT" BorderPane.alignment="CENTER">
+      <VBox alignment="BOTTOM_RIGHT" prefWidth="240.0" styleClass="sidebar" BorderPane.alignment="CENTER">
          <VBox alignment="TOP_CENTER" spacing="10.0" style="-: #fcd303;" VBox.vgrow="ALWAYS">
             <children>
-               <Label alignment="CENTER" text="Moon Page">
-                  <font>
-                     <Font name="System Bold" size="23.0" />
-                  </font>
+               <Label alignment="CENTER" style="-fx-font-size: 23px;" styleClass="bold-text" text="Moon Page" textFill="WHITE">
                   <effect>
                      <Glow />
                   </effect>
@@ -22,41 +35,63 @@
                      <Insets bottom="20.0" top="50.0" />
                   </VBox.margin>
                </Label>
-               <Label text="Chào mừng">
-                  <font>
-                     <Font name="System Bold" size="14.0" />
-                  </font>
-               </Label>
-               <Label fx:id="usernameLabel" alignment="CENTER" style="-fx-background-radius: 10;" text="Tên người dùng">
+               <Label styleClass="bold-text" text="Chào mừng" textFill="WHITE" />
+               <Label fx:id="usernameLabel" alignment="CENTER" text="Tên người dùng" textFill="WHITE">
                   <effect>
                      <Bloom threshold="0.23" />
                   </effect>
                   <VBox.margin>
-                     <Insets bottom="20.0" />
+                     <Insets bottom="80.0" />
                   </VBox.margin>
                </Label>
-               <Button fx:id="createChargeButton" prefHeight="40.0" prefWidth="209.0" styleClass="section-button" text="Tạo khoản thu" />
-               <Button fx:id="chargeButton" prefHeight="40.0" prefWidth="209.0" styleClass="section-button" text="Thu phí">
+               <Button fx:id="homeButton" layoutX="20.0" layoutY="209.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="section-button" text="Trang chủ">
+                  <padding>
+                     <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                  </padding></Button>
+               <Button fx:id="staticButton" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="section-button" text="Tài khoản">
                   <VBox.margin>
                      <Insets />
                   </VBox.margin>
+                  <padding>
+                     <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                  </padding>
                </Button>
-               <Button fx:id="residentsButton" prefHeight="40.0" prefWidth="209.0" styleClass="section-button" text="Quản trị">
+               <Button fx:id="createChargeButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="section-button" text="Khoản thu">
+                  <padding>
+                     <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                  </padding></Button>
+               <Button fx:id="chargeButton" maxWidth="1.7976931348623157E308" styleClass="section-button" text="Thu phí">
                   <VBox.margin>
                      <Insets />
                   </VBox.margin>
+                  <padding>
+                     <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                  </padding>
                </Button>
-               <Button fx:id="staticButton" alignment="CENTER" prefHeight="40.0" prefWidth="209.0" styleClass="section-button" text="Thống kê">
+               <Button fx:id="manageButton" maxWidth="1.7976931348623157E308" styleClass="section-button" text="Quản trị">
                   <VBox.margin>
                      <Insets />
                   </VBox.margin>
+                  <padding>
+                     <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                  </padding>
+               </Button>
+               <Button fx:id="residentsButton" layoutX="20.0" layoutY="449.0" maxWidth="1.7976931348623157E308" styleClass="section-button" text="Nhân khẩu">
+                  <padding>
+                     <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                  </padding>
+               </Button>
+               <Button fx:id="contributeButton" layoutX="20.0" layoutY="509.0" maxWidth="1.7976931348623157E308" styleClass="section-button" text="Khiếu nại">
+                  <padding>
+                     <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                  </padding>
                </Button>
             </children>
             <padding>
                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
             </padding>
          </VBox>
-         <Button fx:id="logoutButton" mnemonicParsing="false" styleClass="logout-button" text="Đăng xuất">
+         <Button fx:id="logoutButton" mnemonicParsing="false" styleClass="logout-button" text="Đăng xuất" textFill="WHITE">
             <VBox.margin>
                <Insets bottom="10.0" right="10.0" />
             </VBox.margin>
@@ -65,63 +100,27 @@
    </left>
    <center>
       <AnchorPane BorderPane.alignment="CENTER">
-         <VBox fx:id="chargeVBox" alignment="TOP_CENTER" layoutX="14.0" prefHeight="516.0" prefWidth="739.0" spacing="10.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <VBox fx:id="chargeVBox" alignment="TOP_CENTER" layoutX="14.0" prefHeight="516.0" prefWidth="739.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Label styleClass="section-title" text="Thu phí" />
-            <HBox alignment="CENTER_LEFT" spacing="5.0">
+            <GridPane hgap="10.0" vgap="10.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" />
+                  <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
                <children>
-                  <Label text="Hạn nộp" />
-                  <DatePicker />
-
-
-                  <Label text="Tháng thu phí" textAlignment="CENTER" wrapText="true" />
-                  <ComboBox fx:id="monthComboBox">
-                  </ComboBox>
-
-                  <Label text="Nhà" />
-                  <ComboBox>
-                  </ComboBox>
-
-                  <Button text="Xem" />
+                  <TextField fx:id="roomSearch" promptText="Tìm kiếm theo phòng" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label prefWidth="64.0" text="Phòng" GridPane.rowIndex="1" />
+                  <TextField fx:id="feeSearch" promptText="Tìm kiếm theo khoản thu" GridPane.columnIndex="1" />
+                  <Label text="Khoản thu" />
                </children>
-            </HBox>
-            <VBox alignment="TOP_CENTER">
-               <children>
-
-                  <!-- Ghi chú -->
-                  <Label style="-fx-font-weight: bold;" text="Lưu ý:" />
-                  <!-- <Label text="- Bạn phải thực hiện việc 'Thêm khách' ở chức năng 'Phòng'..." wrapText="true" /> -->
-               </children>
-            </VBox>
-
-            <!-- Các nút chức năng -->
-            <HBox spacing="10">
-               <Button text="Tính">
-                  <HBox.margin>
-                     <Insets />
-                  </HBox.margin>
-               </Button>
-               <Button text="Thêm khoản thu " />
-               <Button text="In danh sách" />
-               <Button text="Thu tiền" />
-               <Button text="Xóa" />
-               <padding>
-                  <Insets left="10.0" />
-               </padding>
-            </HBox>
-
-            <!-- Bảng dữ liệu -->
-            <TableView VBox.vgrow="ALWAYS">
-               <columns>
-                  <TableColumn prefWidth="86.0" text="Nhà" />
-                  <TableColumn minWidth="0.0" prefWidth="74.0" text="Phòng" />
-                  <TableColumn text="Tên khách" />
-                  <TableColumn prefWidth="107.0" text="Số tiền (VNĐ)" />
-                  <TableColumn prefWidth="92.0" text="Đã trả (VNĐ)" />
-                  <TableColumn prefWidth="103.0" text="Còn lại (VNĐ)" />
-               </columns>
-            </TableView>
+            </GridPane>
+            <Pagination fx:id="paymentTable" VBox.vgrow="ALWAYS" />
          </VBox>
-         <VBox fx:id="grantPermissionVBox" alignment="TOP_CENTER" prefHeight="516.0" prefWidth="753.3333333333334" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <VBox fx:id="grantPermissionVBox" alignment="TOP_CENTER" prefHeight="516.0" prefWidth="753.3333333333334" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                <Label styleClass="section-title" text="Quản trị">
                   <opaqueInsets>
@@ -134,7 +133,7 @@
                <Pagination fx:id="usersPagination" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
             </children>
          </VBox>
-         <VBox fx:id="createChargeVBox" alignment="TOP_CENTER" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <VBox fx:id="createChargeVBox" alignment="TOP_CENTER" spacing="10.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Label alignment="CENTER" styleClass="section-title" text="Danh sách khoản thu">
                <opaqueInsets>
                   <Insets bottom="10.0" left="10.0" right="10.0" />
@@ -143,17 +142,122 @@
                   <Font size="20.0" />
                </font>
             </Label>
-            <Label style="-fx-text-fill: #fcf7f7;" text="Lưu ý: Các dịch vụ phải được gán cho từng khách để khi tính tiền sẽ có tiền dịch vụ đó.">
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-            </Label>
-            <Button mnemonicParsing="false" onAction="#addServiceFee" prefHeight="25.0" text="Thêm khoản thu" />
+            <HBox alignment="CENTER">
+               <children>
+                  <TextField fx:id="serviceFeeFilterField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefColumnCount="30" promptText="Nhập tên khoản thu cần tìm" />
+                  <AnchorPane maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                  <Button mnemonicParsing="false" onAction="#addServiceFee" text="Tạo khoản thu" />
+               </children>
+            </HBox>
             <Pagination fx:id="serviceFeePagination" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
          </VBox>
-         <VBox fx:id="statisticsVBox" alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" prefHeight="516.0" prefWidth="753.3333333333334" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <VBox fx:id="homeVBox" layoutX="20.0" layoutY="20.0" prefHeight="516.0" prefWidth="739.0" spacing="20.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-               <Label styleClass="section-title" text="Thống kê khoản thu">
+               <Label fx:id="greetingLabel" styleClass="section-title" text="Xin chao, mekiet" />
+               <Separator prefWidth="200.0" />
+               <Label fx:id="generalLabel" layoutX="50.0" layoutY="50.0" styleClass="section-title" text="Tong quan thang 11" />
+               <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="dashboards">
+                  <children>
+                     <VBox maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                        <children>
+                           <MaterialIconView fill="WHITE" glyphName="ATTACH_MONEY" size="48" styleClass="dashboard-icon">
+                              <VBox.margin>
+                                 <Insets bottom="20.0" />
+                              </VBox.margin>
+                           </MaterialIconView>
+                           <Label styleClass="dashboard-title" text="Tổng số tiền đã thu" />
+                           <Label fx:id="totalMoneyRecv" layoutX="20.0" layoutY="20.0" styleClass="dashboard-value" text="1.000.000d" />
+                        </children>
+                        <styleClass>
+                           <String fx:value="dashboard" />
+                           <String fx:value="dashboard-1" />
+                        </styleClass>
+                        <padding>
+                           <Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
+                        </padding>
+                        <HBox.margin>
+                           <Insets />
+                        </HBox.margin>
+                     </VBox>
+                     <VBox layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                        <children>
+                           <MaterialIconView fill="WHITE" glyphName="MONEY_OFF" size="48" styleClass="dashboard-icon">
+                              <VBox.margin>
+                                 <Insets bottom="20.0" />
+                              </VBox.margin>
+                           </MaterialIconView>
+                           <Label styleClass="dashboard-title" text="Tổng số tiền chưa thu" />
+                           <Label fx:id="totalMoneyPending" layoutX="20.0" layoutY="20.0" styleClass="dashboard-value" text="1.000.000d" />
+                        </children>
+                        <styleClass>
+                           <String fx:value="dashboard" />
+                           <String fx:value="dashboard-2" />
+                        </styleClass>
+                        <padding>
+                           <Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
+                        </padding>
+                        <HBox.margin>
+                           <Insets />
+                        </HBox.margin>
+                     </VBox>
+                     <VBox layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                        <children>
+                           <MaterialIconView fill="WHITE" glyphName="ACCOUNT_CIRCLE" size="48" styleClass="dashboard-icon">
+                              <VBox.margin>
+                                 <Insets bottom="20.0" />
+                              </VBox.margin>
+                           </MaterialIconView>
+                           <Label styleClass="dashboard-title" text="Số nhân khẩu" />
+                           <Label fx:id="numCitizens" layoutX="20.0" layoutY="20.0" styleClass="dashboard-value" text="1.000.000d" />
+                        </children>
+                        <styleClass>
+                           <String fx:value="dashboard" />
+                           <String fx:value="dashboard-3" />
+                        </styleClass>
+                        <padding>
+                           <Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
+                        </padding>
+                        <HBox.margin>
+                           <Insets />
+                        </HBox.margin>
+                     </VBox>
+                     <VBox layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                        <children>
+                           <MaterialIconView fill="WHITE" glyphName="HOME" size="48" styleClass="dashboard-icon">
+                              <VBox.margin>
+                                 <Insets bottom="20.0" />
+                              </VBox.margin>
+                           </MaterialIconView>
+                           <Label styleClass="dashboard-title" text="Số hộ khẩu" />
+                           <Label fx:id="numRooms" layoutX="20.0" layoutY="20.0" styleClass="dashboard-value" text="1.000.000₫" />
+                        </children>
+                        <styleClass>
+                           <String fx:value="dashboard" />
+                           <String fx:value="dashboard-4" />
+                        </styleClass>
+                        <padding>
+                           <Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
+                        </padding>
+                     </VBox>
+                  </children></HBox>
+               <Separator prefWidth="200.0" />
+               <Label layoutX="50.0" layoutY="145.0" styleClass="section-title" text="Thống kê khoản thu" />
+               <LineChart fx:id="chart" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+                 <xAxis>
+                   <CategoryAxis side="BOTTOM" />
+                 </xAxis>
+                 <yAxis>
+                   <NumberAxis side="LEFT" />
+                 </yAxis>
+               </LineChart>
+            </children>
+            <padding>
+               <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+            </padding>
+         </VBox>
+         <VBox fx:id="unsupportedVBox" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="516.0" prefWidth="753.3333333333334" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+               <Label styleClass="section-title" text="Tính năng chưa được hoàn thiện">
                   <opaqueInsets>
                      <Insets />
                   </opaqueInsets>
@@ -161,12 +265,17 @@
                      <Insets bottom="5.0" />
                   </padding>
                </Label>
-               <Pagination fx:id="feePagination" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
             </children>
+            <padding>
+               <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
          </VBox>
          <BorderPane.margin>
             <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
          </BorderPane.margin>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
       </AnchorPane>
    </center>
 </BorderPane>

@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class RoleTableController {
     private static final Logger logger = LogManager.getLogger();
@@ -22,6 +23,10 @@ public class RoleTableController {
     @FXML
     private TableColumn<User, String> usernameCol;
     @FXML
+    private TableColumn<User, String> fullnameCol;
+    @FXML
+    private TableColumn<User, String> phoneNumCol;
+    @FXML
     private TableColumn<User, DatabaseConnection.Role> roleCol;
     private Runnable updateUsers;
 
@@ -29,19 +34,30 @@ public class RoleTableController {
         numCol.setCellValueFactory(feat -> new ReadOnlyObjectWrapper<>(feat.getValue()));
         usernameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         roleCol.setCellValueFactory(new PropertyValueFactory<>("role"));
-        roleCol.setCellFactory(ComboBoxTableCell.forTableColumn(Utils.readOnlyStringConverter(DatabaseConnection.Role::getDisplayName), FXCollections.observableList(DatabaseConnection.Role.nonAdminRoles())));
+        roleCol.setCellFactory(ComboBoxTableCell.forTableColumn(Utils.readOnlyStringConverter(DatabaseConnection.Role::getDisplayName), FXCollections.observableList(DatabaseConnection.Role.getNonAdminRoles())));
+        fullnameCol.setCellValueFactory(new PropertyValueFactory<>("fullname"));
+        phoneNumCol.setCellValueFactory(new PropertyValueFactory<>("phoneNum"));
+
         table.setContextMenu(new ContextMenu(
-                new MenuItem("Remove") {{
+                new MenuItem("Xóa") {{
                     setOnAction(e -> {
                         final var selected = table.getSelectionModel().getSelectedItems();
-                        for(final var user : selected) {
-                            try {
-                                DatabaseConnection.getInstance().removeUser(user.getId());
-                            } catch (SQLException ex) {
-                                logger.warn("Không thể xóa người dùng " + user.getId(), ex);
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                        alert.setTitle("Xác nhận xóa");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Bạn có chắc chắn muốn xóa người dùng " + selected.getFirst().getName() + " không?");
+
+                        Optional<ButtonType> result = alert.showAndWait();
+                        if(result.isPresent() && result.get() == ButtonType.OK) {
+                            for(final var user : selected) {
+                                try {
+                                    DatabaseConnection.getInstance().removeUser(user.getId());
+                                } catch (SQLException ex) {
+                                    logger.warn("Không thể xóa người dùng " + user.getId(), ex);
+                                }
                             }
+                            updateUsers.run();
                         }
-                        updateUsers.run();
                     });
                 }}
         ));

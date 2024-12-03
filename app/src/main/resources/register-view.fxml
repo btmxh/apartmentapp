@@ -1,52 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER" maxHeight="600.0" maxWidth="406.0" spacing="20.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.RegisterController">
+<HBox prefHeight="645.0" prefWidth="1120.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.RegisterController">
+   <children>
+      <VBox alignment="CENTER" spacing="20.0" HBox.hgrow="ALWAYS">
+         <children>
+            <ImageView fitWidth="400.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@logo.png" />
+               </image>
+            </ImageView>
+            <Label style="-fx-font-weight: bold; -fx-font-size: 36px; -fx-text-alignment: center;" text="Moon Apartment" textAlignment="CENTER" />
+         </children>
+      </VBox>
+      <VBox alignment="CENTER" prefWidth="480.0" spacing="20.0" styleClass="auth-page">
+         <padding>
+            <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+         </padding>
+         <children>
+            <Label styleClass="auth-title" text="Đăng kí" />
+            <VBox alignment="CENTER_LEFT" maxWidth="350.0" prefWidth="300.0" spacing="5">
+               <children>
+                  <Label text="Tên đăng nhập" />
+                  <TextField fx:id="usernameRegTextField" maxWidth="400.0" prefWidth="300" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER_LEFT" maxWidth="350.0" prefWidth="300.0" spacing="5">
+               <children>
+                  <Label text="Họ và tên" />
+                  <TextField fx:id="nameRegTextField" maxWidth="400.0" prefWidth="300" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER_LEFT" maxWidth="350.0" prefWidth="300.0" spacing="5">
+               <children>
+                  <Label text="Số điện thoại" />
+                  <TextField fx:id="phoneNumberRegTextField" maxWidth="400.0" prefWidth="300" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER_LEFT" maxWidth="350.0" prefWidth="300.0" spacing="5">
+               <children>
+                  <Label text="Mật khẩu" />
+                  <PasswordField fx:id="passwordRegPasswordField" maxWidth="400.0" prefWidth="300" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER_LEFT" maxWidth="350.0" prefWidth="300.0" spacing="5">
+               <children>
+                  <Label text="Nhập lại mật khẩu" />
+                  <PasswordField fx:id="repasswordRegPasswordField" maxWidth="400.0" prefWidth="300" />
+               </children>
+            </VBox>
+            <Button fx:id="signUpButton" defaultButton="true" prefWidth="200" styleClass="auth-button" stylesheets="@style.css" text="Tiếp tục" />
+            <Button fx:id="returnLogin" prefWidth="200" styleClass="auth-button" text="Bỏ qua" />
+         </children>
+      </VBox>
+   </children>
    <padding>
-      <Insets bottom="50" left="50" right="50" top="50" />
+      <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
    </padding>
-
-   <Label style="-fx-text-fill: #000000;" text="Đăng kí">
-      <font>
-         <Font name="System Bold" size="36.0" />
-      </font>
-   </Label>
-
-   <VBox alignment="CENTER_LEFT" maxWidth="350.0" prefWidth="300.0" spacing="5">
-      <Label text="Tên đăng nhập" />
-      <TextField fx:id="usernameRegTextField" maxWidth="400.0" prefWidth="300" />
-   </VBox>
-
-   <VBox alignment="CENTER_LEFT" maxWidth="350.0" prefWidth="300.0" spacing="5">
-      <children>
-         <Label text="Email" />
-         <TextField fx:id="emailRegTextField" maxWidth="400.0" prefWidth="300" />
-      </children>
-   </VBox>
-   <VBox alignment="CENTER_LEFT" layoutX="60.0" layoutY="201.0" maxWidth="350.0" prefWidth="300.0" spacing="5">
-      <children>
-         <Label text="Số điện thoại" />
-         <TextField fx:id="phoneNumberRegTextField" maxWidth="400.0" prefWidth="300" />
-      </children>
-   </VBox>
-
-   <VBox alignment="CENTER_LEFT" maxWidth="350.0" prefWidth="300.0" spacing="5">
-      <Label text="Mật khẩu" />
-      <PasswordField fx:id="passwordRegPasswordField" maxWidth="400.0" prefWidth="300" />
-   </VBox>
-
-   <VBox alignment="CENTER_LEFT" maxWidth="350.0" prefWidth="300.0" spacing="5">
-      <Label text="Nhập lại mật khẩu" />
-      <PasswordField fx:id="repasswordRegPasswordField" maxWidth="400.0" prefWidth="300" />
-   </VBox>
-
-   <Button fx:id="signUpButton" defaultButton="true" prefWidth="200" styleClass="auth-button" stylesheets="@style.css" text="Đăng kí" />
-   <Button fx:id="returnLogin" prefWidth="200" styleClass="auth-button" stylesheets="@style.css" text="Bỏ qua" />
-</VBox>
+</HBox>

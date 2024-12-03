@@ -1,8 +1,14 @@
 package io.github.btmxh.apartmentapp.filldb;
 
 import io.github.btmxh.apartmentapp.DatabaseConnection;
+import io.github.btmxh.apartmentapp.Payment;
 import io.github.btmxh.apartmentapp.ServiceFee;
-import java.util.Map;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -10,33 +16,64 @@ public class Main {
         db.createUsersTable();
         db.createServiceFeeTable();
         db.createPaymentsTable();
-        db.signup("admin", "admin@aa.com", "0123456789", "admin");
-        db.signup("b", "b@b.com", "0987654321", "resident");
-        db.signup("c", "c@c.com", "1234567890", "resident");
-        db.signup("d", "d@d.com", "2345678901", "resident");
-        db.signup("e", "e@e.com", "3456789012", "resident");
-        db.signup("f", "f@f.com", "4567890123", "resident");
-        db.signup("g", "g@g.com", "5678901234", "resident");
-        db.signup("h", "h@h.com", "6789012345", "resident");
-        db.signup("i", "i@i.com", "7890123456", "resident");
-        db.signup("j", "j@j.com", "8901234567", "resident");
-        db.signup("k", "k@k.com", "9012345678", "resident");
-        db.signup("l", "l@l.com", "0123445566", "resident");
-        db.signup("m", "m@m.com", "1234556677", "resident");
-        db.signup("n", "n@n.com", "2345667788", "resident");
-        db.signup("o", "o@o.com", "3456778899", "resident");
-        db.signup("p", "p@p.com", "4567889900", "resident");
-        db.signup("q", "q@q.com", "5678990011", "resident");
-        db.signup("r", "r@r.com", "6789001122", "resident");
-        db.signup("s", "s@s.com", "7890112233", "resident");
-        db.signup("t", "t@t.com", "8901223344", "resident");
-        db.signup("u", "u@u.com", "9012334455", "resident");
-        db.signup("v", "v@v.com", "0123445566", "resident");
-        db.signup("w", "w@w.com", "1234556677", "resident");
-        db.signup("x", "x@x.com", "2345667788", "resident");
-        db.signup("y", "y@y.com", "3456778899", "resident");
-        db.signup("z", "z@z.com", "4567889900", "resident");
-        db.updateServiceFee(new ServiceFee(), "Tien cuu hoc bong thang 11", new ServiceFee.Formula("1 + 1", Map.of()));
-        db.updateServiceFee(new ServiceFee(), "Tien cuu hoc bong thang 12", new ServiceFee.Formula("a + 1", Map.of("a", new ServiceFee.ConstFormulaTerminal(727))));
+        db.createCitizensTable();
+        db.signup("admin", "Trần Hùng Cường", "0984849343", "admin");
+        db.signup("huycan", "Vũ Quang Huy", "0984849343", "chimcut");
+        db.signup("dbl", "Đặng Bảo Long", "0984849343", "dabuolo");
+        db.signup("leducanh", "Lê Đức Anh",   "0987654321", "ducanh123");
+        db.signup("method123", "Phạm Nhật Minh",   "0987456321", "kizunamethod");
+        db.signup("hat", "Hoàng Anh Tú", "0987452981", "hatxulemicu");
+        final var fees = new ArrayList<ServiceFee>();
+        for(int m = 1; m <= LocalDate.now().getMonthValue(); ++m) {
+            fees.add(new ServiceFee(
+                    -1,
+                    "Tiền nhà tháng " + m,
+                    ThreadLocalRandom.current().nextInt(40, 50) * 100000L,
+                    LocalDate.of(LocalDate.now().getYear(), m, 25),
+                    LocalDate.of(LocalDate.now().getYear(), m + 1, 5)
+            ));
+            fees.add(new ServiceFee(
+                    -1,
+                    "Tiền nước tháng " + m,
+                    ThreadLocalRandom.current().nextInt(80, 120) * 1000L,
+                    LocalDate.of(LocalDate.now().getYear(), m, 25),
+                    LocalDate.of(LocalDate.now().getYear(), m + 1, 5)
+            ));
+            fees.add(new ServiceFee(
+                    -1,
+                    "Tiền gửi xe tháng " + m,
+                    ThreadLocalRandom.current().nextInt(100, 200) * 1000L,
+                    LocalDate.of(LocalDate.now().getYear(), m, 25),
+                    LocalDate.of(LocalDate.now().getYear(), m + 1, 5)
+            ));
+            fees.add(new ServiceFee(
+                    -1,
+                    "Tiền dịch vụ tháng " + m,
+                    ThreadLocalRandom.current().nextInt(100, 200) * 1000L,
+                    LocalDate.of(LocalDate.now().getYear(), m, 25),
+                    LocalDate.of(LocalDate.now().getYear(), m + 1, 5)
+            ));
+            fees.add(new ServiceFee(
+                    -1,
+                    "Tiền tình nguyện tháng " + m,
+                    -1,
+                    LocalDate.of(LocalDate.now().getYear(), m, 25),
+                    LocalDate.of(LocalDate.now().getYear(), m + 1, 5)
+            ));
+        }
+        for(final var fee : fees) {
+            db.updateServiceFee(fee, fee.getAmount());
+        }
+        final var set = new HashSet<String>();
+        for(final var citizen : CitizenRNG.generateCitizens()) {
+            db.addCitizenToDB(citizen);
+            set.add(citizen.getRoom());
+            if(citizen.isOwner()) {
+                for(final var fee : fees) if(fee.getStartDate().isAfter(citizen.getCreatedAt().toLocalDate()) && ThreadLocalRandom.current().nextBoolean()) {
+                    db.updatePayment(new Payment(-1, fee, citizen.getRoom(), fee.getAmount() <= 0? 100000 : -1, LocalDateTime.now(), null));
+                }
+            }
+        }
     }
+
 }
