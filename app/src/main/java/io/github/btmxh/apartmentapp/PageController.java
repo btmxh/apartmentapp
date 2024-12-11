@@ -28,7 +28,7 @@ import java.util.Objects;
 
 public class PageController {
 
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger(PageController.class);
 
     private static final int ROWS_PER_PAGE = 10;
 
