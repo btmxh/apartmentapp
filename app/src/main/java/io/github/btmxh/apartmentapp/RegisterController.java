@@ -16,7 +16,7 @@ import java.sql.SQLException;
 
 public class RegisterController {
 
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger(RegisterController.class);
 
     @FXML
     private PasswordField passwordRegPasswordField;

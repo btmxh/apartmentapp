@@ -19,9 +19,11 @@ jobs:
           java-version: '22'
           distribution: 'adopt'
 
-      # Build the JAR file
       - name: Build JAR
-        run: ./gradlew jar
+        run: ./gradlew :app:jar
+
+      - name: Remove signatures from JAR file
+        run: zip -d build/libs/*.jar 'META-INF/*.DSA' 'META-INF/*.RSA' 'META-INF/*.SF'
 
       # Create a GitHub Release with the JAR
       - name: Create Release

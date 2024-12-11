@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 public class RoleTableController {
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger(RoleTableController.class);
     @FXML
     private TableView<User> table;
     @FXML
