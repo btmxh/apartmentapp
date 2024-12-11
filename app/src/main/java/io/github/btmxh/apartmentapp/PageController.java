@@ -264,6 +264,7 @@ public class PageController {
         try {
             usersPagination.setPageCount(Math.max(1, (DatabaseConnection.getInstance().getNumNonAdminUsers() + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE));
             serviceFeePagination.setPageCount(Math.max((DatabaseConnection.getInstance().getNumServiceFees(serviceFeeFilterField.getText()) + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE, 1));
+            paymentTable.setPageCount(Math.max(1, (DatabaseConnection.getInstance().getNumPayments() + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE));
         } catch (SQLException e) {
             logger.warn("Lỗi khi thực hiện câu lệnh SQL", e);
             Announcement.show("Lỗi", "Không thể truy cập cơ sở dữ liệu!", e.getMessage());
