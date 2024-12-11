@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class ServiceFeeTableController {
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger(ServiceFeeTableController.class);
     @FXML
     private TableView<ServiceFee> table;
     @FXML

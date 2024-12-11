@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 
 public class AddPaymentController {
@@ -27,21 +28,28 @@ public class AddPaymentController {
     private Payment payment;
     private final SimpleObjectProperty<ServiceFee> fee = new SimpleObjectProperty<>(null);
     private final SimpleStringProperty room = new SimpleStringProperty(null);
+    private final SimpleStringProperty value = new SimpleStringProperty(null);
 
     public void initialize() {
-        roomField.setOnAction(e -> {
+        valueField.textProperty().bind(value);
+        roomField.textProperty().addListener((observable, oldValue, newValue) -> {
             try {
-                final var owner = DatabaseConnection.getInstance().getRoomOwner(roomField.getText());
+                String owner = DatabaseConnection.getInstance().getRoomOwner(newValue);
                 if (owner != null) {
                     roomOwner.setText(owner);
-                    room.set(roomField.getText());
-                    return;
+                    room.set(newValue); // Cập nhật giá trị phòng
+                    if (fee.get() != null && fee.get().getAmount() >= 0) {
+                        // Tính lại giá trị value
+                        int area = DatabaseConnection.getInstance().getRoomArea(newValue);
+                        value.set(String.valueOf(fee.get().getAmount() * area));
+                    }
+                } else {
+                    roomOwner.setText("");
+                    value.set(""); // Reset value nếu không tìm thấy roomOwner
                 }
-
-                Announcement.show("Lỗi", "Phòng chưa có nhân khẩu", "Hãy kiểm tra lại số phòng");
-                roomField.setText("");
             } catch (SQLException | IOException ex) {
-                throw new RuntimeException(ex);
+                logger.warn("Database error", ex);
+                Announcement.show("Lỗi", "Không thể lấy thông tin phòng", ex.getMessage());
             }
         });
     }
@@ -72,8 +80,10 @@ public class AddPaymentController {
                     return;
                 }
             }
+            else
+                amount *= DatabaseConnection.getInstance().getRoomArea(roomField.getText());
 
-            final var owner = DatabaseConnection.getInstance().getRoomOwner(roomField.getText());
+            final var owner = DatabaseConnection.getInstance().getRoomOwner(room.get());
             if (owner == null) {
                 Announcement.show("Lỗi", "Phòng chưa có nhân khẩu", "Hãy kiểm tra lại số phòng");
                 return;
@@ -86,7 +96,7 @@ public class AddPaymentController {
 
             payment.setFee(fee.get());
             payment.setRoomId(room.get());
-            payment.setAmount(fee.get().getAmount() <= 0 ? amount : -1);
+            payment.setAmount(amount);
 
             DatabaseConnection.getInstance().updatePayment(payment);
         } catch (SQLException | IOException ex) {
@@ -105,13 +115,13 @@ public class AddPaymentController {
                 feeName.setText(this.fee.get().getName());
                 valueField.setDisable(fee.get().getAmount() >= 0);
                 if(this.fee.get().getAmount() >= 0) {
-                    valueField.setText(String.valueOf(this.fee.get().getAmount()));
+                    value.set(String.valueOf(this.fee.get().getAmount() * DatabaseConnection.getInstance().getRoomArea(room.get())));
                 }
             } else {
                 feeName.setText("Chưa có khoản thu");
                 valueField.setDisable(true);
             }
-        } catch (IOException e) {
+        } catch (IOException | SQLException e) {
             throw new RuntimeException(e);
         }
     }

@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AddServiceFeeController {
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger(AddServiceFeeController.class);
     @FXML
     private CheckBox constAmount;
     @FXML

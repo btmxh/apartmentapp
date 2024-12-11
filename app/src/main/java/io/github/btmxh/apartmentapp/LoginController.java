@@ -14,7 +14,7 @@ import java.sql.SQLException;
 
 public class LoginController {
 
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger(LoginController.class);
 
     @FXML
     private TextField usernameTextField;
