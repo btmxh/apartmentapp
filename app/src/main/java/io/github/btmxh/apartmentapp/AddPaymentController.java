@@ -57,14 +57,18 @@ public class AddPaymentController {
     }
 
     private void selectRoom() {
-//        try {
-//            this.room.set(PickRoom.open(stage));
-//            if (this.room.get() != null) {
-//                roomLabel.setText(this.room.get());
-//            }
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
+        logger.debug("Loi o day");
+        try {
+            this.room.set(PickRoom.open(stage));
+            logger.debug("Loi o day 1");
+            if (this.room.get() != null) {
+                roomLabel.setText(this.room.get());
+            }
+        } catch (IOException e) {
+            logger.debug("Loi o day 2");
+            throw new RuntimeException(e);
+        }
+        logger.debug("Loi o day 3");
     }
 
     private void selectFee() {
