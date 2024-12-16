@@ -177,6 +177,25 @@ public class DatabaseConnection {
         }
     }
 
+    public void createRoomsTable() {
+        String sql = """
+                CREATE TABLE IF NOT EXISTS rooms (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    room VARCHAR(10) NOT NULL,
+                    owner_id INT NOT NULL DEFAULT 0,
+                    area FLOAT(1) NOT NULL,
+                    num_motors INT NOT NULL DEFAULT 0,
+                    num_cars INT NOT NULL DEFAULT 0
+                );
+                """;
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(sql);
+            logger.info("Đã tạo thành công bảng căn hộ!");
+        } catch (SQLException e) {
+            throw new RuntimeException("Không thể tạo bảng căn hộ trên cơ sở dữ liệu", e);
+        }
+    }
+
     public void addCitizenToDB(Citizen citizen) {
         String query = "INSERT INTO citizens (full_name, date_of_birth, gender, passport_id, nationality, room, is_owner, created_at, updated_at) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -244,6 +263,19 @@ public class DatabaseConnection {
             }
         }
         return fees;
+    }
+
+    public List<String> getRooms(String query) throws IOException, SQLException {
+        final var rooms = new ArrayList<String>();
+        try(var st = connection.prepareStatement("SELECT room FROM rooms WHERE INSTR(room, ?) != 0")) {
+            st.setString(1, query);
+            final var rs = st.executeQuery();
+            while(rs.next()) {
+                final var name = rs.getString("room");;
+                rooms.add(name);
+            }
+        }
+        return rooms;
     }
 
     public boolean paymentExists(int fee_id, String room) throws SQLException, IOException {
