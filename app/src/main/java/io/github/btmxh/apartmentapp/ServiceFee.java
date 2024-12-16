@@ -39,6 +39,12 @@ public class ServiceFee {
         this(id, name, amount, startDate, deadline, 0, 0);
     }
 
+    public ServiceFee(int id, String name, long amount) {
+        this.id = id;
+        this.name.set(name);
+        this.amount.set(amount);
+    }
+
     public int getNumReceived() {
         return numReceived;
     }

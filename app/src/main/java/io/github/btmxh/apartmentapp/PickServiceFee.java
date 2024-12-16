@@ -1,5 +1,6 @@
 package io.github.btmxh.apartmentapp;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.scene.Parent;
@@ -10,15 +11,20 @@ import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
 public class PickServiceFee {
+    private static final Logger logger = LogManager.getLogger(PickServiceFee.class);
+
     private Stage stage;
     public TextField searchBar;
     public ListView<ServiceFee> result;
     private ServiceFee ans;
+    private static String room;
 
     public void initialize() {
         result.setCellFactory(l -> new ListCell<>(){
@@ -47,13 +53,13 @@ public class PickServiceFee {
     }
 
     private void updateItems(String query) throws SQLException, IOException {
-        final var ans = DatabaseConnection.getInstance().getServiceFees(query, Integer.MAX_VALUE, 0);
+        final var ans = DatabaseConnection.getInstance().getUnchargedFees(query, room);
         result.setItems(FXCollections.observableArrayList(ans));
     }
 
     public void submit(ActionEvent actionEvent) {
         if(result.getSelectionModel().getSelectedItem() == null) {
-            Announcement.show("Lỗi", "Chưa chọn khoản phí nào", "Hãy nhấn chọn khoản phí trong bảng kết quả");
+            Announcement.show("Lỗi", "Chưa chọn khoản thu nào", "Hãy nhấn chọn khoản thu trong bảng kết quả");
             return;
         }
 
@@ -70,11 +76,16 @@ public class PickServiceFee {
         this.stage = stage;
     }
 
+    public static void setRoom(String name) {
+        room = name;
+    }
+
     public ServiceFee getAns() {
         return ans;
     }
 
     public static ServiceFee open(Window window) throws IOException {
+
         final var loader = Utils.fxmlLoader("/pick-service-fee.fxml");
         final Parent content = loader.load();
         final PickServiceFee controller = loader.getController();
@@ -85,6 +96,7 @@ public class PickServiceFee {
         stage.setScene(new Scene(content));
         controller.setStage(stage);
         stage.showAndWait();
+
 
         return controller.getAns();
     }

@@ -29,7 +29,6 @@ public class AddPaymentController {
 
     private Stage stage;
     private Payment payment;
-
     private final SimpleObjectProperty<ServiceFee> fee = new SimpleObjectProperty<>(null);
     private final SimpleStringProperty room = new SimpleStringProperty(null);
 
@@ -38,41 +37,39 @@ public class AddPaymentController {
         selectFeeButton.setOnAction(e -> selectFee());
         submitButton.setOnAction(e -> handleSubmit());
         cancelButton.setOnAction(e -> handleCancel());
-
-//        roomField.setOnAction(e -> {
-//            try {
-//                final var owner = DatabaseConnection.getInstance().getRoomOwner(roomField.getText());
-//                if (owner != null) {
-//                    roomOwner.setText(owner);
-//                    room.set(roomField.getText());
-//                    return;
-//                }
-//
-//                Announcement.show("Lỗi", "Phòng chưa có nhân khẩu", "Hãy kiểm tra lại số phòng");
-//                roomField.setText("");
-//            } catch (SQLException | IOException ex) {
-//                throw new RuntimeException(ex);
-//            }
-//        });
     }
 
     private void selectRoom() {
-        logger.debug("Loi o day");
         try {
-            this.room.set(PickRoom.open(stage));
-            logger.debug("Loi o day 1");
-            if (this.room.get() != null) {
-                roomLabel.setText(this.room.get());
+            String res = PickRoom.open(stage);
+            if (res != null && res.equals(room.get()) == false) {
+                fee.set(null);
+                feeLabel.setText("Chưa chọn khoản thu");
+                this.room.set(res);
+                roomLabel.setText(res);
+                PickServiceFee.setRoom(room.get());
             }
+            logger.info(room.get());
         } catch (IOException e) {
-            logger.debug("Loi o day 2");
             throw new RuntimeException(e);
         }
-        logger.debug("Loi o day 3");
     }
 
     private void selectFee() {
-
+        if (room.get() == null) {
+            Announcement.show("Lỗi", "Căn hộ chưa được chọn", "Vui lòng chọn căn hộ.");
+            return;
+        }
+        try {
+            ServiceFee res = PickServiceFee.open(stage);
+            if (res != null) {
+                fee.set(res);
+                feeLabel.setText(this.fee.get().getName());
+            }
+            logger.info(fee.get());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void handleSubmit() {

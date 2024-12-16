@@ -278,6 +278,23 @@ public class DatabaseConnection {
         return rooms;
     }
 
+    public List<ServiceFee> getUnchargedFees(String query, String room) throws IOException, SQLException {
+        final var fees = new ArrayList<ServiceFee>();
+        try(var st = connection.prepareStatement("SELECT fee_id, fee_name, fee_value FROM service_fees WHERE INSTR(fee_name, ?) != 0 AND fee_id NOT IN (SELECT fee_id FROM payments WHERE room = ?)")) {
+            st.setString(1, query);
+            st.setString(2, room);
+            final var rs = st.executeQuery();
+            while(rs.next()) {
+                final var id = rs.getInt("fee_id");
+                final var name = rs.getString("fee_name");
+                final var value = rs.getInt("fee_value");
+                final var fee = new ServiceFee(id, name, value);
+                fees.add(fee);
+            }
+        }
+        return fees;
+    }
+
     public boolean paymentExists(int fee_id, String room) throws SQLException, IOException {
         try(var st = connection.prepareStatement("SELECT * FROM payments WHERE fee_id = ? AND room = ?")) {
             st.setInt(1, fee_id);
