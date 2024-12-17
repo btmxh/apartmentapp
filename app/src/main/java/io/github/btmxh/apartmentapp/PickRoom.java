@@ -15,20 +15,21 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class PickRoom {
+
     private Stage stage;
     public TextField searchBar;
-    public ListView<String> result;
-    private String ans;
+    public ListView<Room> result;
+    private Room ans;
 
     public void initialize() {
         result.setCellFactory(l -> new ListCell<>(){
             @Override
-            protected void updateItem(String room, boolean b) {
+            protected void updateItem(Room room, boolean b) {
                 super.updateItem(room, b);
                 if(b || room == null) {
                     setText("");
                 } else {
-                    setText(room);
+                    setText(room.getName());
                 }
             }
         });
@@ -70,11 +71,11 @@ public class PickRoom {
         this.stage = stage;
     }
 
-    public String getAns() {
+    public Room getAns() {
         return ans;
     }
 
-    public static String open(Window window) throws IOException {
+    public static Room open(Window window) throws IOException {
         final var loader = Utils.fxmlLoader("/pick-room.fxml");
         final Parent content = loader.load();
         final PickRoom controller = loader.getController();

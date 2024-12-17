@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 
 public class AddPaymentController {
     private static final Logger logger = LogManager.getLogger(AddPaymentController.class);
+
     public Label roomLabel;
     public Button selectRoomButton;
     public Label feeLabel;
@@ -30,7 +31,7 @@ public class AddPaymentController {
     private Stage stage;
     private Payment payment;
     private final SimpleObjectProperty<ServiceFee> fee = new SimpleObjectProperty<>(null);
-    private final SimpleStringProperty room = new SimpleStringProperty(null);
+    private final SimpleObjectProperty<Room> room = new SimpleObjectProperty<>(null);
 
     public void initialize() {
         selectRoomButton.setOnAction(e -> selectRoom());
@@ -41,12 +42,15 @@ public class AddPaymentController {
 
     private void selectRoom() {
         try {
-            String res = PickRoom.open(stage);
-            if (res != null && res.equals(room.get()) == false) {
+            Room res = PickRoom.open(stage);
+            if (res != null) {
+                if (room.get() != null && res.getName().equals(room.get().getName())) {
+                    return;
+                }
                 fee.set(null);
                 feeLabel.setText("Chưa chọn khoản thu");
                 this.room.set(res);
-                roomLabel.setText(res);
+                roomLabel.setText(res.getName());
                 PickServiceFee.setRoom(room.get());
             }
             logger.info(room.get());
@@ -65,11 +69,16 @@ public class AddPaymentController {
             if (res != null) {
                 fee.set(res);
                 feeLabel.setText(this.fee.get().getName());
+                setValue();
             }
             logger.info(fee.get());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void setValue() {
+
     }
 
     public void handleSubmit() {

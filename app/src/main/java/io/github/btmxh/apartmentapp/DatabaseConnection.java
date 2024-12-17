@@ -70,6 +70,44 @@ public class DatabaseConnection {
         }
     }
 
+    public enum FeeType {
+        MANAGEMENT("Phí quản lý"),
+        SERVICE("Phí dịch vụ"),
+        PARKING("Phí gửi xe"),
+        DONATION("Phí đóng góp");
+
+        private final String displayName;
+
+        FeeType(String displayName) {
+            this.displayName = displayName;
+        }
+
+        public String getSQLName() {
+            return name();
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
+
+        public static String getFeeTypeEnum() {
+            String feeTypeEnum = Arrays.stream(FeeType.values())
+                    .map(FeeType::getSQLName)
+                    .map(type -> "'" + type + "'")
+                    .collect(Collectors.joining(", "));
+            return "Enum(" + feeTypeEnum + ")";
+        }
+
+        public static FeeType getFeeType(String sqlName) {
+            for (FeeType type : FeeType.values()) {
+                if (type.name().equals(sqlName)) {
+                    return type;
+                }
+            }
+            throw new IllegalArgumentException("Giá trị không xác định: " + sqlName);
+        }
+    }
+
     private DatabaseConnection() {
         try {
             Dotenv dotenv = Dotenv.load();
@@ -181,7 +219,7 @@ public class DatabaseConnection {
         String sql = """
                 CREATE TABLE IF NOT EXISTS rooms (
                     id INT AUTO_INCREMENT PRIMARY KEY,
-                    room VARCHAR(10) NOT NULL,
+                    name VARCHAR(10) NOT NULL,
                     owner_id INT NOT NULL DEFAULT 0,
                     area FLOAT(1) NOT NULL,
                     num_motors INT NOT NULL DEFAULT 0,
@@ -265,30 +303,38 @@ public class DatabaseConnection {
         return fees;
     }
 
-    public List<String> getRooms(String query) throws IOException, SQLException {
-        final var rooms = new ArrayList<String>();
-        try(var st = connection.prepareStatement("SELECT room FROM rooms WHERE INSTR(room, ?) != 0")) {
+    public List<Room> getRooms(String query) throws SQLException {
+        final var rooms = new ArrayList<Room>();
+        try(var st = connection.prepareStatement("SELECT id, name, owner_id, area, number_of_motors, number_of_cars FROM rooms WHERE INSTR(name, ?) != 0")) {
             st.setString(1, query);
             final var rs = st.executeQuery();
             while(rs.next()) {
-                final var name = rs.getString("room");;
-                rooms.add(name);
+                final var id = rs.getInt("id");
+                final var name = rs.getString("name");
+                final var ownerId = rs.getInt("owner_id");
+                final var area = rs.getFloat("area");
+                final var numMotors = rs.getInt("number_of_motors");
+                final var numCars = rs.getInt("number_of_cars");
+                final var room = new Room(id, name, ownerId, area, numMotors, numCars);
+                rooms.add(room);
             }
         }
         return rooms;
     }
 
-    public List<ServiceFee> getUnchargedFees(String query, String room) throws IOException, SQLException {
+    public List<ServiceFee> getUnchargedFees(String query, Room room) throws IOException, SQLException {
         final var fees = new ArrayList<ServiceFee>();
-        try(var st = connection.prepareStatement("SELECT fee_id, fee_name, fee_value FROM service_fees WHERE INSTR(fee_name, ?) != 0 AND fee_id NOT IN (SELECT fee_id FROM payments WHERE room = ?)")) {
+        try(var st = connection.prepareStatement("SELECT fee_id, fee_name, fee_value, type, value2 FROM service_fees WHERE INSTR(fee_name, ?) != 0 AND fee_id NOT IN (SELECT fee_id FROM payments WHERE room = ?)")) {
             st.setString(1, query);
-            st.setString(2, room);
+            st.setString(2, room.getName());
             final var rs = st.executeQuery();
             while(rs.next()) {
                 final var id = rs.getInt("fee_id");
+                final var type = FeeType.valueOf(rs.getString("type"));
                 final var name = rs.getString("fee_name");
-                final var value = rs.getInt("fee_value");
-                final var fee = new ServiceFee(id, name, value);
+                final var value1 = rs.getInt("fee_value");
+                final var value2 = rs.getLong("value2");
+                final var fee = new ServiceFee(id, type, name, value1, value2);
                 fees.add(fee);
             }
         }

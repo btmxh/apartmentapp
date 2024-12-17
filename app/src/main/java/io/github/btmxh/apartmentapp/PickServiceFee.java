@@ -24,7 +24,7 @@ public class PickServiceFee {
     public TextField searchBar;
     public ListView<ServiceFee> result;
     private ServiceFee ans;
-    private static String room;
+    private static Room room;
 
     public void initialize() {
         result.setCellFactory(l -> new ListCell<>(){
@@ -76,8 +76,8 @@ public class PickServiceFee {
         this.stage = stage;
     }
 
-    public static void setRoom(String name) {
-        room = name;
+    public static void setRoom(Room room) {
+        PickServiceFee.room = room;
     }
 
     public ServiceFee getAns() {
