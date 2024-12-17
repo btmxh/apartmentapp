@@ -20,7 +20,6 @@ public class PaymentTableController {
         noCol.setCellValueFactory(feat -> new ReadOnlyObjectWrapper<>(feat.getValue()));
         nameCol.setCellValueFactory(f -> f.getValue().getFee().name());
         roomCol.setCellValueFactory(f -> f.getValue().roomIdProperty());
-        amountCol.setCellValueFactory(f -> new ReadOnlyObjectWrapper<>(f.getValue().getAmount() <= 0? f.getValue().getFee().getAmount() : f.getValue().getAmount()));
         roomOwnerCol.setCellValueFactory(f -> f.getValue().roomOwnerProperty());
     }
 

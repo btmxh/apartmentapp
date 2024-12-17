@@ -71,7 +71,6 @@ public class LoginController {
             }
         }
     }
-
     @FXML
     public void initialize() {
         // Add a button click handler to navigate to the registration page

@@ -101,7 +101,7 @@ public class ServiceFeeTableController {
         final var row = e.getRowValue();
         try {
             row.setName(e.getNewValue());
-            DatabaseConnection.getInstance().updateServiceFee(row, row.getAmount());
+            DatabaseConnection.getInstance().updateServiceFee(row, row.getValue1(), row.getValue2());
         } catch (SQLException | IOException ex) {
             row.setName(e.getOldValue());
             logger.warn("Lỗi khi thực hiện câu lệnh SQL", ex);

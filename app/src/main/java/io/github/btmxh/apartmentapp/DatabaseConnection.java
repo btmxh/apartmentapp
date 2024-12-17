@@ -123,11 +123,13 @@ public class DatabaseConnection {
     public void createServiceFeeTable() {
         String sql = """
                 CREATE TABLE IF NOT EXISTS service_fees (
-                fee_id INT PRIMARY KEY AUTO_INCREMENT,
-                fee_name VARCHAR(50) NOT NULL,
-                fee_value INT NOT NULL,
-                fee_start_date DATE NOT NULL,
-                fee_deadline DATE NOT NULL);
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                type VARCHAR(50) NOT NULL,
+                name VARCHAR(50) NOT NULL,
+                value1 int NOT NULL,
+                value2 int NOT NULL,
+                start_date DATE NOT NULL,
+                end_date DATE NOT NULL);
                 """;
         try (Statement statement = connection.createStatement()) {
             statement.execute(sql);
@@ -136,6 +138,7 @@ public class DatabaseConnection {
             throw new RuntimeException("Không thể tạo bảng phí dịch vụ trên cơ sở dữ liệu", e);
         }
     }
+
 
     public void createPaymentsTable() {
         String sql = """
@@ -214,19 +217,21 @@ public class DatabaseConnection {
 
     public List<ServiceFee> getServiceFees(String query, int limit, int offset) throws IOException, SQLException {
         final var fees = new ArrayList<ServiceFee>();
-        try(var st = connection.prepareStatement("SELECT fee_id, fee_name, fee_value, fee_start_date, fee_deadline FROM service_fees WHERE INSTR(fee_name, ?) != 0 LIMIT ? OFFSET ?")) {
-            st.setInt(2, limit);
+        try(var st = connection.prepareStatement("SELECT id, type, name, value1, value2, start_date, end_date FROM service_fees WHERE INSTR(name, ?) != 0 LIMIT ? OFFSET ?")) {
             st.setInt(3, offset);
+            st.setInt(2, limit);
             st.setString(1, query);
             final var rs = st.executeQuery();
             while(rs.next()) {
-                final var id = rs.getInt("fee_id");
-                final var name = rs.getString("fee_name");
-                final var value = rs.getInt("fee_value");
-                final var startDate = rs.getDate("fee_start_date").toLocalDate();
-                final var deadline = rs.getDate("fee_deadline").toLocalDate();
+                final var id = rs.getInt("id");
+                final var name = rs.getString("name");
+                final var type = rs.getString("type");
+                final var value1 = rs.getInt("value1");
+                final var value2 = rs.getInt("value2");
+                final var startDate = rs.getDate("start_date").toLocalDate();
+                final var endDate = rs.getDate("end_date").toLocalDate();
                 int received, pending;
-                try(var st2 = connection.prepareStatement("SELECT COUNT(*) FROM payments WHERE fee_id = ?")) {
+                try(var st2 = connection.prepareStatement("SELECT COUNT(*) FROM payments WHERE id = ?")) {
                     st2.setInt(1, id);
                     var r2 = st2.executeQuery();
                     r2.next();
@@ -239,7 +244,7 @@ public class DatabaseConnection {
                     pending = r2.getInt(1);
                 }
 
-                final var fee = new ServiceFee(id, name, value, startDate, deadline, received, pending);
+                final var fee = new ServiceFee(id, name, type, value1, value2, startDate, endDate, received, pending);
                 fees.add(fee);
             }
         }
@@ -247,7 +252,7 @@ public class DatabaseConnection {
     }
 
     public boolean paymentExists(int fee_id, String room) throws SQLException, IOException {
-        try(var st = connection.prepareStatement("SELECT * FROM payments WHERE fee_id = ? AND room = ?")) {
+        try(var st = connection.prepareStatement("SELECT * FROM payments WHERE id = ? AND room = ?")) {
             st.setInt(1, fee_id);
             st.setString(2, room);
             final var rs = st.executeQuery();
@@ -257,7 +262,7 @@ public class DatabaseConnection {
 
     public void updatePayment(Payment p) throws SQLException, IOException {
         if(p.getId() == Payment.NULL_ID) {
-            try(var st = connection.prepareStatement("INSERT INTO payments (fee_id, room, amount) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+            try(var st = connection.prepareStatement("INSERT INTO payments (id, room, amount) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
                 st.setInt(1, p.getFee().getId());
                 st.setString(2, p.getRoomId());
                 st.setLong(3, p.getAmount());
@@ -271,7 +276,7 @@ public class DatabaseConnection {
                 }
             }
         } else {
-            try(var st = connection.prepareStatement("UPDATE payments SET fee_id = ?, room = ?, amount = ? WHERE id = ?")) {
+            try(var st = connection.prepareStatement("UPDATE payments SET id = ?, room = ?, amount = ? WHERE id = ?")) {
                 st.setInt(1, p.getFee().getId());
                 st.setString(2, p.getRoomId());
                 st.setLong(3, p.getAmount());
@@ -293,13 +298,14 @@ public class DatabaseConnection {
         }
     }
 
-    public void updateServiceFee(ServiceFee fee, long oldAmount) throws SQLException, IOException {
+    public void updateServiceFee(ServiceFee fee, long oldValue1, long oldValue2) throws SQLException, IOException {
         if(fee.getId() == ServiceFee.NULL_ID) {
-            try(var st = connection.prepareStatement("INSERT INTO service_fees (fee_name, fee_value, fee_start_date, fee_deadline) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+            try(var st = connection.prepareStatement("INSERT INTO service_fees (name, value1, value2, start_date, end_date) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
                 st.setString(1, fee.getName());
-                st.setLong(2, fee.getAmount());
-                st.setDate(3, Date.valueOf(fee.getStartDate()));
-                st.setDate(4, Date.valueOf(fee.getDeadline()));
+                st.setLong(2, fee.getValue1());
+                st.setLong(3, fee.getValue2());
+                st.setDate(4, Date.valueOf(fee.getStartDate()));
+                st.setDate(5, Date.valueOf(fee.getEndDate()));
 
                 if(st.executeUpdate() == 0) {
                     throw new RuntimeException("Lỗi khi chèn phí dịch vụ vào DB");
@@ -310,19 +316,29 @@ public class DatabaseConnection {
                 }
             }
         } else {
-            if(oldAmount != fee.getAmount()) {
-                try(var st = connection.prepareStatement("UPDATE payments SET amount = ? WHERE fee_id = ?")) {
-                    st.setLong(1, oldAmount);
+            if(oldValue1 != fee.getValue1()) {
+                try(var st = connection.prepareStatement("UPDATE payments SET value1 = ? WHERE id = ?")) {
+                    st.setLong(1, oldValue1);
                     st.setInt(2, fee.getId());
                     st.executeUpdate();
                 }
             }
-            try(var st = connection.prepareStatement("UPDATE service_fees SET fee_name = ?, fee_value = ?, fee_start_date = ?, fee_deadline = ? WHERE fee_id = ?")) {
+
+            if (oldValue2 != fee.getValue2()) {
+                try(var st = connection.prepareStatement("UPDATE payments SET value2 = ? WHERE id = ?")) {
+                    st.setLong(1, oldValue2);
+                    st.setInt(2, fee.getId());
+                    st.executeUpdate();
+                }
+            }
+
+            try(var st = connection.prepareStatement("UPDATE service_fees SET name = ?, value1 = ?, value2 = ?, start_date = ?, end_date = ? WHERE id = ?")) {
                 st.setString(1, fee.getName());
-                st.setLong(2, fee.getAmount());
-                st.setDate(3, Date.valueOf(fee.getStartDate()));
-                st.setDate(4, Date.valueOf(fee.getDeadline()));
-                st.setInt(5, fee.getId());
+                st.setLong(2, fee.getValue1());
+                st.setLong(3, fee.getValue2());
+                st.setDate(4, Date.valueOf(fee.getStartDate()));
+                st.setDate(5, Date.valueOf(fee.getEndDate()));
+                st.setInt(6, fee.getId());
                 st.executeUpdate();
             }
         }
@@ -376,78 +392,8 @@ public class DatabaseConnection {
 
     public long[] getDashboardValues() throws SQLException {
         return new long[]{
-            calc("SELECT SUM(IF(fee_value > amount, fee_value, amount)) FROM payments INNER JOIN service_fees on payments.fee_id = service_fees.fee_id"),
-            calc("SELECT SUM(IF(f.fee_value > 0, f.fee_value, 0) * (SELECT COUNT(*) FROM citizens c WHERE f.fee_start_date >= c.created_at AND c.is_owner)) FROM service_fees f"),
-            calc("SELECT COUNT(1) FROM citizens"),
-            calc("SELECT COUNT(DISTINCT room) FROM citizens"),
+            1, 1, 1, 1
         };
-    }
-
-    public ObservableList<XYChart.Series<String, Integer>> getChartData() throws SQLException {
-        String sql = """
-                SELECT
-                    YEAR(f.fee_deadline) AS year,
-                    MONTH(f.fee_deadline) AS month,
-                    SUM(f.fee_value * (SELECT COUNT(*) FROM citizens c WHERE f.fee_start_date >= c.created_at AND c.is_owner)) AS pending
-                FROM
-                    service_fees f
-                WHERE
-                    f.fee_value > 0
-                GROUP BY
-                    YEAR(f.fee_deadline),
-                    MONTH(f.fee_deadline)
-                ORDER BY
-                    year, month
-                LIMIT 10;
-                """;
-
-
-        var list = FXCollections.<XYChart.Series<String, Integer>>observableArrayList();
-        try(final var st = connection.createStatement()) {
-            final var rs = st.executeQuery(sql);
-            final ObservableList<XYChart.Data<String, Integer>> data = FXCollections.observableArrayList();
-            while(rs.next()) {
-                var ym = YearMonth.of(rs.getInt("year"), rs.getInt("month")).toString();
-                int pending = (int) rs.getLong("pending");
-                data.add(new XYChart.Data<>(ym, pending));
-            }
-            final var series = new XYChart.Series<String, Integer>();
-            series.setData(data);
-            series.setName("Tổng số tiền cần thu");
-            list.add(series);
-        }
-
-        sql = """
-                SELECT
-                    YEAR(f.fee_deadline) AS year,
-                    MONTH(f.fee_deadline) AS month,
-                    SUM(IF(f.fee_value > p.amount, f.fee_value, p.amount)) AS received
-                FROM
-                    payments p
-                INNER JOIN
-                    service_fees f ON p.fee_id = f.fee_id
-                GROUP BY
-                    YEAR(f.fee_deadline),
-                    MONTH(f.fee_deadline)
-                ORDER BY
-                    year, month
-                LIMIT 10;
-                """;
-        try(final var st = connection.createStatement()) {
-            final var rs = st.executeQuery(sql);
-            final ObservableList<XYChart.Data<String, Integer>> data = FXCollections.observableArrayList();
-            while(rs.next()) {
-                var ym = YearMonth.of(rs.getInt("year"), rs.getInt("month")).toString();
-                int received = (int) rs.getLong("received");
-                data.add(new XYChart.Data<>(ym, received));
-            }
-            final var series = new XYChart.Series<String, Integer>();
-            series.setData(data);
-            series.setName("Tổng số tiền đã thu");
-            list.add(series);
-        }
-
-        return list;
     }
 
     public String getRole(String username) throws SQLException {
@@ -522,10 +468,22 @@ public class DatabaseConnection {
     }
 
     public int getNumServiceFees(String search) throws SQLException {
-        String query = "SELECT COUNT(*) FROM service_fees WHERE INSTR(fee_name, ?) != 0";
+        String query = "SELECT COUNT(*) FROM service_fees WHERE INSTR(name, ?) != 0";
         try (PreparedStatement s = connection.prepareStatement(query)) {
             s.setString(1, search);
             ResultSet rs = s.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            } else {
+                return 0;
+            }
+        }
+    }
+
+    public int getNumPayment() throws SQLException {
+        String query = "SELECT COUNT(*) FROM payments";
+        try (Statement s = connection.createStatement();
+             ResultSet rs = s.executeQuery(query)) {
             if (rs.next()) {
                 return rs.getInt(1);
             } else {
@@ -542,58 +500,9 @@ public class DatabaseConnection {
     }
 
     public void removeServiceFee(int id) throws SQLException {
-        try(var st = connection.prepareStatement("DELETE FROM service_fees WHERE fee_id = ?")) {
+        try(var st = connection.prepareStatement("DELETE FROM service_fees WHERE id = ?")) {
             st.setInt(1, id);
             st.executeUpdate();
         }
-    }
-
-    public List<Payment> getPayments(String feeQ, String roomQ, int limit, int offset) throws SQLException {
-        var list = new ArrayList<Payment>();
-        try(var st = connection.prepareStatement("""
-                SELECT
-                    payments.*,
-                    service_fees.*,
-                    citizens.full_name AS owner_name
-                FROM
-                    payments
-                JOIN
-                    citizens
-                ON
-                    payments.room = citizens.room
-                JOIN
-                    service_fees
-                ON
-                    payments.fee_id = service_fees.fee_id
-                WHERE
-                    INSTR(payments.room, ?) != 0
-                    AND INSTR(service_fees.fee_name, ?) != 0
-                    AND citizens.is_owner = TRUE
-                LIMIT ? OFFSET ?;
-                """)) {
-            st.setString(1, roomQ);
-            st.setString(2, feeQ);
-            st.setInt(3, limit);
-            st.setInt(4, offset);
-            final var rs = st.executeQuery();
-            while(rs.next()) {
-                list.add(new Payment(
-                        rs.getInt("payments.id"),
-                        new ServiceFee(
-                                rs.getInt("service_fees.fee_id"),
-                                rs.getString("service_fees.fee_name"),
-                                rs.getLong("service_fees.fee_value"),
-                                rs.getDate("service_fees.fee_start_date").toLocalDate(),
-                                rs.getDate("service_fees.fee_deadline").toLocalDate()
-                        ),
-                        rs.getString("payments.room"),
-                        rs.getLong("payments.amount"),
-                        rs.getTimestamp("payments.commit_timestamp").toLocalDateTime(),
-                        rs.getString("owner_name")
-                ));
-            }
-        }
-
-        return list;
     }
 }

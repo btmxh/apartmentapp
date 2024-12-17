@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import org.codehaus.commons.compiler.CompileException;
 
 import java.io.IOException;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
@@ -155,13 +156,6 @@ public class PageController {
         feeSearch.textProperty().addListener((o, old, ne_) -> updatePayments());
         roomSearch.textProperty().addListener((o, old, ne_) -> updatePayments());
         generalLabel.setText("Tổng quan tháng " + LocalDateTime.now().getMonthValue());
-
-        try {
-            chart.setData(DatabaseConnection.getInstance().getChartData());
-        } catch (SQLException e) {
-            logger.error("Unable to retrieve chart stats", e);
-            Announcement.show("Lỗi", "Không thể lấy giá trị bảng", "Vui lòng kiểm tra kết nối của bạn.");
-        }
     }
 
     private void handleLogout() {
@@ -242,27 +236,16 @@ public class PageController {
 
     private TableView<Payment> createPaymentTable(int pageIndex) {
         DatabaseConnection dc = DatabaseConnection.getInstance();
-        try {
-            var loader = new FXMLLoader(Objects.requireNonNull(PageController.class.getResource("/payment-table.fxml")));
-            int start = pageIndex * ROWS_PER_PAGE;
-            var fees = dc.getPayments(feeSearch.getText(), roomSearch.getText(), ROWS_PER_PAGE, pageIndex * ROWS_PER_PAGE);
-            TableView<Payment> table = loader.load();
-            PaymentTableController controller = loader.getController();
-            controller.setPage(start, FXCollections.observableArrayList(fees));
-            return table;
-        } catch (SQLException e) {
-            logger.warn("Lỗi khi thực thi lệnh SQL", e);
-            Announcement.show("Lỗi", "Không thể lấy được danh sách phí dịch vụ!", "Lỗi kết nối cơ sở dữ liệu: " + e.getMessage());
-        } catch (IOException e) {
-            logger.fatal("Lỗi khi tải tệp FXML", e);
-            Announcement.show("Lỗi", "Không thể tải bảng phí dịch vụ FXML!", "Lỗi chi tiết: " + e.getMessage());
-        }
+        var loader = new FXMLLoader(Objects.requireNonNull(PageController.class.getResource("/payment-table.fxml")));
+        int start = pageIndex * ROWS_PER_PAGE;
+        PaymentTableController controller = loader.getController();
         return null;
     }
 
     private void setNumPages() {
         try {
             usersPagination.setPageCount(Math.max(1, (DatabaseConnection.getInstance().getNumNonAdminUsers() + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE));
+            paymentTable.setPageCount(Math.max(1, (DatabaseConnection.getInstance().getNumPayment() + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE));
             serviceFeePagination.setPageCount(Math.max((DatabaseConnection.getInstance().getNumServiceFees(serviceFeeFilterField.getText()) + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE, 1));
         } catch (SQLException e) {
             logger.warn("Lỗi khi thực hiện câu lệnh SQL", e);

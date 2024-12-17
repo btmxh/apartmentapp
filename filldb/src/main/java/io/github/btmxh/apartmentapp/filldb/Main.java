@@ -32,47 +32,41 @@ public class Main {
             final var m = ym.getMonthValue();
             fees.add(new ServiceFee(
                     -1,
-                    "Tiền nhà tháng " + m,
+                    "Tiền nhà tháng " + m, "",
                     ThreadLocalRandom.current().nextInt(40, 50) * 100000L,
+                    0,
+                    ym.atDay(25), nextYm.atDay(5), 0, 0
+            ));
+            fees.add(new ServiceFee(
+                    -1,
+                    "Tiền nước tháng " + m," ",
+                    ThreadLocalRandom.current().nextInt(80, 120) * 1000L, 0,
                     ym.atDay(25), nextYm.atDay(5)
             ));
             fees.add(new ServiceFee(
                     -1,
-                    "Tiền nước tháng " + m,
-                    ThreadLocalRandom.current().nextInt(80, 120) * 1000L,
+                    "Tiền gửi xe tháng " + m,"",
+                    ThreadLocalRandom.current().nextInt(100, 200) * 1000L, 0,
                     ym.atDay(25), nextYm.atDay(5)
             ));
             fees.add(new ServiceFee(
                     -1,
-                    "Tiền gửi xe tháng " + m,
-                    ThreadLocalRandom.current().nextInt(100, 200) * 1000L,
-                    ym.atDay(25), nextYm.atDay(5)
-            ));
-            fees.add(new ServiceFee(
-                    -1,
-                    "Tiền dịch vụ tháng " + m,
-                    ThreadLocalRandom.current().nextInt(100, 200) * 1000L,
+                    "Tiền dịch vụ tháng " + m,"",
+                    ThreadLocalRandom.current().nextInt(100, 200) * 1000L, 0,
                     ym.atDay(25), nextYm.atDay(5)
             ));
             fees.add(new ServiceFee(
                     -1,
                     "Tiền tình nguyện tháng " + m,
-                    -1,
+                    "",-1, 0,
                     ym.atDay(25), nextYm.atDay(5)
             ));
         }
-        for(final var fee : fees) {
-            db.updateServiceFee(fee, fee.getAmount());
-        }
+
         final var set = new HashSet<String>();
         for(final var citizen : CitizenRNG.generateCitizens()) {
             db.addCitizenToDB(citizen);
             set.add(citizen.getRoom());
-            if(citizen.isOwner()) {
-                for(final var fee : fees) if(fee.getStartDate().isAfter(citizen.getCreatedAt().toLocalDate()) && ThreadLocalRandom.current().nextBoolean()) {
-                    db.updatePayment(new Payment(-1, fee, citizen.getRoom(), fee.getAmount() <= 0? 100000 : -1, LocalDateTime.now(), null));
-                }
-            }
         }
     }
 

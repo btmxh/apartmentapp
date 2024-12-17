@@ -62,17 +62,6 @@ public class AddPaymentController {
                 return;
             }
 
-            long amount = fee.get().getAmount();
-            if (amount < 0) {
-                try {
-                    amount = Long.parseLong(valueField.getText().trim());
-                } catch (NumberFormatException ex) {
-                    logger.warn("Unable to parse fee amount", ex);
-                    Announcement.show("Giá trị không hợp lệ", "Số tiền không đúng định dạng", "Vui lòng nhập số tiền hợp lệ (chỉ bao gồm số).");
-                    return;
-                }
-            }
-
             final var owner = DatabaseConnection.getInstance().getRoomOwner(roomField.getText());
             if (owner == null) {
                 Announcement.show("Lỗi", "Phòng chưa có nhân khẩu", "Hãy kiểm tra lại số phòng");
@@ -86,7 +75,6 @@ public class AddPaymentController {
 
             payment.setFee(fee.get());
             payment.setRoomId(room.get());
-            payment.setAmount(fee.get().getAmount() <= 0 ? amount : -1);
 
             DatabaseConnection.getInstance().updatePayment(payment);
         } catch (SQLException | IOException ex) {
@@ -103,10 +91,6 @@ public class AddPaymentController {
             this.fee.set(PickServiceFee.open(stage));
             if (this.fee.get() != null) {
                 feeName.setText(this.fee.get().getName());
-                valueField.setDisable(fee.get().getAmount() >= 0);
-                if(this.fee.get().getAmount() >= 0) {
-                    valueField.setText(String.valueOf(this.fee.get().getAmount()));
-                }
             } else {
                 feeName.setText("Chưa có khoản thu");
                 valueField.setDisable(true);

@@ -20,23 +20,27 @@ public class ServiceFee {
     public static final int NULL_ID = -1;
     private int id = NULL_ID;
     private final SimpleStringProperty name = new SimpleStringProperty();
-    private final SimpleLongProperty amount = new SimpleLongProperty();
+    private final SimpleStringProperty type = new SimpleStringProperty();
+    private final SimpleLongProperty value1 = new SimpleLongProperty();
+    private final SimpleLongProperty value2 = new SimpleLongProperty();
     private final SimpleObjectProperty<LocalDate> startDate = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<LocalDate> deadline = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<LocalDate> endDate = new SimpleObjectProperty<>();
     private int numReceived, numPending;
 
-    public ServiceFee(int id, String name, long amount, LocalDate startDate, LocalDate deadline, int numReceived, int numPending) {
+    public ServiceFee(int id, String name, String type, long value1, long value2, LocalDate startDate, LocalDate endDate, int numReceived, int numPending) {
         this.id = id;
         this.numReceived = numReceived;
         this.numPending = numPending;
         this.name.set(name);
-        this.amount.set(amount);
+        this.type.set(type);
+        this.value1.set(value1);
+        this.value2.set(value2);
         this.startDate.set(startDate);
-        this.deadline.set(deadline);
+        this.endDate.set(endDate);
     }
 
-    public ServiceFee(int id, String name, long amount, LocalDate startDate, LocalDate deadline) {
-        this(id, name, amount, startDate, deadline, 0, 0);
+    public ServiceFee(int id, String name, String type, long value1, long value2, LocalDate startDate, LocalDate endDate) {
+        this(id, name, type, value1, value2, startDate, endDate, 0, 0);
     }
 
     public int getNumReceived() {
@@ -55,6 +59,14 @@ public class ServiceFee {
         this.id = id;
     }
 
+    public void setType(String type) {
+        this.type.set(type);
+    }
+
+    public SimpleStringProperty type() {
+        return type;
+    }
+
     public String getName() {
         return name.get();
     }
@@ -67,17 +79,28 @@ public class ServiceFee {
         return name;
     }
 
-    public long getAmount() {
-        return amount.get();
+    public long getValue1() {
+        return value1.get();
     }
 
-    public void setAmount(long value) {
-        amount.set(value);
+    public long getValue2() {
+        return value2.get();
     }
 
-    public SimpleLongProperty amount() {
-        return amount;
+    public void setValue1(long value1) {
+        this.value1.set(value1);
     }
+
+    public void setValue2(long value2) {
+        this.value2.set(value2);
+    }
+
+    public SimpleLongProperty value1() {
+        return value1;
+    }
+    public SimpleLongProperty value2() {
+        return value2;
+    };
 
     public LocalDate getStartDate() {
         return startDate.get();
@@ -91,16 +114,16 @@ public class ServiceFee {
         this.startDate.set(date);
     }
 
-    public void setDeadline(LocalDate date) {
-        this.deadline.set(date);
+    public void setEndDate(LocalDate date) {
+        this.endDate.set(date);
     }
 
-    public LocalDate getDeadline() {
-        return deadline.get();
+    public LocalDate getEndDate() {
+        return endDate.get();
     }
 
-    public SimpleObjectProperty<LocalDate> deadline() {
-        return deadline;
+    public SimpleObjectProperty<LocalDate> endDate() {
+        return endDate;
     }
 
     public static final class Formula implements FormulaTerminal {
