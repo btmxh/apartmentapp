@@ -1,5 +1,6 @@
 package io.github.btmxh.apartmentapp;
 
+import io.github.btmxh.apartmentapp.DatabaseConnection.FeeType;
 import javafx.beans.property.*;
 import javafx.event.ActionEvent;
 import javafx.scene.Parent;
@@ -49,11 +50,12 @@ public class AddPaymentController {
                 }
                 fee.set(null);
                 feeLabel.setText("Chưa chọn khoản thu");
+                valueTextField.setDisable(true);
+                valueTextField.setText("");
                 this.room.set(res);
                 roomLabel.setText(res.getName());
                 PickServiceFee.setRoom(room.get());
             }
-            logger.info(room.get());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -67,18 +69,33 @@ public class AddPaymentController {
         try {
             ServiceFee res = PickServiceFee.open(stage);
             if (res != null) {
+                if (fee.get() != null && res.getName().equals(fee.get().getName())) {
+                    return;
+                }
+                valueTextField.setDisable(true);
+                valueTextField.setText("");
                 fee.set(res);
                 feeLabel.setText(this.fee.get().getName());
-                setValue();
+
+                switch(fee.get().getType()) {
+                    case FeeType.MANAGEMENT, FeeType.SERVICE:
+                        //payment.setAmount((long) (fee.get().getValue1() * room.get().getArea()));
+                        valueTextField.setText(String.valueOf((long) (fee.get().getValue1() * room.get().getArea())));
+                        break;
+
+                    case FeeType.PARKING:
+                        //payment.setAmount(fee.get().getValue1() * room.get().getNumMotors() + fee.get().getValue2() * room.get().getNumCars());
+                        valueTextField.setText(String.valueOf(fee.get().getValue1() * room.get().getNumMotors() + fee.get().getValue2() * room.get().getNumCars()));
+                        break;
+
+                    case FeeType.DONATION:
+                        valueTextField.setDisable(false);
+                        break;
+                }
             }
-            logger.info(fee.get());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private void setValue() {
-
     }
 
     public void handleSubmit() {

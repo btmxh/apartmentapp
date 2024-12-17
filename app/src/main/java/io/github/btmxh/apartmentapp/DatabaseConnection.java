@@ -332,7 +332,7 @@ public class DatabaseConnection {
                 final var id = rs.getInt("fee_id");
                 final var type = FeeType.valueOf(rs.getString("type"));
                 final var name = rs.getString("fee_name");
-                final var value1 = rs.getInt("fee_value");
+                final var value1 = rs.getLong("fee_value");
                 final var value2 = rs.getLong("value2");
                 final var fee = new ServiceFee(id, type, name, value1, value2);
                 fees.add(fee);

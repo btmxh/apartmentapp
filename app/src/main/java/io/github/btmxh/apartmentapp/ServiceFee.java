@@ -47,7 +47,7 @@ public class ServiceFee {
         this.id = id;
         this.type = type;
         this.name.set(name);
-        this.amount.set(value1);
+        this.value1.set(value1);
         this.value2.set(value2);
     }
 
