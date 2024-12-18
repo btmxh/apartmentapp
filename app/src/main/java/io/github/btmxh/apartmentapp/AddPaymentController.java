@@ -37,7 +37,6 @@ public class AddPaymentController {
                     room.set(roomField.getText());
                     return;
                 }
-
                 Announcement.show("Lỗi", "Phòng chưa có nhân khẩu", "Hãy kiểm tra lại số phòng");
                 roomField.setText("");
             } catch (SQLException | IOException ex) {

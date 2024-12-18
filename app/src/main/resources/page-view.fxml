@@ -153,6 +153,24 @@
             </HBox>
             <Pagination fx:id="serviceFeePagination" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
          </VBox>
+         <VBox fx:id="residentsVBox" alignment="TOP_CENTER" spacing="10.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Label alignment="CENTER" styleClass="section-title" text="Danh sách nhân khẩu">
+               <opaqueInsets>
+                  <Insets bottom="10.0" left="10.0" right="10.0" />
+               </opaqueInsets>
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <HBox alignment="CENTER">
+               <children>
+                  <TextField fx:id="nameResidentSearch" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefColumnCount="30" promptText="Nhập tên nhân khẩu cần tìm" />
+                  <AnchorPane maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                  <Button mnemonicParsing="false" onAction="#addResident" text="Thêm nhân khẩu" />
+               </children>
+            </HBox>
+            <Pagination fx:id="residentTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+         </VBox>
          <VBox fx:id="homeVBox" layoutX="20.0" layoutY="20.0" prefHeight="516.0" prefWidth="739.0" spacing="20.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                <Label fx:id="greetingLabel" styleClass="section-title" text="Xin chao, mekiet" />

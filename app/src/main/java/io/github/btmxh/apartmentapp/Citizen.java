@@ -11,10 +11,9 @@ public class Citizen {
     private String passportId;
     private String nationality;
     private String room;
-    private boolean owner;
     private LocalDateTime createdAt, updatedAt;
 
-    public Citizen(int id, String fullName, LocalDate dateOfBirth, Gender gender, String passportId, String nationality, String room, boolean owner, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Citizen(int id, String fullName, LocalDate dateOfBirth, Gender gender, String passportId, String nationality, String room, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.fullName = fullName;
         this.dateOfBirth = dateOfBirth;
@@ -22,7 +21,6 @@ public class Citizen {
         this.passportId = passportId;
         this.nationality = nationality;
         this.room = room;
-        this.owner = owner;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -39,43 +37,69 @@ public class Citizen {
         return fullName;
     }
 
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
     public LocalDate getDateOfBirth() {
         return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 
     public Gender getGender() {
         return gender;
     }
 
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
     public String getPassportId() {
         return passportId;
+    }
+
+    public void setPassportId(String passportId) {
+        this.passportId = passportId;
     }
 
     public String getNationality() {
         return nationality;
     }
 
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }  // Added setter for nationality
+
     public String getRoom() {
         return room;
     }
 
-    public boolean isOwner() {
-        return owner;
+    public void setRoom(String room) {
+        this.room = room;
     }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public enum Gender {
-        MALE,
-        FEMALE,
-        OTHER;
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
-
+    public enum Gender {
+        Nam,
+        Nữ,
+        Khác;
+    }
 }
