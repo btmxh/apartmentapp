@@ -6,19 +6,47 @@ import java.time.LocalDateTime;
 public class Payment {
     public static final int NULL_ID = -1;
     private int id = -1;
-    private final ObjectProperty<ServiceFee> fee;
-    private final StringProperty roomId;
-    private final LongProperty amount;
-    private final ObjectProperty<LocalDateTime> committedTimestamp;
-    private final StringProperty roomOwner; // Normal StringProperty for roomOwner
+    private final SimpleObjectProperty<ServiceFee> fee = new SimpleObjectProperty<>();
+    private final SimpleStringProperty roomId = new SimpleStringProperty();
+    private final SimpleLongProperty amount = new SimpleLongProperty();
+    private final SimpleObjectProperty<LocalDateTime> committedTimestamp = new SimpleObjectProperty<>();
+    private final SimpleStringProperty roomOwner = new SimpleStringProperty(); // Normal StringProperty for roomOwner
+    private final SimpleObjectProperty<User> user = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<Room> room = new SimpleObjectProperty<>();
+
 
     public Payment(int id, ServiceFee fee, String roomId, long amount, LocalDateTime committedTimestamp, String roomOwner) {
         this.id = id;
-        this.fee = new SimpleObjectProperty<>(fee);
-        this.roomId = new SimpleStringProperty(roomId);
-        this.amount = new SimpleLongProperty(amount);
-        this.committedTimestamp = new SimpleObjectProperty<>(committedTimestamp);
-        this.roomOwner = new SimpleStringProperty(roomOwner); // Initialize roomOwner
+        this.fee.set(fee);
+        this.roomId.set(roomId);
+        this.amount.set(amount);
+        this.committedTimestamp.set(committedTimestamp);
+        this.roomOwner.set(roomOwner);// Initialize roomOwner
+    }
+
+    public Payment(int id, ServiceFee fee, Room room, long amount, LocalDateTime committedTimestamp, User user) {
+        this.id = id;
+        this.fee.set(fee);
+        this.room.set(room);
+        this.amount.set(amount);
+        this.committedTimestamp.set(committedTimestamp);
+        this.user.set(user);// Initialize roomOwner
+    }
+
+    public Room getRoom() {
+        return room.get();
+    }
+
+    public void setRoom(Room room) {
+        this.room.set(room);
+    }
+
+    public User getUser() {
+        return user.get();
+    }
+
+    public void setUser(User user) {
+        this.user.set(user);
     }
 
     public int getId() {

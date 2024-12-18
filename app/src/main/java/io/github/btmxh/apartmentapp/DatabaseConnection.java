@@ -186,7 +186,8 @@ public class DatabaseConnection {
                 fee_id INT NOT NULL,
                 room VARCHAR(10) NOT NULL,
                 amount INT NOT NULL,
-                commit_timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);
+                commit_timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                user_id INT NOT NULL);
                 """;
         try (Statement statement = connection.createStatement()) {
             statement.execute(sql);
@@ -377,6 +378,16 @@ public class DatabaseConnection {
                 st.setInt(4, p.getId());
                 st.executeUpdate();
             }
+        }
+    }
+
+    public void updatePayment1(Payment p) throws SQLException, IOException {
+        try(var st = connection.prepareStatement("INSERT INTO payments (fee_id, room, amount, user_id) VALUES (?, ?, ?, ?)")) {
+            st.setInt(1, p.getFee().getId());
+            st.setString(2, p.getRoomId());
+            st.setLong(3, p.getAmount());
+            st.setInt(4, p.getUser().getId());
+            st.executeUpdate();
         }
     }
 

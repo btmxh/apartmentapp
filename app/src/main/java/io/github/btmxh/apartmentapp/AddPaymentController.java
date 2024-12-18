@@ -33,6 +33,7 @@ public class AddPaymentController {
     private Payment payment;
     private final SimpleObjectProperty<ServiceFee> fee = new SimpleObjectProperty<>(null);
     private final SimpleObjectProperty<Room> room = new SimpleObjectProperty<>(null);
+    private static final SimpleObjectProperty<User> user = new SimpleObjectProperty<>(null);
 
     public void initialize() {
         selectRoomButton.setOnAction(e -> selectRoom());
@@ -117,7 +118,8 @@ public class AddPaymentController {
                 payment.setAmount(amount);
                 payment.setRoomId(room.get().getName());
                 payment.setFee(fee.get());
-                DatabaseConnection.getInstance().updatePayment(payment);
+                payment.setUser(user.get());
+                DatabaseConnection.getInstance().updatePayment1(payment);
             }
         }
         catch (SQLException | IOException ex) {
@@ -130,6 +132,10 @@ public class AddPaymentController {
 
     public void handleCancel() {
         stage.close();
+    }
+
+    public static void setUser(User user) {
+        AddPaymentController.user.set(user);
     }
 
     public void setPayment(Payment p) {
