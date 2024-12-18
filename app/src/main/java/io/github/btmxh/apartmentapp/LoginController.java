@@ -31,46 +31,70 @@ public class LoginController {
     @FXML
     private Button loginButton;
 
+    // Tài khoản admin cố định
+    private static final String ADMIN_USERNAME = "admin";
+    private static final String ADMIN_PASSWORD = "admin";
+
     public void loginButtonOnActive(ActionEvent event) {
         String username = usernameTextField.getText();
         String password = passwordPasswordField.getText();
 
+        // Kiểm tra tài khoản và mật khẩu không trống
         if (username.isBlank() || password.isBlank()) {
             loginMessageLabel.setText("Tên người dùng và mật khẩu không được để trống!");
-            usernameTextField.setText("");
-            passwordPasswordField.setText("");
+            clearInputFields();
         }
+        // Đăng nhập bằng tài khoản admin cố định
+        else if (username.equals(ADMIN_USERNAME)) {
+            if (!password.equals(ADMIN_PASSWORD)) {
+                loginMessageLabel.setText("Tên người dùng hoặc mật khẩu không khớp!");
+            } else {
+                loadHomePage(true); // Chế độ admin
+            }
+        }
+        // Đăng nhập tài khoản từ cơ sở dữ liệu
         else {
             DatabaseConnection dbc = DatabaseConnection.getInstance();
             try {
                 User user = dbc.login(username, password);
                 if (user != null) {
-                    try {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/page-view.fxml"));
-                        Region homepage = loader.load();
-                        PageController pageController = loader.getController();
-                        pageController.setUser(user);
-                        Stage stage = (Stage) loginButton.getScene().getWindow();
-                        stage.close();
-
-                        stage = new Stage();
-                        stage.setScene(new Scene(homepage));
-                        stage.show();
-
-                    } catch (Exception e) {
-                        logger.fatal("Lỗi khi tải tệp FXML", e);
-                        Announcement.show("Lỗi","Không thể truy cập trang chủ!", "Lỗi tải FXML: " + e.getMessage());
-                    }
+                    loadHomePage(false); // Chế độ người dùng thông thường
                 } else {
-                    loginMessageLabel.setText("Tên người dùng hoặc mật khẩu không đúng. Hãy thử lại!");
+                    loginMessageLabel.setText("Tên người dùng hoặc mật khẩu không khớp!");
                 }
-            }
-            catch (SQLException e) {
+            } catch (SQLException e) {
                 logger.warn("Lỗi khi thực hiện câu lệnh SQL", e);
-                Announcement.show("Lỗi", "Không thể đăng nhập!","Lỗi kết nối cơ sở dữ liệu:" + e.getMessage());
+                Announcement.show("Lỗi", "Không thể đăng nhập!", "Lỗi kết nối cơ sở dữ liệu: " + e.getMessage());
             }
         }
     }
+
+    /**
+     * Phương thức tải màn hình trang chính
+     * @param isAdmin true nếu là tài khoản admin, false nếu là tài khoản thường
+     */
+    private void loadHomePage(boolean isAdmin) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/page-view.fxml"));
+            Region homepage = loader.load();
+
+            // Lấy controller của trang chính
+            PageController pageController = loader.getController();
+            pageController.setAdminMode(isAdmin); // Thiết lập chế độ admin nếu cần
+
+            Stage stage = (Stage) loginButton.getScene().getWindow();
+            stage.close();
+
+            stage = new Stage();
+            stage.setScene(new Scene(homepage));
+            stage.show();
+
+        } catch (Exception e) {
+            logger.fatal("Lỗi khi tải tệp FXML", e);
+            Announcement.show("Lỗi", "Không thể truy cập trang chủ!", "Lỗi tải FXML: " + e.getMessage());
+        }
+    }
+
     @FXML
     public void initialize() {
         // Add a button click handler to navigate to the registration page
@@ -81,8 +105,18 @@ public class LoginController {
                 stage.getScene().setRoot(registerRoot);
             } catch (Exception e) {
                 logger.fatal("Error loading FXML file", e);
-                Announcement.show("Lỗi","Không thể truy cập trang đăng ký!", "Lỗi tải FXML: " + e.getMessage());
+                Announcement.show("Lỗi", "Không thể truy cập trang đăng ký!", "Lỗi tải FXML: " + e.getMessage());
             }
         });
+    }
+
+    public boolean isValidPassword(String password) {
+        String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$";
+        return password.matches(regex);
+    }
+
+    private void clearInputFields() {
+        usernameTextField.clear();
+        passwordPasswordField.clear();
     }
 }

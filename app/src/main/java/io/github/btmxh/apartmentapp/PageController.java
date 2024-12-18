@@ -283,6 +283,18 @@ public class PageController {
             Announcement.show("Lỗi", "Không thể tải FXML của hộp thoại phí dịch vụ!", "Lỗi chi tiết: " + e.getMessage());
         }
     }
+
+    public void setAdminMode(boolean isAdmin) {
+        if (isAdmin) {
+            manageButton.setVisible(true);
+            manageButton.setManaged(true);
+            logger.info("Chế độ Admin đã bật!");
+        } else {
+            manageButton.setVisible(false);
+            manageButton.setManaged(false);
+            logger.info("Chế độ Admin đã tắt!");
+        }
+    }
 }
 
 

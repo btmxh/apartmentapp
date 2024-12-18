@@ -72,6 +72,12 @@ public class RegisterController {
             return "Mật khẩu không được để trống!";
         }
 
+        // Kiểm tra mật khẩu chi tiết
+        String passwordValidationMessage = isValidPassword(password);
+        if (passwordValidationMessage != null) {
+            return passwordValidationMessage;
+        }
+
         if (name.isEmpty()) {
             return "Họ và tên không được để trống!";
         }
@@ -147,6 +153,26 @@ public class RegisterController {
             logger.error("Lỗi khi tải tệp FXML", e);
             Announcement.show("Lỗi","Không thể truy cập vào trang đăng nhập!", "FXML loading error: " + e.getMessage());
         }
+    }
+
+    private static String isValidPassword(String password) {
+        if (password.length() < 8) {
+            return "Mật khẩu phải có ít nhất 8 ký tự!";
+        }
+
+        if (!password.matches(".*[a-z].*")) {
+            return "Mật khẩu phải có ít nhất 1 ký tự chữ thường!";
+        }
+
+        if (!password.matches(".*[A-Z].*")) {
+            return "Mật khẩu phải có ít nhất 1 ký tự chữ hoa!";
+        }
+
+        if (!password.matches(".*\\d.*")) {
+            return "Mật khẩu phải có ít nhất 1 ký tự số!";
+        }
+
+        return null; // Nếu không có lỗi
     }
 }
 
