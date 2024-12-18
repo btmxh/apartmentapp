@@ -163,7 +163,7 @@ public class DatabaseConnection {
                     gender ENUM('Nam', 'Nữ', 'Khác') NOT NULL,
                     passport_id VARCHAR(12) NOT NULL UNIQUE,
                     nationality VARCHAR(100) NOT NULL,
-                    room VARCHAR(10) NOT NULL,
+                    room_id INT NOT NULL,
                     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
                 );
@@ -173,6 +173,22 @@ public class DatabaseConnection {
             logger.info("Đã tạo thành công bảng nhân khẩu!");
         } catch (SQLException e) {
             throw new RuntimeException("Không thể tạo bảng nhân khẩu trên cơ sở dữ liệu", e);
+        }
+    }
+
+    public void createRoomsTable() {
+        String sql = """
+                CREATE TABLE IF NOT EXISTS rooms (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    room VARCHAR(10) NOT NULL,
+                    area INT NOT NULL
+                );
+                """;
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(sql);
+            logger.info("Đã tạo thành công bảng căn hộ!");
+        } catch (SQLException e) {
+            throw new RuntimeException("Không thể tạo bảng căn hộ trên cơ sở dữ liệu", e);
         }
     }
 
@@ -312,6 +328,30 @@ public class DatabaseConnection {
                 return null;
             }
         }
+    }
+
+    public int getRoomArea(String room) throws SQLException, IOException {
+        try(var st = connection.prepareStatement("SELECT area FROM rooms WHERE room = ?")) {
+            st.setString(1, room);
+            var rs = st.executeQuery();
+            if(rs.next()) {
+                return rs.getInt(1);
+            } else {
+                return 0;
+            }
+        }
+
+//        String sql = "SELECT user_role FROM users WHERE user_name = ?;";
+//        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+//            ps.setString(1, username);
+//            try (ResultSet rs = ps.executeQuery()) {
+//                if (rs.next()) {
+//                    return rs.getString("user_role");
+//                } else {
+//                    return "";
+//                }
+//            }
+//        }
     }
 
     public void updateServiceFee(ServiceFee fee, long oldAmount) throws SQLException, IOException {
@@ -546,6 +586,18 @@ public class DatabaseConnection {
         String query = "SELECT COUNT(*) FROM service_fees WHERE INSTR(fee_name, ?) != 0";
         try (PreparedStatement s = connection.prepareStatement(query)) {
             s.setString(1, search);
+            ResultSet rs = s.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            } else {
+                return 0;
+            }
+        }
+    }
+
+    public int getNumPayments() throws SQLException {
+        String query = "SELECT COUNT(*) FROM payments";
+        try (PreparedStatement s = connection.prepareStatement(query)) {
             ResultSet rs = s.executeQuery();
             if (rs.next()) {
                 return rs.getInt(1);
