@@ -45,7 +45,7 @@ public class AddPaymentController {
         try {
             Room res = PickRoom.open(stage);
             if (res != null) {
-                if (room.get() != null && res.getName().equals(room.get().getName())) {
+                if (room.get() != null && res.getId() == room.get().getId()) {
                     return;
                 }
                 fee.set(null);
@@ -69,7 +69,7 @@ public class AddPaymentController {
         try {
             ServiceFee res = PickServiceFee.open(stage);
             if (res != null) {
-                if (fee.get() != null && res.getName().equals(fee.get().getName())) {
+                if (fee.get() != null && res.getId() == fee.get().getId()) {
                     return;
                 }
                 valueTextField.setDisable(true);
@@ -99,7 +99,33 @@ public class AddPaymentController {
     }
 
     public void handleSubmit() {
-
+        try {
+            if (room.get() == null || fee.get() == null) {
+                Announcement.show("Thiếu thông tin", "Chưa chọn căn hộ", "Vui lòng chọn căn hộ và khoản thu trước khi xác nhận.");
+                return;
+            } else if (fee.get() == null) {
+                Announcement.show("Thiếu thông tin", "Chưa chọn khoản thu", "Vui lòng chọn khoản thu trước khi xác nhận.");
+            } else {
+                long amount;
+                try {
+                    amount = Long.parseLong(valueTextField.getText().trim());
+                } catch (NumberFormatException ex) {
+                    logger.warn("Nhập số tiền không thành công", ex);
+                    Announcement.show("Giá trị không hợp lệ", "Số tiền không đúng định dạng", "Vui lòng nhập số tiền hợp lệ (chỉ bao gồm số).");
+                    return;
+                }
+                payment.setAmount(amount);
+                payment.setRoomId(room.get().getName());
+                payment.setFee(fee.get());
+                DatabaseConnection.getInstance().updatePayment(payment);
+            }
+        }
+        catch (SQLException | IOException ex) {
+            logger.warn("Thêm thanh toán thất bại", ex);
+            Announcement.show("Lỗi", "Không thể thêm thanh toán vào CSDL", ex.getMessage());
+            return;
+        }
+        stage.close();
     }
 
     public void handleCancel() {
