@@ -47,6 +47,7 @@ public class PageController {
     private enum Section {
         CREATECHARGE,
         CHARGE,
+        RESIDENT,
         GRANTPERMISSION,
         UNSUPPORTED,
         HOME
@@ -83,6 +84,9 @@ public class PageController {
     private VBox chargeVBox;
 
     @FXML
+    private VBox residentsVBox;
+
+    @FXML
     private ComboBox<Month> monthComboBox;
 
     @FXML
@@ -112,6 +116,15 @@ public class PageController {
     @FXML
     private Pagination paymentTable;
 
+    @FXML
+    private Button addResident;
+
+    @FXML
+    private Pagination residentTable;
+
+    @FXML
+    private TextField nameResidentSearch;
+
     private final ObjectProperty<Section> section = new SimpleObjectProperty<>(Section.HOME);
 
     private void bindSection(Section sect, Node content, Button button) {
@@ -129,13 +142,14 @@ public class PageController {
         usersPagination.setPageFactory(this::createUserTable);
         serviceFeePagination.setPageFactory(this::createServiceFeeTable);
         paymentTable.setPageFactory(this::createPaymentTable);
+        residentTable.setPageFactory(this::createResidentTable);
 
         bindSection(Section.HOME, homeVBox, homeButton);
         bindSection(Section.CREATECHARGE, createChargeVBox, createChargeButton);
         bindSection(Section.CHARGE, chargeVBox, chargeButton);
+        bindSection(Section.RESIDENT, residentsVBox, residentsButton);
         bindSection(Section.GRANTPERMISSION, grantPermissionVBox, manageButton);
         bindSection(Section.UNSUPPORTED, unsupportedVBox, staticButton);
-        bindSection(Section.UNSUPPORTED, unsupportedVBox, residentsButton);
         bindSection(Section.UNSUPPORTED, unsupportedVBox, contributeButton);
         try {
             final var values = DatabaseConnection.getInstance().getDashboardValues();
@@ -155,6 +169,7 @@ public class PageController {
         feeSearch.textProperty().addListener((o, old, ne_) -> updatePayments());
         roomSearch.textProperty().addListener((o, old, ne_) -> updatePayments());
         generalLabel.setText("Tổng quan tháng " + LocalDateTime.now().getMonthValue());
+        nameResidentSearch.textProperty().addListener((o, old, ne_) -> updateResidents());
 
         try {
             chart.setData(DatabaseConnection.getInstance().getChartData());
@@ -260,11 +275,32 @@ public class PageController {
         return null;
     }
 
+    private TableView<Citizen> createResidentTable(int pageIndex) {
+        DatabaseConnection dc = DatabaseConnection.getInstance();
+        try {
+            var loader = new FXMLLoader(Objects.requireNonNull(PageController.class.getResource("/resident-table.fxml")));
+            int start = pageIndex * ROWS_PER_PAGE;
+            var ResidentList = DatabaseConnection.getInstance().getResidents(nameResidentSearch.getText(), ROWS_PER_PAGE, pageIndex * ROWS_PER_PAGE) ;
+            TableView<Citizen> table = loader.load();
+            ResidentTableController controller = loader.getController();
+            controller.setResidentPage(start, ResidentList, this::updateResidents);
+            return table;
+        } catch (SQLException e) {
+            logger.warn("Lỗi khi thực thi lệnh SQL", e);
+            Announcement.show("Lỗi", "Không thể lấy được danh sách phí dịch vụ!", "Lỗi kết nối cơ sở dữ liệu: " + e.getMessage());
+        } catch (IOException e) {
+            logger.fatal("Lỗi khi tải tệp FXML", e);
+            Announcement.show("Lỗi", "Không thể tải bảng phí dịch vụ FXML!", "Lỗi chi tiết: " + e.getMessage());
+        }
+        return null;
+    }
+
     private void setNumPages() {
         try {
             usersPagination.setPageCount(Math.max(1, (DatabaseConnection.getInstance().getNumNonAdminUsers() + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE));
             serviceFeePagination.setPageCount(Math.max((DatabaseConnection.getInstance().getNumServiceFees(serviceFeeFilterField.getText()) + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE, 1));
-            paymentTable.setPageCount(Math.max(1, (DatabaseConnection.getInstance().getNumPayments() + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE));
+            paymentTable.setPageCount(Math.max(1, (DatabaseConnection.getInstance().getNumPayment() + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE));
+            residentTable.setPageCount(Math.max(1, (DatabaseConnection.getInstance().getNumResident() + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE));
         } catch (SQLException e) {
             logger.warn("Lỗi khi thực hiện câu lệnh SQL", e);
             Announcement.show("Lỗi", "Không thể truy cập cơ sở dữ liệu!", e.getMessage());
@@ -292,6 +328,13 @@ public class PageController {
         paymentTable.setCurrentPageIndex(Math.min(page, usersPagination.getPageCount() - 1));
     }
 
+    private void updateResidents() {
+        int page = residentTable.getCurrentPageIndex();
+        setNumPages();
+        residentTable.setPageFactory(this::createResidentTable);
+        residentTable.setCurrentPageIndex(Math.min(page, residentTable.getPageCount() - 1));
+    }
+
     public void addServiceFee(ActionEvent event) {
         try {
             AddServiceFeeController.open(((Node) event.getSource()).getScene().getWindow(), null);
@@ -299,6 +342,16 @@ public class PageController {
         } catch (IOException e) {
             logger.fatal("Lỗi khi tải tệp FXML", e);
             Announcement.show("Lỗi", "Không thể tải FXML của hộp thoại phí dịch vụ!", "Lỗi chi tiết: " + e.getMessage());
+        }
+    }
+
+    public void addResident(ActionEvent event) {
+        try {
+            AddResidentController.open(((Node) event.getSource()).getScene().getWindow(), null);
+            updateResidents();
+        } catch (IOException e) {
+            logger.fatal("Lỗi khi tải tệp FXML", e);
+            Announcement.show("Lỗi", "Không thể tải FXML của nhân khẩu!", "Lỗi chi tiết: " + e.getMessage());
         }
     }
 }

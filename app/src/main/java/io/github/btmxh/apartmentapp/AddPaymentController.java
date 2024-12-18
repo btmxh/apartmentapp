@@ -47,6 +47,8 @@ public class AddPaymentController {
                     roomOwner.setText("");
                     value.set(""); // Reset value nếu không tìm thấy roomOwner
                 }
+                Announcement.show("Lỗi", "Phòng chưa có nhân khẩu", "Hãy kiểm tra lại số phòng");
+                roomField.setText("");
             } catch (SQLException | IOException ex) {
                 logger.warn("Database error", ex);
                 Announcement.show("Lỗi", "Không thể lấy thông tin phòng", ex.getMessage());
