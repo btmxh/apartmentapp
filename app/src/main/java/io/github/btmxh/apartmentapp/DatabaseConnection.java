@@ -159,14 +159,18 @@ public class DatabaseConnection {
     }
 
     public void createServiceFeeTable() {
+        String typeEnum = FeeType.getFeeTypeEnum();
         String sql = """
                 CREATE TABLE IF NOT EXISTS service_fees (
                 fee_id INT PRIMARY KEY AUTO_INCREMENT,
                 fee_name VARCHAR(50) NOT NULL,
                 fee_value INT NOT NULL,
                 fee_start_date DATE NOT NULL,
-                fee_deadline DATE NOT NULL);
-                """;
+                fee_deadline DATE NOT NULL,
+                value2 INT NOT NULL,
+                """
+                +
+                "type " + typeEnum + " NOT NULL);";
         try (Statement statement = connection.createStatement()) {
             statement.execute(sql);
             logger.info("Đã tạo thành công bảng phí dịch vụ!");
@@ -222,8 +226,8 @@ public class DatabaseConnection {
                     name VARCHAR(10) NOT NULL,
                     owner_id INT NOT NULL DEFAULT 0,
                     area FLOAT(1) NOT NULL,
-                    num_motors INT NOT NULL DEFAULT 0,
-                    num_cars INT NOT NULL DEFAULT 0
+                    number_of_motors INT NOT NULL DEFAULT 0,
+                    number_of_cars INT NOT NULL DEFAULT 0
                 );
                 """;
         try (Statement statement = connection.createStatement()) {
