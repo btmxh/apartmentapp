@@ -134,7 +134,7 @@ public class AddPaymentController {
 
     public void setPayment(Payment p) {
         payment = p;
-        fee.set(p.getFee());
+        //fee.set(p.getFee());
     }
 
     public void setStage(Stage stage) {

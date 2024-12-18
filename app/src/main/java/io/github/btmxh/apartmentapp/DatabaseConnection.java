@@ -427,6 +427,18 @@ public class DatabaseConnection {
         }
     }
 
+    public void updateServiceFee1(ServiceFee fee) throws SQLException, IOException {
+        try(var st = connection.prepareStatement("INSERT INTO service_fees (type, fee_name, fee_value, value2, fee_start_date, fee_deadline) VALUES (?, ?, ?, ?, ?, ?)")) {
+            st.setString(1, fee.getType().getSQLName());
+            st.setString(2, fee.getName());
+            st.setLong(3, fee.getValue1());
+            st.setLong(4, fee.getValue2());
+            st.setDate(5, Date.valueOf(fee.getStartDate()));
+            st.setDate(6, Date.valueOf(fee.getDeadline()));
+            st.executeUpdate();
+        }
+    }
+
     public User login(String username, String password) throws SQLException {
         String sql = "SELECT * FROM users WHERE user_name = ? AND user_password = ?;";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
