@@ -51,6 +51,18 @@ public class ServiceFee {
         this.value2.set(value2);
     }
 
+    public ServiceFee(int id, FeeType type, String name, long value1, long value2, LocalDate startDate, LocalDate deadline) {
+        this.id = id;
+        this.type = type;
+        this.name.set(name);
+        this.value1.set(value1);
+        this.value2.set(value2);
+        this.startDate.set(startDate);
+        this.deadline.set(deadline);
+    }
+
+
+
     public FeeType getType() {
         return type;
     }

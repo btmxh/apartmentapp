@@ -330,32 +330,34 @@ public class DatabaseConnection {
 
     public List<ServiceFee> getServiceFees(String query, int limit, int offset) throws IOException, SQLException {
         final var fees = new ArrayList<ServiceFee>();
-        try(var st = connection.prepareStatement("SELECT fee_id, fee_name, fee_value, fee_start_date, fee_deadline FROM service_fees WHERE INSTR(fee_name, ?) != 0 LIMIT ? OFFSET ?")) {
+        try(var st = connection.prepareStatement("SELECT fee_id, type, fee_name, fee_value, value2, fee_start_date, fee_deadline FROM service_fees WHERE INSTR(fee_name, ?) != 0 LIMIT ? OFFSET ?")) {
             st.setInt(2, limit);
             st.setInt(3, offset);
             st.setString(1, query);
             final var rs = st.executeQuery();
             while(rs.next()) {
                 final var id = rs.getInt("fee_id");
+                final var type = FeeType.valueOf(rs.getString("type"));
                 final var name = rs.getString("fee_name");
-                final var value = rs.getInt("fee_value");
+                final var value1 = rs.getLong("fee_value");
+                final var value2 = rs.getLong("value2");
                 final var startDate = rs.getDate("fee_start_date").toLocalDate();
                 final var deadline = rs.getDate("fee_deadline").toLocalDate();
-                int received, pending;
-                try(var st2 = connection.prepareStatement("SELECT COUNT(*) FROM payments WHERE fee_id = ?")) {
-                    st2.setInt(1, id);
-                    var r2 = st2.executeQuery();
-                    r2.next();
-                    received = r2.getInt(1);
-                }
-                try(var st2 = connection.prepareStatement("SELECT COUNT(*) FROM citizens WHERE created_at <= ?")) {
-                    st2.setDate(1, Date.valueOf(startDate));
-                    var r2 = st2.executeQuery();
-                    r2.next();
-                    pending = r2.getInt(1);
-                }
+//                int received, pending;
+//                try(var st2 = connection.prepareStatement("SELECT COUNT(*) FROM payments WHERE fee_id = ?")) {
+//                    st2.setInt(1, id);
+//                    var r2 = st2.executeQuery();
+//                    r2.next();
+//                    received = r2.getInt(1);
+//                }
+//                try(var st2 = connection.prepareStatement("SELECT COUNT(*) FROM citizens WHERE created_at <= ?")) {
+//                    st2.setDate(1, Date.valueOf(startDate));
+//                    var r2 = st2.executeQuery();
+//                    r2.next();
+//                    pending = r2.getInt(1);
+//                }
 
-                final var fee = new ServiceFee(id, name, value, startDate, deadline, received, pending);
+                final var fee = new ServiceFee(id, type, name, value1, value2, startDate, deadline);
                 fees.add(fee);
             }
         }
@@ -517,14 +519,28 @@ public class DatabaseConnection {
     }
 
     public void updateServiceFee1(ServiceFee fee) throws SQLException, IOException {
-        try(var st = connection.prepareStatement("INSERT INTO service_fees (type, fee_name, fee_value, value2, fee_start_date, fee_deadline) VALUES (?, ?, ?, ?, ?, ?)")) {
-            st.setString(1, fee.getType().getSQLName());
-            st.setString(2, fee.getName());
-            st.setLong(3, fee.getValue1());
-            st.setLong(4, fee.getValue2());
-            st.setDate(5, Date.valueOf(fee.getStartDate()));
-            st.setDate(6, Date.valueOf(fee.getDeadline()));
-            st.executeUpdate();
+        if(fee.getId() == ServiceFee.NULL_ID) {
+            try (var st = connection.prepareStatement("INSERT INTO service_fees (type, fee_name, fee_value, value2, fee_start_date, fee_deadline) VALUES (?, ?, ?, ?, ?, ?)")) {
+                st.setString(1, fee.getType().getSQLName());
+                st.setString(2, fee.getName());
+                st.setLong(3, fee.getValue1());
+                st.setLong(4, fee.getValue2());
+                st.setDate(5, Date.valueOf(fee.getStartDate()));
+                st.setDate(6, Date.valueOf(fee.getDeadline()));
+                st.executeUpdate();
+            }
+        }
+        else {
+            try (var st = connection.prepareStatement("UPDATE service_fees SET type = ?, fee_name = ?, fee_value = ?, value2 = ?, fee_start_date = ?, fee_deadline = ? WHERE fee_id = ?")) {
+                st.setString(1, fee.getType().getSQLName());
+                st.setString(2, fee.getName());
+                st.setLong(3, fee.getValue1());
+                st.setLong(4, fee.getValue2());
+                st.setDate(5, Date.valueOf(fee.getStartDate()));
+                st.setDate(6, Date.valueOf(fee.getDeadline()));
+                st.setInt(7, fee.getId());
+                st.executeUpdate();
+            }
         }
     }
 
@@ -779,9 +795,9 @@ public class DatabaseConnection {
         }
     }
 
-    public void removeServiceFee(int id) throws SQLException {
+    public void removeServiceFee(ServiceFee fee) throws SQLException {
         try(var st = connection.prepareStatement("DELETE FROM service_fees WHERE fee_id = ?")) {
-            st.setInt(1, id);
+            st.setInt(1, fee.getId());
             st.executeUpdate();
         }
     }
