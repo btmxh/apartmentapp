@@ -11,6 +11,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.util.Pair;
 import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.janino.ExpressionEvaluator;
+import io.github.btmxh.apartmentapp.DatabaseConnection.FeeType;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -24,6 +25,9 @@ public class ServiceFee {
     private final SimpleObjectProperty<LocalDate> startDate = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<LocalDate> deadline = new SimpleObjectProperty<>();
     private int numReceived, numPending;
+    private FeeType type;
+    private final SimpleLongProperty value1 = new SimpleLongProperty();
+    private final SimpleLongProperty value2 = new SimpleLongProperty();
 
     public ServiceFee(int id, String name, long amount, LocalDate startDate, LocalDate deadline, int numReceived, int numPending) {
         this.id = id;
@@ -37,6 +41,38 @@ public class ServiceFee {
 
     public ServiceFee(int id, String name, long amount, LocalDate startDate, LocalDate deadline) {
         this(id, name, amount, startDate, deadline, 0, 0);
+    }
+
+    public ServiceFee(int id, FeeType type, String name, long value1, long value2) {
+        this.id = id;
+        this.type = type;
+        this.name.set(name);
+        this.value1.set(value1);
+        this.value2.set(value2);
+    }
+
+    public FeeType getType() {
+        return type;
+    }
+
+    public void setType(FeeType type) {
+        this.type = type;
+    }
+
+    public long getValue1() {
+        return value1.get();
+    }
+
+    public void setValue1(long value) {
+        this.value1.set(value);
+    }
+
+    public long getValue2() {
+        return value2.get();
+    }
+
+    public void setValue2(long value) {
+        this.value2.set(value);
     }
 
     public int getNumReceived() {

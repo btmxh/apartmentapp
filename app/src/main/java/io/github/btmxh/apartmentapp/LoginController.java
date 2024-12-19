@@ -46,6 +46,7 @@ public class LoginController {
                 User user = dbc.login(username, password);
                 if (user != null) {
                     try {
+                        AddPaymentController.setUser(user);
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/page-view.fxml"));
                         Region homepage = loader.load();
                         PageController pageController = loader.getController();

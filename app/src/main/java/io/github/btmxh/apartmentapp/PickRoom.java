@@ -1,6 +1,5 @@
 package io.github.btmxh.apartmentapp;
 
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.scene.Parent;
@@ -11,30 +10,26 @@ import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class PickServiceFee {
-    private static final Logger logger = LogManager.getLogger(PickServiceFee.class);
+public class PickRoom {
 
     private Stage stage;
     public TextField searchBar;
-    public ListView<ServiceFee> result;
-    private ServiceFee ans;
-    private static Room room;
+    public ListView<Room> result;
+    private Room ans;
 
     public void initialize() {
         result.setCellFactory(l -> new ListCell<>(){
             @Override
-            protected void updateItem(ServiceFee serviceFee, boolean b) {
-                super.updateItem(serviceFee, b);
-                if(b || serviceFee == null) {
+            protected void updateItem(Room room, boolean b) {
+                super.updateItem(room, b);
+                if(b || room == null) {
                     setText("");
                 } else {
-                    setText(serviceFee.getName());
+                    setText(room.getName());
                 }
             }
         });
@@ -53,13 +48,13 @@ public class PickServiceFee {
     }
 
     private void updateItems(String query) throws SQLException, IOException {
-        final var ans = DatabaseConnection.getInstance().getUnchargedFees(query, room);
+        final var ans = DatabaseConnection.getInstance().getRooms(query);
         result.setItems(FXCollections.observableArrayList(ans));
     }
 
     public void submit(ActionEvent actionEvent) {
         if(result.getSelectionModel().getSelectedItem() == null) {
-            Announcement.show("Lỗi", "Chưa chọn khoản thu nào", "Hãy nhấn chọn khoản thu trong bảng kết quả");
+            Announcement.show("Lỗi", "Chưa chọn căn hộ nào", "Hãy nhấn chọn căn hộ trong bảng kết quả");
             return;
         }
 
@@ -76,19 +71,14 @@ public class PickServiceFee {
         this.stage = stage;
     }
 
-    public static void setRoom(Room room) {
-        PickServiceFee.room = room;
-    }
-
-    public ServiceFee getAns() {
+    public Room getAns() {
         return ans;
     }
 
-    public static ServiceFee open(Window window) throws IOException {
-
-        final var loader = Utils.fxmlLoader("/pick-service-fee.fxml");
+    public static Room open(Window window) throws IOException {
+        final var loader = Utils.fxmlLoader("/pick-room.fxml");
         final Parent content = loader.load();
-        final PickServiceFee controller = loader.getController();
+        final PickRoom controller = loader.getController();
         final var stage = new Stage();
 
         stage.initOwner(window);
@@ -96,7 +86,6 @@ public class PickServiceFee {
         stage.setScene(new Scene(content));
         controller.setStage(stage);
         stage.showAndWait();
-
 
         return controller.getAns();
     }

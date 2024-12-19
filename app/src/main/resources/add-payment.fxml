@@ -25,31 +25,29 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label styleClass="big-label" text="Tên khoản phí" />
-            <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1">
+            <Label styleClass="big-label" text="Khoản thu" GridPane.rowIndex="1" />
+            <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
-                  <Label fx:id="feeName" maxWidth="1.7976931348623157E308" text="Chưa có khoản thu" HBox.hgrow="ALWAYS" />
-                  <Button mnemonicParsing="false" onAction="#selectFee" text="Chọn" />
+                  <Label fx:id="feeLabel" maxWidth="1.7976931348623157E308" text="Chưa chọn khoản thu" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="selectFeeButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="66.0" text="Chọn" />
                </children>
             </HBox>
-            <Label styleClass="big-label" text="Số tiền thu (trên hộ dân, đơn vị VNĐ)" GridPane.rowIndex="1" />
-            <TextField fx:id="valueField" styleClass="big-text-field" GridPane.columnIndex="1" GridPane.rowIndex="1" disable="true">
+            <Label styleClass="big-label" text="Số tiền" GridPane.rowIndex="2" />
+            <TextField fx:id="valueTextField" disable="true" styleClass="big-text-field" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <padding>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </padding></TextField>
-            <Label styleClass="big-label" text="Thanh toán cho phòng" GridPane.rowIndex="2" />
-            <Label styleClass="big-label" text="Người thanh toán" GridPane.rowIndex="3" />
-            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cancel" text="Huỷ" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-          <Button contentDisplay="CENTER" defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#submit" text="OK" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <TextField fx:id="roomField" layoutX="304.0" layoutY="64.0" styleClass="big-text-field" GridPane.columnIndex="1" GridPane.rowIndex="2">
-               <padding>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </padding>
-            </TextField>
-            <Label fx:id="roomOwner" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label styleClass="big-label" text="Căn hộ" />
+            <Button fx:id="cancelButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Huỷ" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+          <Button fx:id="submitButton" contentDisplay="CENTER" defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Xác nhận" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1">
+               <children>
+                  <Label fx:id="roomLabel" maxWidth="1.7976931348623157E308" text="Chưa chọn căn hộ" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="selectRoomButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="66.0" text="Chọn" />
+               </children>
+            </HBox>
          </children>
          <VBox.margin>
             <Insets bottom="80.0" left="80.0" right="80.0" top="80.0" />

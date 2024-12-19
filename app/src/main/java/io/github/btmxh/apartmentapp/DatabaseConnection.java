@@ -70,6 +70,44 @@ public class DatabaseConnection {
         }
     }
 
+    public enum FeeType {
+        MANAGEMENT("Phí quản lý"),
+        SERVICE("Phí dịch vụ"),
+        PARKING("Phí gửi xe"),
+        DONATION("Phí đóng góp");
+
+        private final String displayName;
+
+        FeeType(String displayName) {
+            this.displayName = displayName;
+        }
+
+        public String getSQLName() {
+            return name();
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
+
+        public static String getFeeTypeEnum() {
+            String feeTypeEnum = Arrays.stream(FeeType.values())
+                    .map(FeeType::getSQLName)
+                    .map(type -> "'" + type + "'")
+                    .collect(Collectors.joining(", "));
+            return "Enum(" + feeTypeEnum + ")";
+        }
+
+        public static FeeType getFeeType(String sqlName) {
+            for (FeeType type : FeeType.values()) {
+                if (type.name().equals(sqlName)) {
+                    return type;
+                }
+            }
+            throw new IllegalArgumentException("Giá trị không xác định: " + sqlName);
+        }
+    }
+
     private DatabaseConnection() {
         try {
             Dotenv dotenv = Dotenv.load();
@@ -121,14 +159,18 @@ public class DatabaseConnection {
     }
 
     public void createServiceFeeTable() {
+        String typeEnum = FeeType.getFeeTypeEnum();
         String sql = """
                 CREATE TABLE IF NOT EXISTS service_fees (
                 fee_id INT PRIMARY KEY AUTO_INCREMENT,
                 fee_name VARCHAR(50) NOT NULL,
                 fee_value INT NOT NULL,
                 fee_start_date DATE NOT NULL,
-                fee_deadline DATE NOT NULL);
-                """;
+                fee_deadline DATE NOT NULL,
+                value2 INT NOT NULL,
+                """
+                +
+                "type " + typeEnum + " NOT NULL);";
         try (Statement statement = connection.createStatement()) {
             statement.execute(sql);
             logger.info("Đã tạo thành công bảng phí dịch vụ!");
@@ -144,7 +186,8 @@ public class DatabaseConnection {
                 fee_id INT NOT NULL,
                 room VARCHAR(10) NOT NULL,
                 amount INT NOT NULL,
-                commit_timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);
+                commit_timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                user_id INT NOT NULL);
                 """;
         try (Statement statement = connection.createStatement()) {
             statement.execute(sql);
@@ -160,10 +203,10 @@ public class DatabaseConnection {
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     full_name VARCHAR(255) NOT NULL,
                     date_of_birth DATE NOT NULL,
-                    gender ENUM('Nam', 'Nữ', 'Khác') NOT NULL,
+                    gender ENUM('MALE', 'FEMALE', 'OTHER') NOT NULL,
                     passport_id VARCHAR(12) NOT NULL UNIQUE,
                     nationality VARCHAR(100) NOT NULL,
-                    room_id INT NOT NULL,
+                    room VARCHAR(10) NOT NULL,
                     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
                 );
@@ -180,8 +223,11 @@ public class DatabaseConnection {
         String sql = """
                 CREATE TABLE IF NOT EXISTS rooms (
                     id INT AUTO_INCREMENT PRIMARY KEY,
-                    room VARCHAR(10) NOT NULL,
-                    area INT NOT NULL
+                    name VARCHAR(10) NOT NULL,
+                    owner_id INT NOT NULL DEFAULT 0,
+                    area FLOAT(1) NOT NULL,
+                    number_of_motors INT NOT NULL DEFAULT 0,
+                    number_of_cars INT NOT NULL DEFAULT 0
                 );
                 """;
         try (Statement statement = connection.createStatement()) {
@@ -192,7 +238,7 @@ public class DatabaseConnection {
         }
     }
 
-    public void addCitizenToDB(Citizen citizen) throws IOException, SQLException {
+    public void addCitizenToDB(Citizen citizen) {
         String insertQuery = "INSERT INTO citizens (full_name, date_of_birth, gender, passport_id, nationality, room) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -283,6 +329,44 @@ public class DatabaseConnection {
         return fees;
     }
 
+    public List<Room> getRooms(String query) throws SQLException {
+        final var rooms = new ArrayList<Room>();
+        try(var st = connection.prepareStatement("SELECT id, name, owner_id, area, number_of_motors, number_of_cars FROM rooms WHERE INSTR(name, ?) != 0")) {
+            st.setString(1, query);
+            final var rs = st.executeQuery();
+            while(rs.next()) {
+                final var id = rs.getInt("id");
+                final var name = rs.getString("name");
+                final var ownerId = rs.getInt("owner_id");
+                final var area = rs.getFloat("area");
+                final var numMotors = rs.getInt("number_of_motors");
+                final var numCars = rs.getInt("number_of_cars");
+                final var room = new Room(id, name, ownerId, area, numMotors, numCars);
+                rooms.add(room);
+            }
+        }
+        return rooms;
+    }
+
+    public List<ServiceFee> getUnchargedFees(String query, Room room) throws IOException, SQLException {
+        final var fees = new ArrayList<ServiceFee>();
+        try(var st = connection.prepareStatement("SELECT fee_id, fee_name, fee_value, type, value2 FROM service_fees WHERE INSTR(fee_name, ?) != 0 AND fee_id NOT IN (SELECT fee_id FROM payments WHERE room = ?)")) {
+            st.setString(1, query);
+            st.setString(2, room.getName());
+            final var rs = st.executeQuery();
+            while(rs.next()) {
+                final var id = rs.getInt("fee_id");
+                final var type = FeeType.valueOf(rs.getString("type"));
+                final var name = rs.getString("fee_name");
+                final var value1 = rs.getLong("fee_value");
+                final var value2 = rs.getLong("value2");
+                final var fee = new ServiceFee(id, type, name, value1, value2);
+                fees.add(fee);
+            }
+        }
+        return fees;
+    }
+
     public boolean paymentExists(int fee_id, String room) throws SQLException, IOException {
         try(var st = connection.prepareStatement("SELECT * FROM payments WHERE fee_id = ? AND room = ?")) {
             st.setInt(1, fee_id);
@@ -315,6 +399,16 @@ public class DatabaseConnection {
                 st.setInt(4, p.getId());
                 st.executeUpdate();
             }
+        }
+    }
+
+    public void updatePayment1(Payment p) throws SQLException, IOException {
+        try(var st = connection.prepareStatement("INSERT INTO payments (fee_id, room, amount, user_id) VALUES (?, ?, ?, ?)")) {
+            st.setInt(1, p.getFee().getId());
+            st.setString(2, p.getRoomId());
+            st.setLong(3, p.getAmount());
+            st.setInt(4, p.getUser().getId());
+            st.executeUpdate();
         }
     }
 
@@ -386,6 +480,18 @@ public class DatabaseConnection {
                 st.setInt(5, fee.getId());
                 st.executeUpdate();
             }
+        }
+    }
+
+    public void updateServiceFee1(ServiceFee fee) throws SQLException, IOException {
+        try(var st = connection.prepareStatement("INSERT INTO service_fees (type, fee_name, fee_value, value2, fee_start_date, fee_deadline) VALUES (?, ?, ?, ?, ?, ?)")) {
+            st.setString(1, fee.getType().getSQLName());
+            st.setString(2, fee.getName());
+            st.setLong(3, fee.getValue1());
+            st.setLong(4, fee.getValue2());
+            st.setDate(5, Date.valueOf(fee.getStartDate()));
+            st.setDate(6, Date.valueOf(fee.getDeadline()));
+            st.executeUpdate();
         }
     }
 
