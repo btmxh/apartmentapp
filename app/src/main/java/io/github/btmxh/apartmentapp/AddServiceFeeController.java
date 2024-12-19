@@ -19,7 +19,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class AddServiceFeeController {
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger(AddServiceFeeController.class);
     @FXML
     private DatePicker endDatePicker;
     @FXML

@@ -68,10 +68,8 @@ public class Main {
         for(final var citizen : CitizenRNG.generateCitizens()) {
             db.addCitizenToDB(citizen);
             set.add(citizen.getRoom());
-            if(citizen.isOwner()) {
-                for(final var fee : fees) if(fee.getStartDate().isAfter(citizen.getCreatedAt().toLocalDate()) && ThreadLocalRandom.current().nextBoolean()) {
-                    db.updatePayment(new Payment(-1, fee, citizen.getRoom(), fee.getAmount() <= 0? 100000 : -1, LocalDateTime.now(), null));
-                }
+            for(final var fee : fees) if(fee.getStartDate().isAfter(citizen.getCreatedAt().toLocalDate()) && ThreadLocalRandom.current().nextBoolean()) {
+                db.updatePayment(new Payment(-1, fee, citizen.getRoom(), fee.getAmount() <= 0? 100000 : -1, LocalDateTime.now(), null));
             }
         }
     }

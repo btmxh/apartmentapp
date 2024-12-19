@@ -27,7 +27,6 @@ public class CitizenRNG {
                             generateRandomPassportId(),
                             "Vietnam",
                             room,
-                            k == 0,
                             LocalDateTime.now().minusDays(rng.nextInt(10, 1000)),
                             LocalDateTime.now()
                     ));

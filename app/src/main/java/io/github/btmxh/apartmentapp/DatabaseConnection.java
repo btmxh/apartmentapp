@@ -207,7 +207,6 @@ public class DatabaseConnection {
                     passport_id VARCHAR(12) NOT NULL UNIQUE,
                     nationality VARCHAR(100) NOT NULL,
                     room VARCHAR(10) NOT NULL,
-                    is_owner BOOLEAN NOT NULL,
                     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
                 );
@@ -240,31 +239,53 @@ public class DatabaseConnection {
     }
 
     public void addCitizenToDB(Citizen citizen) {
-        String query = "INSERT INTO citizens (full_name, date_of_birth, gender, passport_id, nationality, room, is_owner, created_at, updated_at) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String insertQuery = "INSERT INTO citizens (full_name, date_of_birth, gender, passport_id, nationality, room) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
 
-        try (PreparedStatement st = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            st.setString(1, citizen.getFullName());
-            st.setDate(2, Date.valueOf(citizen.getDateOfBirth()));
-            st.setString(3, citizen.getGender().toString());
-            st.setString(4, citizen.getPassportId());
-            st.setString(5, citizen.getNationality());
-            st.setString(6, citizen.getRoom());
-            st.setBoolean(7, citizen.isOwner());
-            st.setTimestamp(8, java.sql.Timestamp.valueOf(citizen.getCreatedAt()));
-            st.setTimestamp(9, java.sql.Timestamp.valueOf(citizen.getUpdatedAt()));
+        String updateQuery = "UPDATE citizens SET full_name = ?, date_of_birth = ?, gender = ?, passport_id = ?, "
+                + "nationality = ?, room = ? WHERE id = ?";
 
-            if (st.executeUpdate() == 0) {
-                throw new RuntimeException("Error while inserting citizen into DB");
-            }
+        // Nếu ID là -1 thì thực hiện thêm mới
+        if (citizen.getId() == -1) {
+            try (PreparedStatement st = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
+                st.setString(1, citizen.getFullName());
+                st.setDate(2, Date.valueOf(citizen.getDateOfBirth()));
+                st.setString(3, citizen.getGender().toString());
+                st.setString(4, citizen.getPassportId());
+                st.setString(5, citizen.getNationality());
+                st.setString(6, citizen.getRoom());
 
-            try (ResultSet rs = st.getGeneratedKeys()) {
-                if (rs.next()) {
-                    citizen.setId(rs.getInt(1));  // Set the generated ID back to the Citizen object
+                if (st.executeUpdate() == 0) {
+                    throw new RuntimeException("Error while inserting citizen into DB");
                 }
+
+                // Lấy ID tự động tạo và gán lại cho đối tượng Citizen
+                try (ResultSet rs = st.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        citizen.setId(rs.getInt(1));
+                    }
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException("Database INSERT operation failed", e);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Database operation failed", e);
+        }
+        // Nếu ID khác -1 thì thực hiện cập nhật
+        else {
+            try (PreparedStatement st = connection.prepareStatement(updateQuery)) {
+                st.setString(1, citizen.getFullName());
+                st.setDate(2, Date.valueOf(citizen.getDateOfBirth()));
+                st.setString(3, citizen.getGender().toString());
+                st.setString(4, citizen.getPassportId());
+                st.setString(5, citizen.getNationality());
+                st.setString(6, citizen.getRoom());
+                st.setInt(7, citizen.getId());
+
+                if (st.executeUpdate() == 0) {
+                    throw new RuntimeException("Error while updating citizen in DB");
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException("Database UPDATE operation failed", e);
+            }
         }
     }
 
@@ -294,7 +315,7 @@ public class DatabaseConnection {
                     r2.next();
                     received = r2.getInt(1);
                 }
-                try(var st2 = connection.prepareStatement("SELECT COUNT(*) FROM citizens WHERE created_at <= ? AND is_owner")) {
+                try(var st2 = connection.prepareStatement("SELECT COUNT(*) FROM citizens WHERE created_at <= ?")) {
                     st2.setDate(1, Date.valueOf(startDate));
                     var r2 = st2.executeQuery();
                     r2.next();
@@ -392,7 +413,7 @@ public class DatabaseConnection {
     }
 
     public String getRoomOwner(String room) throws SQLException, IOException {
-        try(var st = connection.prepareStatement("SELECT full_name FROM citizens WHERE is_owner AND room = ?")) {
+        try(var st = connection.prepareStatement("SELECT full_name FROM citizens WHERE room = ?")) {
             st.setString(1, room);
             var rs = st.executeQuery();
             if(rs.next()) {
@@ -401,6 +422,30 @@ public class DatabaseConnection {
                 return null;
             }
         }
+    }
+
+    public int getRoomArea(String room) throws SQLException, IOException {
+        try(var st = connection.prepareStatement("SELECT area FROM rooms WHERE room = ?")) {
+            st.setString(1, room);
+            var rs = st.executeQuery();
+            if(rs.next()) {
+                return rs.getInt(1);
+            } else {
+                return 0;
+            }
+        }
+
+//        String sql = "SELECT user_role FROM users WHERE user_name = ?;";
+//        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+//            ps.setString(1, username);
+//            try (ResultSet rs = ps.executeQuery()) {
+//                if (rs.next()) {
+//                    return rs.getString("user_role");
+//                } else {
+//                    return "";
+//                }
+//            }
+//        }
     }
 
     public void updateServiceFee(ServiceFee fee, long oldAmount) throws SQLException, IOException {
@@ -499,7 +544,7 @@ public class DatabaseConnection {
     public long[] getDashboardValues() throws SQLException {
         return new long[]{
             calc("SELECT SUM(IF(fee_value > amount, fee_value, amount)) FROM payments INNER JOIN service_fees on payments.fee_id = service_fees.fee_id"),
-            calc("SELECT SUM(IF(f.fee_value > 0, f.fee_value, 0) * (SELECT COUNT(*) FROM citizens c WHERE f.fee_start_date >= c.created_at AND c.is_owner)) FROM service_fees f"),
+            calc("SELECT SUM(IF(f.fee_value > 0, f.fee_value, 0) * (SELECT COUNT(*) FROM citizens c WHERE f.fee_start_date >= c.created_at)) FROM service_fees f"),
             calc("SELECT COUNT(1) FROM citizens"),
             calc("SELECT COUNT(DISTINCT room) FROM citizens"),
         };
@@ -510,7 +555,7 @@ public class DatabaseConnection {
                 SELECT
                     YEAR(f.fee_deadline) AS year,
                     MONTH(f.fee_deadline) AS month,
-                    SUM(f.fee_value * (SELECT COUNT(*) FROM citizens c WHERE f.fee_start_date >= c.created_at AND c.is_owner)) AS pending
+                    SUM(f.fee_value * (SELECT COUNT(*) FROM citizens c WHERE f.fee_start_date >= c.created_at )) AS pending
                 FROM
                     service_fees f
                 WHERE
@@ -656,6 +701,44 @@ public class DatabaseConnection {
         }
     }
 
+    public int getNumPayments() throws SQLException {
+        String query = "SELECT COUNT(*) FROM payments";
+        try (PreparedStatement s = connection.prepareStatement(query)) {
+            ResultSet rs = s.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            } else {
+                return 0;
+            }
+        }
+    }
+
+    public int getNumPayment() throws SQLException {
+        String query = "SELECT COUNT(*) FROM payments";
+        try (PreparedStatement s = connection.prepareStatement(query)) {
+//            s.setString(1, search);
+            ResultSet rs = s.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            } else {
+                return 0;
+            }
+        }
+    }
+
+    public int getNumResident() throws SQLException {
+        String query = "SELECT COUNT(*) FROM citizens";
+        try (PreparedStatement s = connection.prepareStatement(query)) {
+//            s.setString(1, search);
+            ResultSet rs = s.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            } else {
+                return 0;
+            }
+        }
+    }
+
     public void removeUser(int id) throws SQLException {
         try(var st = connection.prepareStatement("DELETE FROM users WHERE user_id = ?")) {
             st.setInt(1, id);
@@ -666,6 +749,13 @@ public class DatabaseConnection {
     public void removeServiceFee(int id) throws SQLException {
         try(var st = connection.prepareStatement("DELETE FROM service_fees WHERE fee_id = ?")) {
             st.setInt(1, id);
+            st.executeUpdate();
+        }
+    }
+
+    public  void removeResident(int id) throws SQLException {
+        try(var st = connection.prepareStatement("DELETE FROM citizens WHERE id = ?")){
+            st.setInt(1,id);
             st.executeUpdate();
         }
     }
@@ -690,7 +780,6 @@ public class DatabaseConnection {
                 WHERE
                     INSTR(payments.room, ?) != 0
                     AND INSTR(service_fees.fee_name, ?) != 0
-                    AND citizens.is_owner = TRUE
                 LIMIT ? OFFSET ?;
                 """)) {
             st.setString(1, roomQ);
@@ -717,5 +806,32 @@ public class DatabaseConnection {
         }
 
         return list;
+    }
+
+    public ObservableList<Citizen> getResidents(String search, int limit, int offset) throws SQLException {
+        ObservableList<Citizen> residentList = FXCollections.observableArrayList();
+        String query = """
+                SELECT * FROM Citizens WHERE INSTR(full_name, ?) > 0 LIMIT ? OFFSET ?""";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, search);
+            ps.setInt(2, limit);
+            ps.setInt(3, offset);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String fullname = rs.getString("full_name");
+                    Date date = rs.getDate("date_of_birth");
+                    String gender = rs.getString("gender");
+                    String passportId = rs.getString("passport_id");
+                    String nationality = rs.getString("nationality");
+                    String room = rs.getString("room");
+                    var createdAt = rs.getTimestamp("created_at");
+                    var updatedAt = rs.getTimestamp("updated_at");
+
+                    residentList.add(new Citizen(id, fullname, date.toLocalDate(), Citizen.Gender.valueOf(gender), passportId, nationality, room, createdAt.toLocalDateTime(), updatedAt.toLocalDateTime()));
+                }
+            }
+        }
+        return residentList;
     }
 }
