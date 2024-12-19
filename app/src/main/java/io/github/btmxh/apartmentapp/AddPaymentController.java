@@ -41,6 +41,9 @@ public class AddPaymentController {
         selectFeeButton.setOnAction(e -> selectFee());
         submitButton.setOnAction(e -> handleSubmit());
         cancelButton.setOnAction(e -> handleCancel());
+
+        valueTextField.setText("");
+        valueTextField.setDisable(true);
     }
 
     private void selectRoom() {
@@ -81,16 +84,17 @@ public class AddPaymentController {
 
                 switch(fee.get().getType()) {
                     case FeeType.MANAGEMENT, FeeType.SERVICE:
-                        //payment.setAmount((long) (fee.get().getValue1() * room.get().getArea()));
                         valueTextField.setText(String.valueOf((long) (fee.get().getValue1() * room.get().getArea())));
+                        valueTextField.setDisable(true);
                         break;
 
                     case FeeType.PARKING:
-                        //payment.setAmount(fee.get().getValue1() * room.get().getNumMotors() + fee.get().getValue2() * room.get().getNumCars());
                         valueTextField.setText(String.valueOf(fee.get().getValue1() * room.get().getNumMotors() + fee.get().getValue2() * room.get().getNumCars()));
+                        valueTextField.setDisable(true);
                         break;
 
                     case FeeType.DONATION:
+                        valueTextField.setText("");
                         valueTextField.setDisable(false);
                         break;
                 }
@@ -108,19 +112,19 @@ public class AddPaymentController {
             } else if (fee.get() == null) {
                 Announcement.show("Thiếu thông tin", "Chưa chọn khoản thu", "Vui lòng chọn khoản thu trước khi xác nhận.");
             } else {
-                long amount;
+                long value;
                 try {
-                    amount = Long.parseLong(valueTextField.getText().trim());
+                    value = Long.parseLong(valueTextField.getText().trim());
                 } catch (NumberFormatException ex) {
                     logger.warn("Nhập số tiền không thành công", ex);
                     Announcement.show("Giá trị không hợp lệ", "Số tiền không đúng định dạng", "Vui lòng nhập số tiền hợp lệ (chỉ bao gồm số).");
                     return;
                 }
-                payment.setAmount(amount);
-                payment.setRoomId(room.get().getName());
+                payment.setValue(value);
+                payment.setRoom(room.get());
                 payment.setFee(fee.get());
                 payment.setUser(user.get());
-                DatabaseConnection.getInstance().updatePayment1(payment);
+                DatabaseConnection.getInstance().updatePayment(payment);
             }
         }
         catch (SQLException | IOException ex) {
@@ -139,9 +143,23 @@ public class AddPaymentController {
         AddPaymentController.user.set(user);
     }
 
-    public void setPayment(Payment p) {
-        payment = p;
-        //fee.set(p.getFee());
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+        if (payment.getRoom() != null) {
+            roomLabel.setText(payment.getRoom().getName());
+            room.set(payment.getRoom());
+        }
+        if (payment.getFee() != null) {
+            fee.set(payment.getFee());
+            feeLabel.setText(payment.getFee().getName());
+            if (payment.getFee().getType() == FeeType.DONATION) {
+                valueTextField.setDisable(false);
+            }
+        }
+        if (payment.getValue() != 0) {
+            valueTextField.setText(String.valueOf(payment.getValue()));
+        }
+        user.set(payment.getUser());
     }
 
     public void setStage(Stage stage) {
@@ -154,7 +172,7 @@ public class AddPaymentController {
         final AddPaymentController controller = loader.getController();
         final var stage = new Stage();
         if (payment == null) {
-            payment = new Payment(-1, null, "", -1, LocalDateTime.now(), "");
+            payment = new Payment(-1, null, user.get(), null, 0, LocalDateTime.now());
         }
 
         stage.initOwner(window);
