@@ -6,7 +6,8 @@
 <TableView fx:id="table" editable="true" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.ServiceFeeTableController">
     <columns>
         <TableColumn fx:id="noCol" editable="false" maxWidth="400.0" prefWidth="100.0" sortable="false" text="STT" />
-        <TableColumn fx:id="nameCol" prefWidth="400.0" sortable="false" text="Tên khoản thu" />
+        <TableColumn fx:id="nameCol" prefWidth="300.0" sortable="false" text="Tên khoản thu" />
+      <TableColumn fx:id="typeCol" prefWidth="200.0" text="Loại khoản thu" />
         <TableColumn fx:id="startDateCol" editable="false" prefWidth="250.0" sortable="false" text="Ngày bắt đầu" />
       <TableColumn fx:id="deadlineCol" prefWidth="250.0" sortable="false" text="Hạn cuối" />
     </columns>
