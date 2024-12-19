@@ -1,6 +1,7 @@
 package io.github.btmxh.apartmentapp.filldb;
 
 import io.github.btmxh.apartmentapp.Citizen;
+import io.github.btmxh.apartmentapp.DatabaseConnection.Gender;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
+
 
 public class CitizenRNG {
 
@@ -44,8 +46,8 @@ public class CitizenRNG {
         return LocalDate.of(year, month, day);
     }
 
-    private static Citizen.Gender generateRandomGender() {
-        Citizen.Gender[] genders = Citizen.Gender.values();
+    private static Gender generateRandomGender() {
+        Gender[] genders = Gender.values();
         return genders[(int) (Math.random() * genders.length)];
     }
 

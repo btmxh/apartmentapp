@@ -2,6 +2,7 @@ package io.github.btmxh.apartmentapp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import io.github.btmxh.apartmentapp.DatabaseConnection.Gender;
 
 public class Citizen {
     private int id;
@@ -95,11 +96,5 @@ public class Citizen {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public enum Gender {
-        Nam,
-        Nữ,
-        Khác;
     }
 }

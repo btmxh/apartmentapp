@@ -35,16 +35,25 @@ public class AddServiceFeeController {
     @FXML
     private Label carLabel;
     @FXML
+    private Label unit1Label;
+    @FXML
+    private Label unit2Label;
+    @FXML
+    private Label valueLabel;
+    @FXML
     private DatePicker startDatePicker;
 
     private ServiceFee fee;
     private Stage stage;
 
     public void initialize() {
-        value1TextField.setDisable(true);
+        valueLabel.setVisible(false);
+        value1TextField.setVisible(false);
         value2TextField.setVisible(false);
         motorLabel.setVisible(false);
         carLabel.setVisible(false);
+        unit1Label.setVisible(false);
+        unit2Label.setVisible(false);
         typeComboBox.getItems().addAll(FeeType.values());
         typeComboBox.setCellFactory(param -> new javafx.scene.control.ListCell<>() {
             @Override
@@ -72,17 +81,52 @@ public class AddServiceFeeController {
                 new ChangeListener<FeeType>() {
                     @Override
                     public void changed(ObservableValue<? extends FeeType> observable, FeeType oldValue, FeeType newValue) {
-                        if (newValue == FeeType.PARKING) {
-                            value2TextField.setVisible(true);
-                            motorLabel.setVisible(true);
-                            carLabel.setVisible(true);
-                        }
-                        else {
+                        if (newValue == FeeType.DONATION || newValue == null) {
+                            valueLabel.setVisible(false);
+                            value1TextField.setVisible(false);
+                            value1TextField.setText(null);
                             value2TextField.setVisible(false);
+                            value2TextField.setText(null);
                             motorLabel.setVisible(false);
                             carLabel.setVisible(false);
+                            unit1Label.setVisible(false);
+                            unit2Label.setVisible(false);
                         }
-                        value1TextField.setDisable(newValue == FeeType.DONATION);
+                        else if (newValue == FeeType.PARKING) {
+                            valueLabel.setVisible(true);
+                            value1TextField.setVisible(true);
+                            value1TextField.setText(null);
+                            value2TextField.setVisible(true);
+                            value2TextField.setText(null);
+                            motorLabel.setVisible(true);
+                            carLabel.setVisible(true);
+                            unit1Label.setVisible(true);
+                            unit1Label.setText("/ xe");
+                            unit2Label.setVisible(true);
+                        }
+                        else if (oldValue == FeeType.MANAGEMENT || oldValue == FeeType.SERVICE) {
+                            valueLabel.setVisible(true);
+                            value1TextField.setVisible(true);
+                            value2TextField.setVisible(false);
+                            value2TextField.setText(null);
+                            motorLabel.setVisible(false);
+                            carLabel.setVisible(false);
+                            unit1Label.setVisible(true);
+                            unit1Label.setText("/ m²");
+                            unit2Label.setVisible(false);
+                        }
+                        else {
+                            valueLabel.setVisible(true);
+                            value1TextField.setVisible(true);
+                            value1TextField.setText(null);
+                            value2TextField.setVisible(false);
+                            value2TextField.setText(null);
+                            motorLabel.setVisible(false);
+                            carLabel.setVisible(false);
+                            unit1Label.setVisible(true);
+                            unit1Label.setText("/ m²");
+                            unit2Label.setVisible(false);
+                        }
                     }
                 }
         );
@@ -122,14 +166,16 @@ public class AddServiceFeeController {
                 return;
             }
 
-            long value1, value2 = 0;
-            try {
-                value1 = Long.parseLong(value1TextField.getText().trim());
-            }
-            catch (NumberFormatException ex) {
-                logger.warn("Nhập số tiền không thành công", ex);
-                Announcement.show("Giá trị không hợp lệ", "Số tiền không đúng định dạng", "Vui lòng nhập số tiền hợp lệ (chỉ bao gồm số).");
-                return;
+            long value1 = 0, value2 = 0;
+            if (type != FeeType.DONATION) {
+                try {
+                    value1 = Long.parseLong(value1TextField.getText().trim());
+                }
+                catch (NumberFormatException ex) {
+                    logger.warn("Nhập số tiền không thành công", ex);
+                    Announcement.show("Giá trị không hợp lệ", "Số tiền không đúng định dạng", "Vui lòng nhập số tiền hợp lệ (chỉ bao gồm số).");
+                    return;
+                }
             }
 
             if (type == FeeType.PARKING) {
@@ -149,13 +195,7 @@ public class AddServiceFeeController {
             fee.setDeadline(deadline);
             fee.setValue1(value1);
             fee.setValue2(value2);
-            logger.info(type.getDisplayName());
-            logger.info(name);
-            logger.info(startDate);
-            logger.info(deadline);
-            logger.info(value1);
-            logger.info(value2);
-            DatabaseConnection.getInstance().updateServiceFee1(fee);
+            DatabaseConnection.getInstance().updateServiceFee(fee);
         } catch (SQLException | IOException ex) {
             logger.warn("Thêm khoản thu thất bại", ex);
             Announcement.show("Lỗi", "Không thể thêm khoản thu vào CSDL", ex.getMessage());
@@ -171,7 +211,7 @@ public class AddServiceFeeController {
         final AddServiceFeeController controller = loader.getController();
         final var stage = new Stage();
         if (fee == null) {
-            fee = new ServiceFee(ServiceFee.NULL_ID, "", -1, LocalDate.now(), LocalDate.now());
+            fee = new ServiceFee(ServiceFee.NULL_ID, null,null, 0, 0, null, null);
         }
 
         stage.initOwner(window);
@@ -184,16 +224,12 @@ public class AddServiceFeeController {
 
     public void setServiceFee(ServiceFee fee) {
         this.fee = fee;
-//        nameField.setText(fee.getName());
-//        if(fee.getAmount() >= 0) {
-//            valueField.setText(String.valueOf(fee.getAmount()));
-//        } else {
-//            valueField.setText("");
-//        }
-//        constAmount.setSelected(fee.getAmount() < 0);
-//        startDatePicker.setValue(fee.getStartDate());
-//        deadlinePicker.setValue(fee.getDeadline());
-
+        typeComboBox.setValue(fee.getType());
+        nameTextField.setText(fee.getName());
+        value1TextField.setText(String.valueOf(fee.getValue1()));
+        value2TextField.setText(String.valueOf(fee.getValue2()));
+        startDatePicker.setValue(fee.getStartDate());
+        endDatePicker.setValue(fee.getDeadline());
     }
 
     private void setStage(Stage stage) {

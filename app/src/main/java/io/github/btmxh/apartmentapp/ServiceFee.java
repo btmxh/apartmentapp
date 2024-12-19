@@ -20,43 +20,38 @@ import java.util.stream.Collectors;
 public class ServiceFee {
     public static final int NULL_ID = -1;
     private int id = NULL_ID;
+    private final SimpleObjectProperty<FeeType> type = new SimpleObjectProperty<>();
     private final SimpleStringProperty name = new SimpleStringProperty();
-    private final SimpleLongProperty amount = new SimpleLongProperty();
-    private final SimpleObjectProperty<LocalDate> startDate = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<LocalDate> deadline = new SimpleObjectProperty<>();
-    private int numReceived, numPending;
-    private FeeType type;
     private final SimpleLongProperty value1 = new SimpleLongProperty();
     private final SimpleLongProperty value2 = new SimpleLongProperty();
-
-    public ServiceFee(int id, String name, long amount, LocalDate startDate, LocalDate deadline, int numReceived, int numPending) {
-        this.id = id;
-        this.numReceived = numReceived;
-        this.numPending = numPending;
-        this.name.set(name);
-        this.amount.set(amount);
-        this.startDate.set(startDate);
-        this.deadline.set(deadline);
-    }
-
-    public ServiceFee(int id, String name, long amount, LocalDate startDate, LocalDate deadline) {
-        this(id, name, amount, startDate, deadline, 0, 0);
-    }
+    private final SimpleObjectProperty<LocalDate> startDate = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<LocalDate> deadline = new SimpleObjectProperty<>();
 
     public ServiceFee(int id, FeeType type, String name, long value1, long value2) {
         this.id = id;
-        this.type = type;
+        this.type.set(type);
         this.name.set(name);
         this.value1.set(value1);
         this.value2.set(value2);
     }
 
+    public ServiceFee(int id, FeeType type, String name, long value1, long value2, LocalDate startDate, LocalDate deadline) {
+        this.id = id;
+        this.type.set(type);
+        this.name.set(name);
+        this.value1.set(value1);
+        this.value2.set(value2);
+        this.startDate.set(startDate);
+        this.deadline.set(deadline);
+    }
+
+
     public FeeType getType() {
-        return type;
+        return type.get();
     }
 
     public void setType(FeeType type) {
-        this.type = type;
+        this.type.set(type);
     }
 
     public long getValue1() {
@@ -73,14 +68,6 @@ public class ServiceFee {
 
     public void setValue2(long value) {
         this.value2.set(value);
-    }
-
-    public int getNumReceived() {
-        return numReceived;
-    }
-
-    public int getNumPending() {
-        return numPending;
     }
 
     public int getId() {
@@ -101,18 +88,6 @@ public class ServiceFee {
 
     public SimpleStringProperty name() {
         return name;
-    }
-
-    public long getAmount() {
-        return amount.get();
-    }
-
-    public void setAmount(long value) {
-        amount.set(value);
-    }
-
-    public SimpleLongProperty amount() {
-        return amount;
     }
 
     public LocalDate getStartDate() {
