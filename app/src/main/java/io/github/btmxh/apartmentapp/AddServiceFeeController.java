@@ -122,7 +122,7 @@ public class AddServiceFeeController {
                 return;
             }
 
-            long value1, value2 = 0;
+            long value1 = 0, value2 = 0;
             try {
                 value1 = Long.parseLong(value1TextField.getText().trim());
             }
