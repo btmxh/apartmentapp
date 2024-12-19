@@ -13,6 +13,7 @@ public class Payment {
     private final SimpleStringProperty roomOwner = new SimpleStringProperty(); // Normal StringProperty for roomOwner
     private final SimpleObjectProperty<User> user = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<Room> room = new SimpleObjectProperty<>();
+    private final SimpleLongProperty value = new SimpleLongProperty();
 
 
     public Payment(int id, ServiceFee fee, String roomId, long amount, LocalDateTime committedTimestamp, String roomOwner) {
@@ -24,13 +25,21 @@ public class Payment {
         this.roomOwner.set(roomOwner);// Initialize roomOwner
     }
 
-    public Payment(int id, ServiceFee fee, Room room, long amount, LocalDateTime committedTimestamp, User user) {
+    public Payment(int id, ServiceFee fee, User user, Room room, long value, LocalDateTime committedTimestamp) {
         this.id = id;
         this.fee.set(fee);
         this.room.set(room);
-        this.amount.set(amount);
+        this.value.set(value);
         this.committedTimestamp.set(committedTimestamp);
         this.user.set(user);// Initialize roomOwner
+    }
+
+    public long getValue() {
+        return value.get();
+    }
+
+    public void setValue(long value) {
+        this.value.set(value);
     }
 
     public Room getRoom() {

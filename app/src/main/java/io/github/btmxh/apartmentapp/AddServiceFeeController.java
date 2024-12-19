@@ -195,13 +195,7 @@ public class AddServiceFeeController {
             fee.setDeadline(deadline);
             fee.setValue1(value1);
             fee.setValue2(value2);
-//            logger.info(type.getDisplayName());
-//            logger.info(name);
-//            logger.info(startDate);
-//            logger.info(deadline);
-//            logger.info(value1);
-//            logger.info(value2);
-            DatabaseConnection.getInstance().updateServiceFee1(fee);
+            DatabaseConnection.getInstance().updateServiceFee(fee);
         } catch (SQLException | IOException ex) {
             logger.warn("Thêm khoản thu thất bại", ex);
             Announcement.show("Lỗi", "Không thể thêm khoản thu vào CSDL", ex.getMessage());
@@ -231,7 +225,6 @@ public class AddServiceFeeController {
     public void setServiceFee(ServiceFee fee) {
         this.fee = fee;
         typeComboBox.setValue(fee.getType());
-//        logger.info("1{}", fee.getType());
         nameTextField.setText(fee.getName());
         value1TextField.setText(String.valueOf(fee.getValue1()));
         value2TextField.setText(String.valueOf(fee.getValue2()));

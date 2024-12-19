@@ -260,17 +260,17 @@ public class PageController {
         try {
             var loader = new FXMLLoader(Objects.requireNonNull(PageController.class.getResource("/payment-table.fxml")));
             int start = pageIndex * ROWS_PER_PAGE;
-            var fees = dc.getPayments(feeSearch.getText(), roomSearch.getText(), ROWS_PER_PAGE, pageIndex * ROWS_PER_PAGE);
+            var payments = dc.getPayments(feeSearch.getText(), roomSearch.getText(), ROWS_PER_PAGE, pageIndex * ROWS_PER_PAGE);
             TableView<Payment> table = loader.load();
             PaymentTableController controller = loader.getController();
-            controller.setPage(start, FXCollections.observableArrayList(fees));
+            controller.setPaymentData(start, FXCollections.observableArrayList(payments), this::updatePayments);
             return table;
         } catch (SQLException e) {
             logger.warn("Lỗi khi thực thi lệnh SQL", e);
-            Announcement.show("Lỗi", "Không thể lấy được danh sách phí dịch vụ!", "Lỗi kết nối cơ sở dữ liệu: " + e.getMessage());
+            Announcement.show("Lỗi", "Không thể lấy được danh sách thanh toán!", "Lỗi kết nối cơ sở dữ liệu: " + e.getMessage());
         } catch (IOException e) {
             logger.fatal("Lỗi khi tải tệp FXML", e);
-            Announcement.show("Lỗi", "Không thể tải bảng phí dịch vụ FXML!", "Lỗi chi tiết: " + e.getMessage());
+            Announcement.show("Lỗi", "Không thể tải bảng thanh toán FXML!", "Lỗi chi tiết: " + e.getMessage());
         }
         return null;
     }
