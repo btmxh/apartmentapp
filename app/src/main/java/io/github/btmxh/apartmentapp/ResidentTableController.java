@@ -8,6 +8,7 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import io.github.btmxh.apartmentapp.DatabaseConnection.Gender;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -23,7 +24,7 @@ public class ResidentTableController {
     public TableColumn<Citizen, LocalDate> birthCol;
     public TableColumn<Citizen, String> roomNumberCol;
     public TableColumn<Citizen, String> passportIDCol;
-    public TableColumn<Citizen, Citizen.Gender> genderCol;
+    public TableColumn<Citizen, Gender> genderCol;
     public TableColumn<Citizen, String> nationCol;
     private  Runnable updateResidents;
 

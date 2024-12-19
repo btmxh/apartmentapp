@@ -108,6 +108,43 @@ public class DatabaseConnection {
         }
     }
 
+    public enum Gender {
+        MALE("Nam"),
+        FEMALE("Nữ"),
+        OTHER("Khác");
+
+        private final String displayName;
+
+        Gender(String displayName) {
+            this.displayName = displayName;
+        }
+
+        public String getSQLName() {
+            return name();
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
+
+        public static String getGenderEnum() {
+            String genderEnum = Arrays.stream(Gender.values())
+                    .map(Gender::getSQLName)
+                    .map(type -> "'" + type + "'")
+                    .collect(Collectors.joining(", "));
+            return "Enum(" + genderEnum + ")";
+        }
+
+        public static Gender getGender(String sqlName) {
+            for (Gender gender : Gender.values()) {
+                if (gender.name().equals(sqlName)) {
+                    return gender;
+                }
+            }
+            throw new IllegalArgumentException("Giá trị không xác định: " + sqlName);
+        }
+    }
+
     private DatabaseConnection() {
         try {
             Dotenv dotenv = Dotenv.load();
@@ -238,7 +275,7 @@ public class DatabaseConnection {
         }
     }
 
-    public void addCitizenToDB(Citizen citizen) {
+    public void addCitizenToDB(Citizen citizen) throws SQLException {
         String insertQuery = "INSERT INTO citizens (full_name, date_of_birth, gender, passport_id, nationality, room) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -265,8 +302,6 @@ public class DatabaseConnection {
                         citizen.setId(rs.getInt(1));
                     }
                 }
-            } catch (SQLException e) {
-                throw new RuntimeException("Database INSERT operation failed", e);
             }
         }
         // Nếu ID khác -1 thì thực hiện cập nhật
@@ -283,8 +318,6 @@ public class DatabaseConnection {
                 if (st.executeUpdate() == 0) {
                     throw new RuntimeException("Error while updating citizen in DB");
                 }
-            } catch (SQLException e) {
-                throw new RuntimeException("Database UPDATE operation failed", e);
             }
         }
     }
@@ -828,7 +861,7 @@ public class DatabaseConnection {
                     var createdAt = rs.getTimestamp("created_at");
                     var updatedAt = rs.getTimestamp("updated_at");
 
-                    residentList.add(new Citizen(id, fullname, date.toLocalDate(), Citizen.Gender.valueOf(gender), passportId, nationality, room, createdAt.toLocalDateTime(), updatedAt.toLocalDateTime()));
+                    residentList.add(new Citizen(id, fullname, date.toLocalDate(), Gender.valueOf(gender), passportId, nationality, room, createdAt.toLocalDateTime(), updatedAt.toLocalDateTime()));
                 }
             }
         }
