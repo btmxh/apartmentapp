@@ -389,15 +389,6 @@ public class DatabaseConnection {
         return fees;
     }
 
-    public boolean paymentExists(int fee_id, String room) throws SQLException, IOException {
-        try(var st = connection.prepareStatement("SELECT * FROM payments WHERE fee_id = ? AND room = ?")) {
-            st.setInt(1, fee_id);
-            st.setString(2, room);
-            final var rs = st.executeQuery();
-            return rs.next();
-        }
-    }
-
     public void updatePayment(Payment payment) throws SQLException, IOException {
         if (payment.getId() == Payment.NULL_ID)
             try(var st = connection.prepareStatement("INSERT INTO payments (fee_id, user_id, room_id, value) VALUES (?, ?, ?, ?)")) {
@@ -419,77 +410,6 @@ public class DatabaseConnection {
             }
         }
     }
-
-    public String getRoomOwner(String room) throws SQLException, IOException {
-        try(var st = connection.prepareStatement("SELECT full_name FROM citizens WHERE room = ?")) {
-            st.setString(1, room);
-            var rs = st.executeQuery();
-            if(rs.next()) {
-                return rs.getString("full_name");
-            } else {
-                return null;
-            }
-        }
-    }
-
-    public int getRoomArea(String room) throws SQLException, IOException {
-        try(var st = connection.prepareStatement("SELECT area FROM rooms WHERE room = ?")) {
-            st.setString(1, room);
-            var rs = st.executeQuery();
-            if(rs.next()) {
-                return rs.getInt(1);
-            } else {
-                return 0;
-            }
-        }
-
-//        String sql = "SELECT user_role FROM users WHERE user_name = ?;";
-//        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-//            ps.setString(1, username);
-//            try (ResultSet rs = ps.executeQuery()) {
-//                if (rs.next()) {
-//                    return rs.getString("user_role");
-//                } else {
-//                    return "";
-//                }
-//            }
-//        }
-    }
-
-//    public void updateServiceFee(ServiceFee fee, long oldAmount) throws SQLException, IOException {
-//        if(fee.getId() == ServiceFee.NULL_ID) {
-//            try(var st = connection.prepareStatement("INSERT INTO service_fees (fee_name, fee_value, fee_start_date, fee_deadline) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
-//                st.setString(1, fee.getName());
-//                st.setLong(2, fee.getAmount());
-//                st.setDate(3, Date.valueOf(fee.getStartDate()));
-//                st.setDate(4, Date.valueOf(fee.getDeadline()));
-//
-//                if(st.executeUpdate() == 0) {
-//                    throw new RuntimeException("Lỗi khi chèn phí dịch vụ vào DB");
-//                }
-//                try(var rs = st.getGeneratedKeys()) {
-//                    rs.next();
-//                    fee.setId(rs.getInt(1));
-//                }
-//            }
-//        } else {
-//            if(oldAmount != fee.getAmount()) {
-//                try(var st = connection.prepareStatement("UPDATE payments SET amount = ? WHERE fee_id = ?")) {
-//                    st.setLong(1, oldAmount);
-//                    st.setInt(2, fee.getId());
-//                    st.executeUpdate();
-//                }
-//            }
-//            try(var st = connection.prepareStatement("UPDATE service_fees SET fee_name = ?, fee_value = ?, fee_start_date = ?, fee_deadline = ? WHERE fee_id = ?")) {
-//                st.setString(1, fee.getName());
-//                st.setLong(2, fee.getAmount());
-//                st.setDate(3, Date.valueOf(fee.getStartDate()));
-//                st.setDate(4, Date.valueOf(fee.getDeadline()));
-//                st.setInt(5, fee.getId());
-//                st.executeUpdate();
-//            }
-//        }
-//    }
 
     public void updateServiceFee(ServiceFee fee) throws SQLException, IOException {
         if(fee.getId() == ServiceFee.NULL_ID) {
@@ -735,10 +655,22 @@ public class DatabaseConnection {
         }
     }
 
+    public int getNumPayments(String search) throws SQLException {
+        String query = "SELECT COUNT(*) FROM payments, service_fees WHERE payments.fee_id = service_fees.id AND INSTR(service_fees.name, ?) != 0";
+        try (PreparedStatement s = connection.prepareStatement(query)) {
+            s.setString(1, search);
+            ResultSet rs = s.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            } else {
+                return 0;
+            }
+        }
+    }
+
     public int getNumPayment() throws SQLException {
         String query = "SELECT COUNT(*) FROM payments";
         try (PreparedStatement s = connection.prepareStatement(query)) {
-//            s.setString(1, search);
             ResultSet rs = s.executeQuery();
             if (rs.next()) {
                 return rs.getInt(1);
