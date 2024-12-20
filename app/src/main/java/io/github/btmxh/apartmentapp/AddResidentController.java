@@ -84,7 +84,7 @@ public class AddResidentController {
             citizen.setRoom(room);
             DatabaseConnection.getInstance().addCitizenToDB(citizen);
 
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException ex) {
             logger.error("Error inserting data into database", ex);
             Announcement.show("Lỗi", "Không thể thêm phí dịch vụ vào CSDL", ex.getMessage());
             return;

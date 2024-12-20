@@ -18,11 +18,12 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="1080.0" prefWidth="1440.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.PageController">
+<BorderPane prefHeight="1080.0" prefWidth="1440.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.PageController">
    <left>
       <VBox alignment="BOTTOM_RIGHT" prefWidth="240.0" styleClass="sidebar" BorderPane.alignment="CENTER">
          <VBox alignment="TOP_CENTER" spacing="10.0" style="-: #fcd303;" VBox.vgrow="ALWAYS">
@@ -48,14 +49,14 @@
                   <padding>
                      <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
                   </padding></Button>
-               <Button fx:id="staticButton" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="section-button" text="Tài khoản">
-                  <VBox.margin>
-                     <Insets />
-                  </VBox.margin>
-                  <padding>
-                     <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
-                  </padding>
-               </Button>
+<!--               <Button fx:id="staticButton" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="section-button" text="Tài khoản">-->
+<!--                  <VBox.margin>-->
+<!--                     <Insets />-->
+<!--                  </VBox.margin>-->
+<!--                  <padding>-->
+<!--                     <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />-->
+<!--                  </padding>-->
+<!--               </Button>-->
                <Button fx:id="createChargeButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="section-button" text="Khoản thu">
                   <padding>
                      <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
@@ -117,7 +118,7 @@
                   <Label prefWidth="64.0" text="Phòng" GridPane.rowIndex="1" />
                   <TextField fx:id="feeSearch" promptText="Tìm kiếm theo khoản thu" GridPane.columnIndex="1" />
                   <Label text="Khoản thu" />
-                  <Button mnemonicParsing="false" text="Thu phí" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" onAction="#addPayment" />
+                  <Button mnemonicParsing="false" onAction="#addPayment" text="Thu phí" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                </children>
             </GridPane>
             <Pagination fx:id="paymentTable" VBox.vgrow="ALWAYS" />
@@ -173,7 +174,16 @@
          </VBox>
          <VBox fx:id="homeVBox" layoutX="20.0" layoutY="20.0" prefHeight="516.0" prefWidth="739.0" spacing="20.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-               <Label fx:id="greetingLabel" styleClass="section-title" text="Xin chao, mekiet" />
+               <HBox prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Label fx:id="greetingLabel" styleClass="section-title" text="Xin chao, mekiet" />
+                     <Region HBox.hgrow="ALWAYS" />
+                     <Button onAction="#changeInforUser" mnemonicParsing="false" text="Thay đổi thông tin tài khoản">
+                        <font>
+                           <Font size="15.0" />
+                        </font></Button>
+                  </children>
+               </HBox>
                <Separator prefWidth="200.0" />
                <Label fx:id="generalLabel" layoutX="50.0" layoutY="50.0" styleClass="section-title" text="Tong quan thang 11" />
                <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="dashboards">

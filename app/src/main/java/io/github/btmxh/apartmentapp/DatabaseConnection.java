@@ -238,7 +238,7 @@ public class DatabaseConnection {
         }
     }
 
-    public void addCitizenToDB(Citizen citizen) {
+    public void addCitizenToDB(Citizen citizen) throws SQLException {
         String insertQuery = "INSERT INTO citizens (full_name, date_of_birth, gender, passport_id, nationality, room) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -435,17 +435,6 @@ public class DatabaseConnection {
             }
         }
 
-//        String sql = "SELECT user_role FROM users WHERE user_name = ?;";
-//        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-//            ps.setString(1, username);
-//            try (ResultSet rs = ps.executeQuery()) {
-//                if (rs.next()) {
-//                    return rs.getString("user_role");
-//                } else {
-//                    return "";
-//                }
-//            }
-//        }
     }
 
     public void updateServiceFee(ServiceFee fee, long oldAmount) throws SQLException, IOException {
@@ -666,6 +655,39 @@ public class DatabaseConnection {
         }
         return userList;
     }
+
+    public String getUserPasswordByPhoneNumber(String phoneNumber) throws SQLException {
+        String password = null;
+        String query = "SELECT user_password FROM users WHERE user_name = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, phoneNumber);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    password = rs.getString("user_password");
+                }
+            }
+        }
+        return password;
+    }
+
+    public void setPassword (String pass, String name) throws SQLException {
+        String query = "UPDATE users SET user_password = ? WHERE user_name = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, pass);
+            ps.setString(2, name);
+            ps.executeUpdate();
+        }
+    }
+
+    public void setPhoneNum (String phone, String name) throws SQLException {
+        String query = "UPDATE users SET user_phone_number = ? WHERE user_name = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, phone);
+            ps.setString(2, name);
+            ps.executeUpdate();
+        }
+    }
+
 
     public void setRole(String username, Role role) throws SQLException {
         String query = "UPDATE users SET user_role = ? WHERE user_name = ?";
