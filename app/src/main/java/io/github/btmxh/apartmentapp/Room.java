@@ -8,15 +8,15 @@ public class Room {
     public static final int NULL_ID = -1;
     private int id = NULL_ID;
     private SimpleStringProperty name = new SimpleStringProperty();
-    private SimpleIntegerProperty ownerId = new SimpleIntegerProperty();
+    private SimpleStringProperty ownerName = new SimpleStringProperty();
     private SimpleFloatProperty area = new SimpleFloatProperty();
     private SimpleIntegerProperty numMotors = new SimpleIntegerProperty();
     private SimpleIntegerProperty numCars = new SimpleIntegerProperty();
 
-    public Room(int id, String name, int ownerId, float area, int numMotors, int numCars) {
+    public Room(int id, String name, String ownerName, float area, int numMotors, int numCars) {
         this.id = id;
         this.name.set(name);
-        this.ownerId.set(ownerId);
+        this.ownerName.set(ownerName);
         this.area.set(area);
         this.numMotors.set(numMotors);
         this.numCars.set(numCars);
@@ -50,12 +50,12 @@ public class Room {
         this.area.set(area);
     }
 
-    public int getOwnerId() {
-        return ownerId.get();
+    public String getOwnerName() {
+        return ownerName.get();
     }
 
-    public void setOwnerId(int ownerId) {
-        this.ownerId.set(ownerId);
+    public void setOwnerName(String ownerName) {
+        this.ownerName.set(ownerName);
     }
 
     public int getNumCars() {

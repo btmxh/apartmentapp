@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+
+<TableView fx:id="table" editable="true" prefHeight="400.0" prefWidth="953.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.RoomTableController">
+    <columns>
+      <TableColumn fx:id="noCol" editable="false" maxWidth="400.0" prefWidth="100.0" sortable="false" text="STT" />
+      <TableColumn fx:id="nameCol" minWidth="0.0" prefWidth="200.0" sortable="false" text="Tên căn hộ" />
+      <TableColumn fx:id="ownerCol" editable="false" minWidth="0.0" prefWidth="200.0" sortable="false" text="Chủ căn hộ" />
+      <TableColumn fx:id="areaCol" minWidth="0.0" prefWidth="150.0" sortable="false" text="Diện tích (m²)" />
+      <TableColumn fx:id="motorsCol" minWidth="0.0" prefWidth="150.0" sortable="false" text="Số lượng xe máy" />
+      <TableColumn fx:id="carsCol" prefWidth="150.0" text="Số lượng ô tô" />
+    </columns>
+   <columnResizePolicy>
+      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+   </columnResizePolicy>
+</TableView>

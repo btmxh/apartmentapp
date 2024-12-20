@@ -262,7 +262,7 @@ public class DatabaseConnection {
                 CREATE TABLE IF NOT EXISTS rooms (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     name VARCHAR(10) NOT NULL,
-                    owner_id INT NOT NULL DEFAULT 0,
+                    owner_name VARCHAR(255) NOT NULL,
                     area FLOAT(1) NOT NULL,
                     number_of_motors INT NOT NULL DEFAULT 0,
                     number_of_cars INT NOT NULL DEFAULT 0
@@ -353,17 +353,38 @@ public class DatabaseConnection {
 
     public List<Room> getRooms(String query) throws SQLException {
         final var rooms = new ArrayList<Room>();
-        try(var st = connection.prepareStatement("SELECT id, name, owner_id, area, number_of_motors, number_of_cars FROM rooms WHERE INSTR(name, ?) != 0")) {
+        try(var st = connection.prepareStatement("SELECT id, name, owner_name, area, number_of_motors, number_of_cars FROM rooms WHERE INSTR(name, ?) != 0")) {
             st.setString(1, query);
             final var rs = st.executeQuery();
             while(rs.next()) {
                 final var id = rs.getInt("id");
                 final var name = rs.getString("name");
-                final var ownerId = rs.getInt("owner_id");
+                final var ownerName = rs.getString("owner_name");
                 final var area = rs.getFloat("area");
                 final var numMotors = rs.getInt("number_of_motors");
                 final var numCars = rs.getInt("number_of_cars");
-                final var room = new Room(id, name, ownerId, area, numMotors, numCars);
+                final var room = new Room(id, name, ownerName, area, numMotors, numCars);
+                rooms.add(room);
+            }
+        }
+        return rooms;
+    }
+
+    public List<Room> getRooms(String query, int limit, int offset) throws SQLException {
+        final var rooms = new ArrayList<Room>();
+        try(var st = connection.prepareStatement("SELECT id, name, owner_name, area, number_of_motors, number_of_cars FROM rooms WHERE INSTR(name, ?) != 0 LIMIT ? OFFSET ?")) {
+            st.setString(1, query);
+            st.setInt(2, limit);
+            st.setInt(3, offset);
+            final var rs = st.executeQuery();
+            while(rs.next()) {
+                final var id = rs.getInt("id");
+                final var name = rs.getString("name");
+                final var ownerName = rs.getString("owner_name");
+                final var area = rs.getFloat("area");
+                final var numMotors = rs.getInt("number_of_motors");
+                final var numCars = rs.getInt("number_of_cars");
+                final var room = new Room(id, name, ownerName, area, numMotors, numCars);
                 rooms.add(room);
             }
         }
@@ -432,6 +453,30 @@ public class DatabaseConnection {
                 st.setDate(5, Date.valueOf(fee.getStartDate()));
                 st.setDate(6, Date.valueOf(fee.getDeadline()));
                 st.setInt(7, fee.getId());
+                st.executeUpdate();
+            }
+        }
+    }
+
+    public void updateRoom(Room room) throws SQLException, IOException {
+        if(room.getId() == Room.NULL_ID) {
+            try (var st = connection.prepareStatement("INSERT INTO rooms (name, owner_name, area, number_of_motors, number_of_cars) VALUES (?, ?, ?, ?, ?)")) {
+                st.setString(1, room.getName());
+                st.setString(2, room.getOwnerName());
+                st.setFloat(3, room.getArea());
+                st.setInt(4, room.getNumMotors());
+                st.setInt(5, room.getNumCars());
+                st.executeUpdate();
+            }
+        }
+        else {
+            try (var st = connection.prepareStatement("UPDATE rooms SET name = ?, owner_name = ?, area = ?, number_of_motors = ?, number_of_cars = ? WHERE id = ?")) {
+                st.setString(1, room.getName());
+                st.setString(2, room.getOwnerName());
+                st.setFloat(3, room.getArea());
+                st.setInt(4, room.getNumMotors());
+                st.setInt(5, room.getNumCars());
+                st.setInt(6, room.getId());
                 st.executeUpdate();
             }
         }
@@ -670,6 +715,19 @@ public class DatabaseConnection {
         }
     }
 
+    public int getNumRooms(String search) throws SQLException {
+        String query = "SELECT COUNT(*) FROM rooms WHERE INSTR(name, ?) != 0";
+        try (PreparedStatement s = connection.prepareStatement(query)) {
+            s.setString(1, search);
+            ResultSet rs = s.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            } else {
+                return 0;
+            }
+        }
+    }
+
     public void removeUser(int id) throws SQLException {
         try(var st = connection.prepareStatement("DELETE FROM users WHERE user_id = ?")) {
             st.setInt(1, id);
@@ -684,9 +742,23 @@ public class DatabaseConnection {
         }
     }
 
+    public void removePayment(Payment payment) throws SQLException {
+        try(var st = connection.prepareStatement("DELETE FROM payments WHERE id = ?")) {
+            st.setInt(1, payment.getId());
+            st.executeUpdate();
+        }
+    }
+
     public  void removeResident(int id) throws SQLException {
         try(var st = connection.prepareStatement("DELETE FROM citizens WHERE id = ?")){
             st.setInt(1,id);
+            st.executeUpdate();
+        }
+    }
+
+    public void removeRoom(Room room) throws SQLException {
+        try(var st = connection.prepareStatement("DELETE FROM rooms WHERE id = ?")) {
+            st.setInt(1, room.getId());
             st.executeUpdate();
         }
     }
@@ -731,7 +803,7 @@ public class DatabaseConnection {
                         new Room(
                                 rs.getInt("rooms.id"),
                                 rs.getString("rooms.name"),
-                                rs.getInt("rooms.owner_id"),
+                                rs.getString("rooms.owner_name"),
                                 rs.getFloat("rooms.area"),
                                 rs.getInt("rooms.number_of_motors"),
                                 rs.getInt("rooms.number_of_cars")
@@ -743,13 +815,6 @@ public class DatabaseConnection {
         }
 
         return list;
-    }
-
-    public void removePayment(Payment payment) throws SQLException {
-        try(var st = connection.prepareStatement("DELETE FROM payments WHERE id = ?")) {
-            st.setInt(1, payment.getId());
-            st.executeUpdate();
-        }
     }
 
     public ObservableList<Citizen> getResidents(String search, int limit, int offset) throws SQLException {
