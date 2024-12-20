@@ -643,34 +643,11 @@ public class DatabaseConnection {
         }
     }
 
-    public int getNumPayments() throws SQLException {
-        String query = "SELECT COUNT(*) FROM payments";
+    public int getNumPayments(String feeS, String roomS) throws SQLException {
+        String query = "SELECT COUNT(*) FROM payments, service_fees, rooms WHERE payments.fee_id = service_fees.id AND payments.room_id = rooms.id AND INSTR(service_fees.name, ?) != 0 AND INSTR(rooms.name, ?) != 0";
         try (PreparedStatement s = connection.prepareStatement(query)) {
-            ResultSet rs = s.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1);
-            } else {
-                return 0;
-            }
-        }
-    }
-
-    public int getNumPayments(String search) throws SQLException {
-        String query = "SELECT COUNT(*) FROM payments, service_fees WHERE payments.fee_id = service_fees.id AND INSTR(service_fees.name, ?) != 0";
-        try (PreparedStatement s = connection.prepareStatement(query)) {
-            s.setString(1, search);
-            ResultSet rs = s.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1);
-            } else {
-                return 0;
-            }
-        }
-    }
-
-    public int getNumPayment() throws SQLException {
-        String query = "SELECT COUNT(*) FROM payments";
-        try (PreparedStatement s = connection.prepareStatement(query)) {
+            s.setString(1, feeS);
+            s.setString(2, roomS);
             ResultSet rs = s.executeQuery();
             if (rs.next()) {
                 return rs.getInt(1);

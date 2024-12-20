@@ -299,7 +299,7 @@ public class PageController {
         try {
             usersPagination.setPageCount(Math.max(1, (DatabaseConnection.getInstance().getNumNonAdminUsers() + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE));
             serviceFeePagination.setPageCount(Math.max((DatabaseConnection.getInstance().getNumServiceFees(serviceFeeFilterField.getText()) + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE, 1));
-            paymentTable.setPageCount(Math.max(1, (DatabaseConnection.getInstance().getNumPayment() + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE));
+            paymentTable.setPageCount(Math.max(Math.max(1, (DatabaseConnection.getInstance().getNumPayments(feeSearch.getText(), roomSearch.getText()) + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE), 1));
             residentTable.setPageCount(Math.max(1, (DatabaseConnection.getInstance().getNumResident() + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE));
         } catch (SQLException e) {
             logger.warn("Lỗi khi thực hiện câu lệnh SQL", e);
