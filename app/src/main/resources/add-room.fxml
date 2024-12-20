@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="645.0" prefWidth="1120.0" spacing="10.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.AddRoomController">
+   <children>
+      <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="section-title" text="Tạo căn hộ" textAlignment="CENTER" />
+      <GridPane hgap="20.0" vgap="30.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="535.0" minWidth="10.0" prefWidth="334.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="820.0" minWidth="10.0" prefWidth="666.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label styleClass="big-label" text="Diện tích" GridPane.rowIndex="2" />
+            <Label styleClass="big-label" text="Số lượng xe máy" GridPane.rowIndex="3" />
+            <Label styleClass="big-label" text="Tên căn hộ" />
+            <Button fx:id="cancelButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Huỷ" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+          <Button fx:id="submitButton" contentDisplay="CENTER" defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Xác nhận" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label styleClass="big-label" text="Số lượng ô tô" GridPane.rowIndex="4" />
+            <TextField fx:id="nameField" GridPane.columnIndex="1" />
+            <TextField fx:id="areaField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="motorsField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="carsField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label styleClass="big-label" text="Chủ căn hộ" GridPane.rowIndex="1" />
+            <TextField fx:id="ownerField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+         </children>
+         <VBox.margin>
+            <Insets bottom="80.0" left="80.0" right="80.0" top="80.0" />
+         </VBox.margin>
+      </GridPane>
+   </children>
+   <padding>
+      <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+   </padding>
+</VBox>

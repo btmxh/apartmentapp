@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import io.github.btmxh.apartmentapp.DatabaseConnection.Gender;
 
 import java.io.IOException;
 import java.sql.PreparedStatement;
@@ -30,7 +31,7 @@ public class AddResidentController {
     private TextField fullNameField;
 
     @FXML
-    private ChoiceBox<Citizen.Gender> genderField;
+    private ChoiceBox<Gender> genderField;
 
     @FXML
     private TextField nationField;
@@ -46,8 +47,8 @@ public class AddResidentController {
 
     @FXML
     public void initialize() {
-        genderField.getItems().setAll(Citizen.Gender.values());
-        genderField.setValue(Citizen.Gender.Khác);
+        genderField.getItems().setAll(Gender.values());
+        genderField.setValue(Gender.OTHER);
     }
 
     public void cancelButton(ActionEvent actionEvent) {
@@ -84,9 +85,9 @@ public class AddResidentController {
             citizen.setRoom(room);
             DatabaseConnection.getInstance().addCitizenToDB(citizen);
 
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException ex) {
             logger.error("Error inserting data into database", ex);
-            Announcement.show("Lỗi", "Không thể thêm phí dịch vụ vào CSDL", ex.getMessage());
+            Announcement.show("Lỗi", "Không thể thêm cư dân vào CSDL", ex.getMessage());
             return;
         }
         stage.close();
@@ -114,7 +115,7 @@ public class AddResidentController {
         final AddResidentController controller = loader.getController();
         final var stage = new Stage();
         if (citizen == null) {
-            citizen = new Citizen(-1, "", LocalDate.now(), Citizen.Gender.Khác,"", "","", LocalDateTime.now(), LocalDateTime.now());
+            citizen = new Citizen(-1, "", LocalDate.now(), Gender.OTHER,"", "","", LocalDateTime.now(), LocalDateTime.now());
         }
 
         stage.initOwner(window);

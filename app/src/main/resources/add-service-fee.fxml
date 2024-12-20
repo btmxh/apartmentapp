@@ -33,14 +33,14 @@
         </rowConstraints>
          <children>
             <Label fx:id="value2Label" prefHeight="17.0" prefWidth="270.0" styleClass="big-label" text="Loại khoản thu" GridPane.rowIndex="1" />
-            <Label styleClass="big-label" text="Số tiền " GridPane.rowIndex="5" />
+            <Label fx:id="valueLabel" styleClass="big-label" text="Số tiền " GridPane.rowIndex="5" />
             <Label styleClass="big-label" text="Ngày bắt đầu thu" GridPane.rowIndex="3" />
-            <DatePicker fx:id="startDatePicker" maxWidth="1.7976931348623157E308" styleClass="big-text-field" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <DatePicker fx:id="startDatePicker" editable="false" maxWidth="1.7976931348623157E308" styleClass="big-text-field" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <padding>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </padding></DatePicker>
             <Label styleClass="big-label" text="Hạn cuối" GridPane.rowIndex="4" />
-            <DatePicker fx:id="endDatePicker" maxWidth="1.7976931348623157E308" styleClass="big-text-field" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <DatePicker fx:id="endDatePicker" editable="false" maxWidth="1.7976931348623157E308" styleClass="big-text-field" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <padding>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </padding></DatePicker>
@@ -53,21 +53,23 @@
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
                <children>
                   <Label fx:id="motorLabel" prefHeight="34.0" prefWidth="191.0" text="Xe máy" />
-                  <TextField fx:id="value1TextField" prefHeight="34.0" prefWidth="438.0" styleClass="big-text-field">
+                  <TextField fx:id="value1TextField" prefHeight="34.0" prefWidth="544.0" styleClass="big-text-field">
                      <padding>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </padding>
                   </TextField>
+                  <Label fx:id="unit1Label" alignment="CENTER" prefHeight="34.0" prefWidth="111.0" text="/ xe" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
                <children>
                   <Label fx:id="carLabel" prefHeight="34.0" prefWidth="191.0" text="Ô tô" />
-                  <TextField fx:id="value2TextField" prefHeight="34.0" prefWidth="438.0" styleClass="big-text-field">
+                  <TextField fx:id="value2TextField" prefHeight="34.0" prefWidth="544.0" styleClass="big-text-field">
                      <padding>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </padding>
                   </TextField>
+                  <Label fx:id="unit2Label" alignment="CENTER" prefHeight="34.0" prefWidth="111.0" text="/ xe" />
                </children>
             </HBox>
          </children>

@@ -1,18 +1,19 @@
 package io.github.btmxh.apartmentapp;
 
 import io.github.btmxh.apartmentapp.DatabaseConnection.Role;
+import javafx.beans.property.SimpleStringProperty;
 
 public class User {
     private int id;
     private String name;
-    private String fullname;
+    private SimpleStringProperty fullname = new SimpleStringProperty();
     private String phoneNum;
     private Role role;
 
     public User(int id, String name, String fullname, String phoneNum, Role role) {
         this.id = id;
         this.name = name;
-        this.fullname = fullname;
+        this.fullname.set(fullname);
         this.phoneNum = phoneNum;
         this.role = role;
     }
@@ -34,6 +35,10 @@ public class User {
     }
 
     public String getFullname() {
+        return fullname.get();
+    }
+
+    public SimpleStringProperty fullname() {
         return fullname;
     }
 
