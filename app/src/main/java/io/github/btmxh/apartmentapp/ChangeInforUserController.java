@@ -68,6 +68,7 @@ public class ChangeInforUserController {
         fullNameUser.setText(user.getFullname());
         fullNameUser.setDisable(true);
         phoneField.setText(user.getPhoneNum());
+        phoneField.setDisable(true);
     }
 
     public static void open(Window window, User user) throws IOException {
@@ -87,88 +88,65 @@ public class ChangeInforUserController {
     @FXML
     void submitButton(ActionEvent event) {
         try {
-            DatabaseConnection dc = DatabaseConnection.getInstance();
-            String username = userNameField.getText();
             String oldPass = oldPassword.getText();
             String newPass = newPassword.getText();
             String confirmPass = reNewPassword.getText();
-            String phone = phoneField.getText();
 
-            // Kiểm tra xem các trường mật khẩu có được điền hay không
             if (oldPass.isEmpty() || newPass.isEmpty() || confirmPass.isEmpty()) {
-                showAlert("Lỗi", "Vui lòng điền đầy đủ thông tin các trường mật khẩu!");
+                Announcement.show("Thiếu thông tin", "Mật khẩu cũ, Mật khẩu mới và Nhập lại mật khẩu mới không được để trống", "Vui lòng kiểm tra lại.");
                 return;
             }
 
-            // Kiểm tra mật khẩu cũ
-            if (!isOldPasswordCorrect(oldPass, username)) {
-                showAlert("Lỗi", "Mật khẩu cũ không chính xác!");
+            if (!oldPass.equals(DatabaseConnection.getInstance().getUserPassword(currentUser.getName()))) {
+                Announcement.show("Sai thông tin", "Mật khẩu cũ không chính xác", "Vui lòng kiểm tra lại.");
                 return;
             }
 
-            // Kiểm tra mật khẩu mới và xác nhận mật khẩu
             if (!newPass.equals(confirmPass)) {
-                showAlert("Lỗi", "Mật khẩu mới và xác nhận mật khẩu không khớp!");
+                Announcement.show("Sai thông tin", "Mật khẩu mới và Nhập lại mật khẩu mới không giống nhau", "Vui lòng kiểm tra lại.");
                 return;
             }
 
-            if (updatePassword(newPass, username)) {
-
-                showAlert("Thành công", "Mật khẩu đã được thay đổi thành công!");
-
-            } else {
-                showAlert("Lỗi", "Có lỗi xảy ra khi thay đổi mật khẩu. Vui lòng thử lại!");
-            }
-
-            if(updatePhoneNum(phone, username)){
-                showAlert("Thành công", "Số điện thoại đã được thay đổi thành công!");
-                String phoneNum = currentUser.getPhoneNum();
-                phoneField.setText(phoneNum);
-//                phoneField.setText(dc.getPhoneNumberAfterOK(username));
-            } else {
-                showAlert("Lỗi", "Có lỗi xảy ra khi thay đổi số điện thoại. Vui lòng thử lại!");
-            }
-            if (updatePassword(newPass, username) && updatePhoneNum(phone, username)) {
-                stage.close();
-            }
-
+            DatabaseConnection.getInstance().setPassword(newPass, currentUser.getName());
         }
-        catch (SQLException e) {
-            logger.warn("Thay đổi thông tin thất bại", e);
-            showAlert("Lỗi", "Không thể thay đổi thông tin người dùng. Vui lòng thử lại!");
+        catch (SQLException ex) {
+            logger.warn("Thay đổi mật khẩu thất bại", ex);
+            Announcement.show("Lỗi", "Không thể thay đổi mật khẩu", ex.getMessage());
+            return;
         }
+
+        stage.close();
     }
 
-    private boolean isOldPasswordCorrect(String oldPass, String name) {
-        DatabaseConnection dc = DatabaseConnection.getInstance();
-        try {
-            return oldPass.equals(dc.getUserPasswordByPhoneNumber(name));
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-
-    public boolean updatePassword(String newPass, String name) throws SQLException {
-        DatabaseConnection dc = DatabaseConnection.getInstance();
-        try {
-            dc.setPassword(newPass, name);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean updatePhoneNum(String phone, String name) throws SQLException {
-        DatabaseConnection dc = DatabaseConnection.getInstance();
-        try {
-            dc.setPhoneNum(phone, name);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+//    private boolean isOldPasswordCorrect(String oldPass, String name) {
+//        DatabaseConnection dc = DatabaseConnection.getInstance();
+//        try {
+//            return oldPass.equals(dc.getUserPasswordByPhoneNumber(name));
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
+//
+//    public boolean updatePassword(String newPass, String name) throws SQLException {
+//        DatabaseConnection dc = DatabaseConnection.getInstance();
+//        try {
+//            dc.setPassword(newPass, name);
+//            return true;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
+//
+//    public boolean updatePhoneNum(String phone, String name) throws SQLException {
+//        DatabaseConnection dc = DatabaseConnection.getInstance();
+//        try {
+//            dc.setPhoneNum(phone, name);
+//            return true;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
 }

@@ -10,9 +10,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="645.0" prefWidth="1120.0" spacing="10.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.ChangeInforUserController">
+<VBox prefHeight="645.0" prefWidth="1120.0" spacing="10.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.ChangeInforUserController">
     <children>
-        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="section-title" text="Thay đổi thông tin tài khoản" textAlignment="CENTER" />
+        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="section-title" text="Thay đổi mật khẩu" textAlignment="CENTER" />
         <GridPane hgap="20.0" prefWidth="982.0" vgap="30.0">
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="535.0" minWidth="10.0" prefWidth="172.0000203450521" />
@@ -34,7 +34,7 @@
                 <Label styleClass="big-label" text="Họ và tên " GridPane.rowIndex="1" />
                 <Label styleClass="big-label" text="Số điện thoại" GridPane.rowIndex="2" />
                 <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cancelButton" text="Huỷ" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-                <Button contentDisplay="CENTER" defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#submitButton" text="OK" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                <Button contentDisplay="CENTER" defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#submitButton" text="Xác nhận" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                 <TextField fx:id="phoneField" layoutX="304.0" layoutY="64.0" styleClass="big-text-field" GridPane.columnIndex="1" GridPane.rowIndex="2">
                     <padding>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -43,8 +43,8 @@
                 <TextField fx:id="userNameField" GridPane.columnIndex="1" />
                 <TextField fx:id="fullNameUser" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label text="Mật khẩu cũ " GridPane.rowIndex="3" />
-            <Label text="Thay đổi mật khẩu" GridPane.rowIndex="4" />
-            <Label text="Nhập lại mật khẩu" GridPane.rowIndex="5" />
+            <Label text="Mật khẩu mới" GridPane.rowIndex="4" />
+            <Label text="Nhập lại mật khẩu mới" GridPane.rowIndex="5" />
             <PasswordField fx:id="oldPassword" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <PasswordField fx:id="newPassword" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <PasswordField fx:id="reNewPassword" GridPane.columnIndex="1" GridPane.rowIndex="5" />

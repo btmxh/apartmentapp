@@ -27,19 +27,19 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label styleClass="big-label" text="Khoản thu" GridPane.rowIndex="1" />
+            <Label prefHeight="30.0" prefWidth="282.0" styleClass="big-label" text="Khoản thu" GridPane.rowIndex="1" />
             <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
                   <Label fx:id="feeLabel" maxWidth="1.7976931348623157E308" text="Chưa chọn khoản thu" HBox.hgrow="ALWAYS" />
                   <Button fx:id="selectFeeButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="66.0" text="Chọn" />
                </children>
             </HBox>
-            <Label styleClass="big-label" text="Số tiền" GridPane.rowIndex="2" />
+            <Label prefHeight="30.0" prefWidth="282.0" styleClass="big-label" text="Số tiền" GridPane.rowIndex="2" />
             <TextField fx:id="valueTextField" disable="true" styleClass="big-text-field" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <padding>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </padding></TextField>
-            <Label styleClass="big-label" text="Căn hộ" />
+            <Label prefHeight="30.0" prefWidth="290.0" styleClass="big-label" text="Căn hộ" />
             <Button fx:id="cancelButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Huỷ" GridPane.columnIndex="1" GridPane.rowIndex="5" />
           <Button fx:id="submitButton" contentDisplay="CENTER" defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Xác nhận" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1">

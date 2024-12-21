@@ -24,7 +24,7 @@ public class ResidentTableController {
     public TableColumn<Citizen, LocalDate> birthCol;
     public TableColumn<Citizen, String> roomNumberCol;
     public TableColumn<Citizen, String> passportIDCol;
-    public TableColumn<Citizen, Gender> genderCol;
+    public TableColumn<Citizen, String> genderCol;
     public TableColumn<Citizen, String> nationCol;
     private  Runnable updateResidents;
 
@@ -34,10 +34,29 @@ public class ResidentTableController {
         birthCol.setCellValueFactory(new PropertyValueFactory<>("dateOfBirth"));
         roomNumberCol.setCellValueFactory(new PropertyValueFactory<>("room"));
         passportIDCol.setCellValueFactory(new PropertyValueFactory<>("passportId"));
-        genderCol.setCellValueFactory(new PropertyValueFactory<>("gender"));
+        genderCol.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().getGender().getDisplayName()));
         nationCol.setCellValueFactory(new PropertyValueFactory<>("nationality"));
 
         table.setContextMenu(new ContextMenu(
+                new MenuItem("Chỉnh sửa") {{
+                    setOnAction(e -> {
+                        final var selected = table.getSelectionModel().getSelectedItem();
+                        if (selected == null) return;
+
+                        try {
+                            // Mở form sửa thông tin với dữ liệu của nhân khẩu được chọn
+                            AddResidentController.open(table.getScene().getWindow(), selected);
+                            updateResidents.run(); // Cập nhật lại dữ liệu sau khi sửa
+                        } catch (IOException ex) {
+                            logger.error("Không thể mở form sửa thông tin.", ex);
+                            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                            errorAlert.setTitle("Lỗi");
+                            errorAlert.setHeaderText(null);
+                            errorAlert.setContentText("Không thể mở form sửa thông tin.");
+                            errorAlert.showAndWait();
+                        }
+                    });
+                }},
                 new MenuItem("Xóa") {{
                     setOnAction(e -> {
                         final var selected = table.getSelectionModel().getSelectedItems();
@@ -56,25 +75,6 @@ public class ResidentTableController {
                                 }
                             }
                             updateResidents.run();
-                        }
-                    });
-                }},
-                new MenuItem("Sửa") {{
-                    setOnAction(e -> {
-                        final var selected = table.getSelectionModel().getSelectedItem();
-                        if (selected == null) return;
-
-                        try {
-                            // Mở form sửa thông tin với dữ liệu của nhân khẩu được chọn
-                            AddResidentController.open(table.getScene().getWindow(), selected);
-                            updateResidents.run(); // Cập nhật lại dữ liệu sau khi sửa
-                        } catch (IOException ex) {
-                            logger.error("Không thể mở form sửa thông tin.", ex);
-                            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                            errorAlert.setTitle("Lỗi");
-                            errorAlert.setHeaderText(null);
-                            errorAlert.setContentText("Không thể mở form sửa thông tin.");
-                            errorAlert.showAndWait();
                         }
                     });
                 }}

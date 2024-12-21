@@ -7,7 +7,7 @@
     <columns>
       <TableColumn fx:id="noCol" editable="false" maxWidth="409.0" prefWidth="100.0" sortable="false" text="STT" />
       <TableColumn fx:id="nameCol" minWidth="0.0" prefWidth="300.0" sortable="false" text="Tên khoản thu" />
-      <TableColumn fx:id="roomCol" editable="false" minWidth="0.0" prefWidth="200.0" sortable="false" text="Căn hộ" />
+      <TableColumn fx:id="roomCol" editable="false" minWidth="0.0" prefWidth="200.0" sortable="false" text="Tên căn hộ" />
       <TableColumn fx:id="valueCol" minWidth="0.0" prefWidth="200.0" sortable="false" text="Số tiền" />
       <TableColumn fx:id="userCol" minWidth="0.0" prefWidth="200.0" sortable="false" text="Người thu" />
     </columns>

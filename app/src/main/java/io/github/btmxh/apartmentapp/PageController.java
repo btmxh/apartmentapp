@@ -34,10 +34,6 @@ public class PageController {
 
     private static final int ROWS_PER_PAGE = 10;
 
-    private Connection connection;
-    @FXML private TextField serviceFeeFilterField;
-    @FXML private Button residentsButton, contributeButton;
-
     private enum Section {
         CREATECHARGE,
         CHARGE,

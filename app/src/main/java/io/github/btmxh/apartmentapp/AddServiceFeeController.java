@@ -211,7 +211,7 @@ public class AddServiceFeeController {
         final AddServiceFeeController controller = loader.getController();
         final var stage = new Stage();
         if (fee == null) {
-            fee = new ServiceFee(ServiceFee.NULL_ID, null,null, 0, 0, null, null);
+            fee = new ServiceFee(ServiceFee.NULL_ID, null,null, 0, 0, LocalDate.now(), LocalDate.now());
         }
 
         stage.initOwner(window);
