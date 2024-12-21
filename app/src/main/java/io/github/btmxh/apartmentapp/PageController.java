@@ -18,6 +18,8 @@ import org.apache.logging.log4j.Logger;
 import org.codehaus.commons.compiler.CompileException;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
@@ -31,6 +33,10 @@ public class PageController {
     private static final Logger logger = LogManager.getLogger(PageController.class);
 
     private static final int ROWS_PER_PAGE = 10;
+
+    private Connection connection;
+    @FXML private TextField serviceFeeFilterField;
+    @FXML private Button residentsButton, contributeButton;
 
     private enum Section {
         CREATECHARGE,
@@ -49,6 +55,8 @@ public class PageController {
     @FXML private TextField roomFilterField;
     @FXML private Pagination roomPagination;
 
+    private User user;
+
     @FXML
     private Button createChargeButton;
 
@@ -58,8 +66,8 @@ public class PageController {
     @FXML
     private Button manageButton;
 
-    @FXML
-    private Button staticButton;
+//    @FXML
+//    private Button staticButton;
 
     @FXML
     private Button logoutButton;
@@ -113,13 +121,11 @@ public class PageController {
     private Pagination paymentTable;
 
     @FXML
-    private Button addResident;
-
-    @FXML
     private Pagination residentTable;
 
     @FXML
     private TextField nameResidentSearch;
+
 
     private final ObjectProperty<Section> section = new SimpleObjectProperty<>(Section.HOME);
 
@@ -146,7 +152,7 @@ public class PageController {
         bindSection(Section.CHARGE, chargeVBox, chargeButton);
         bindSection(Section.RESIDENT, residentsVBox, residentsButton);
         bindSection(Section.GRANTPERMISSION, grantPermissionVBox, manageButton);
-        bindSection(Section.UNSUPPORTED, unsupportedVBox, staticButton);
+//        bindSection(Section.UNSUPPORTED, unsupportedVBox, staticButton);
         bindSection(Section.UNSUPPORTED, unsupportedVBox, contributeButton);
         bindSection(Section.ROOM, roomVBox, roomButton);
         try {
@@ -207,6 +213,7 @@ public class PageController {
 
 
     public void setUser(User user) {
+        this.user = user;
         usernameLabel.setText(user.getFullname());
         greetingLabel.setText(getGreeting() + ", " + user.getFullname());
         manageButton.setVisible(user.getRole() == DatabaseConnection.Role.ADMIN);
@@ -379,6 +386,31 @@ public class PageController {
             logger.fatal("Lỗi khi tải tệp FXML", e);
             Announcement.show("Lỗi", "Không thể tải FXML của nhân khẩu!", "Lỗi chi tiết: " + e.getMessage());
         }
+    }
+
+//    public void updateInformationUser(User user, String name) throws SQLException {
+//        try (Connection connection = ; // Get connection HERE
+//             PreparedStatement ps = connection.prepareStatement("UPDATE users SET user_phone_number = ? WHERE user_name = ?")) {
+//
+//            ps.setString(1, user.getPhoneNum());
+//            ps.setString(2, name);
+//            ps.executeUpdate();
+//        }
+//    }
+
+    public void changeInforUser(ActionEvent event) {
+        try {
+//            updateInformationUser(user, user.getName());
+            ChangeInforUserController.open(((Node) event.getSource()).getScene().getWindow(), user);
+            updateUsers();
+        } catch (IOException e) {
+            logger.fatal("Lỗi khi tải tệp FXML", e);
+            Announcement.show("Lỗi", "Không thể tải FXML của User!", "Lỗi chi tiết: " + e.getMessage());
+        }
+//        catch (SQLException e) { // Catch the SQLException here
+//            logger.fatal("Lỗi khi cập nhật thông tin người dùng", e);
+//            Announcement.show("Lỗi", "Không thể cập nhật thông tin người dùng!", "Lỗi chi tiết: " + e.getMessage());
+//        }
     }
 
     public void addPayment(ActionEvent event) {
