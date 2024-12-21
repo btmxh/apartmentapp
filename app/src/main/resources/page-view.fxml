@@ -23,7 +23,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="1080.0" prefWidth="1440.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.PageController">
+<BorderPane prefHeight="800.0" prefWidth="1280.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.PageController">
    <left>
       <VBox alignment="BOTTOM_RIGHT" prefWidth="240.0" styleClass="sidebar" BorderPane.alignment="CENTER">
          <VBox alignment="TOP_CENTER" spacing="10.0" style="-: #fcd303;" VBox.vgrow="ALWAYS">
