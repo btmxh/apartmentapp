@@ -48,8 +48,8 @@ public class PageController {
         ROOM
     }
 
-    @FXML private TextField serviceFeeFilterField;
-    @FXML private Button residentsButton, contributeButton;
+//    @FXML private TextField serviceFeeFilterField;
+//    @FXML private Button residentsButton, contributeButton;
     @FXML private Button roomButton;
     @FXML private  VBox roomVBox;
     @FXML private TextField roomFilterField;

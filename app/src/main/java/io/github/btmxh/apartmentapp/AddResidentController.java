@@ -4,10 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -31,7 +28,7 @@ public class AddResidentController {
     private TextField fullNameField;
 
     @FXML
-    private ChoiceBox<Gender> genderField;
+    private ComboBox<Gender> genderComboBox;
 
     @FXML
     private TextField nationField;
@@ -47,8 +44,29 @@ public class AddResidentController {
 
     @FXML
     public void initialize() {
-        genderField.getItems().setAll(Gender.values());
-        genderField.setValue(Gender.OTHER);
+        genderComboBox.getItems().addAll(DatabaseConnection.Gender.values());
+        genderComboBox.setCellFactory(param -> new javafx.scene.control.ListCell<>() {
+            @Override
+            protected void updateItem(DatabaseConnection.Gender item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.getDisplayName());
+                }
+            }
+        });
+        genderComboBox.setButtonCell(new javafx.scene.control.ListCell<>() {
+            @Override
+            protected void updateItem(DatabaseConnection.Gender item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.getDisplayName());
+                }
+            }
+        });
     }
 
     public void cancelButton(ActionEvent actionEvent) {
@@ -79,7 +97,7 @@ public class AddResidentController {
             }
             citizen.setFullName(fullNameField.getText());
             citizen.setDateOfBirth(dateField.getValue());
-            citizen.setGender(genderField.getValue());
+            citizen.setGender(genderComboBox.getValue());
             citizen.setNationality(nationality);
             citizen.setPassportId(passportId);
             citizen.setRoom(room);
@@ -102,7 +120,7 @@ public class AddResidentController {
         if (c != null) {
             fullNameField.setText(citizen.getFullName());
             dateField.setValue(citizen.getDateOfBirth());
-            genderField.setValue(citizen.getGender());
+            genderComboBox.setValue(citizen.getGender());
             passportIdField.setText(citizen.getPassportId());
             nationField.setText(citizen.getNationality());
             roomField.setText(citizen.getRoom());
@@ -115,7 +133,7 @@ public class AddResidentController {
         final AddResidentController controller = loader.getController();
         final var stage = new Stage();
         if (citizen == null) {
-            citizen = new Citizen(-1, "", LocalDate.now(), Gender.OTHER,"", "","", LocalDateTime.now(), LocalDateTime.now());
+            citizen = new Citizen(-1, "", LocalDate.now(), null,"", "","", LocalDateTime.now(), LocalDateTime.now());
         }
 
         stage.initOwner(window);

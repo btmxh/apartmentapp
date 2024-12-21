@@ -23,7 +23,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="1080.0" prefWidth="1440.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.PageController">
+<BorderPane prefHeight="1080.0" prefWidth="1440.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.btmxh.apartmentapp.PageController">
    <left>
       <VBox alignment="BOTTOM_RIGHT" prefWidth="240.0" styleClass="sidebar" BorderPane.alignment="CENTER">
          <VBox alignment="TOP_CENTER" spacing="10.0" style="-: #fcd303;" VBox.vgrow="ALWAYS">
@@ -69,10 +69,7 @@
                      <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
                   </padding>
                </Button>
-               <Button fx:id="manageButton" maxWidth="1.7976931348623157E308" styleClass="section-button" text="Quản trị">
-                  <VBox.margin>
-                     <Insets />
-                  </VBox.margin>
+               <Button fx:id="roomButton" maxWidth="1.7976931348623157E308" styleClass="section-button" text="Căn hộ">
                   <padding>
                      <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
                   </padding>
@@ -82,7 +79,10 @@
                      <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
                   </padding>
                </Button>
-               <Button fx:id="roomButton" maxWidth="1.7976931348623157E308" styleClass="section-button" text="Căn hộ">
+               <Button fx:id="manageButton" maxWidth="1.7976931348623157E308" styleClass="section-button" text="Quản trị">
+                  <VBox.margin>
+                     <Insets />
+                  </VBox.margin>
                   <padding>
                      <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
                   </padding>
@@ -183,7 +183,7 @@
                   <children>
                      <Label fx:id="greetingLabel" styleClass="section-title" text="Xin chao, mekiet" />
                      <Region HBox.hgrow="ALWAYS" />
-                     <Button onAction="#changeInforUser" mnemonicParsing="false" text="Thay đổi thông tin tài khoản">
+                     <Button mnemonicParsing="false" onAction="#changeInforUser" text="Thay đổi thông tin tài khoản">
                         <font>
                            <Font size="15.0" />
                         </font></Button>
