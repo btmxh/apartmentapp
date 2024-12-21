@@ -82,6 +82,11 @@
                      <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
                   </padding>
                </Button>
+               <Button fx:id="roomButton" maxWidth="1.7976931348623157E308" styleClass="section-button" text="Căn hộ">
+                  <padding>
+                     <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                  </padding>
+               </Button>
                <Button fx:id="contributeButton" layoutX="20.0" layoutY="509.0" maxWidth="1.7976931348623157E308" styleClass="section-button" text="Khiếu nại">
                   <padding>
                      <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
@@ -101,7 +106,7 @@
    </left>
    <center>
       <AnchorPane BorderPane.alignment="CENTER">
-         <VBox fx:id="chargeVBox" alignment="TOP_CENTER" layoutX="14.0" prefHeight="516.0" prefWidth="739.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <VBox fx:id="chargeVBox" alignment="TOP_CENTER" layoutX="14.0" prefHeight="516.0" prefWidth="739.0" spacing="10.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Label styleClass="section-title" text="Thu phí" />
             <GridPane hgap="10.0" vgap="10.0">
                <columnConstraints>
@@ -299,6 +304,26 @@
             <padding>
                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
             </padding>
+         </VBox>
+         <VBox fx:id="roomVBox" alignment="TOP_CENTER" spacing="10.0">
+            <children>
+               <Label alignment="CENTER" styleClass="section-title" text="Danh sách căn hộ">
+                  <opaqueInsets>
+                     <Insets bottom="10.0" left="10.0" right="10.0" />
+                  </opaqueInsets>
+                  <font>
+                     <Font size="20.0" />
+                  </font>
+               </Label>
+               <HBox alignment="CENTER">
+                  <children>
+                     <TextField fx:id="roomFilterField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefColumnCount="30" promptText="Nhập tên căn hộ cần tìm" />
+                     <AnchorPane maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                     <Button mnemonicParsing="false" onAction="#addRoom" text="Tạo căn hộ" />
+                  </children>
+               </HBox>
+               <Pagination fx:id="roomPagination" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+            </children>
          </VBox>
          <BorderPane.margin>
             <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />

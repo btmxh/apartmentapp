@@ -38,22 +38,22 @@ public class PageController {
     @FXML private TextField serviceFeeFilterField;
     @FXML private Button residentsButton, contributeButton;
 
-    public void addPayment(ActionEvent actionEvent) {
-        try {
-            AddPaymentController.open(serviceFeeFilterField.getScene().getWindow(), null);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private enum Section {
         CREATECHARGE,
         CHARGE,
         RESIDENT,
         GRANTPERMISSION,
         UNSUPPORTED,
-        HOME
+        HOME,
+        ROOM
     }
+
+    @FXML private TextField serviceFeeFilterField;
+    @FXML private Button residentsButton, contributeButton;
+    @FXML private Button roomButton;
+    @FXML private  VBox roomVBox;
+    @FXML private TextField roomFilterField;
+    @FXML private Pagination roomPagination;
 
     private User user;
 
@@ -145,6 +145,7 @@ public class PageController {
         serviceFeePagination.setPageFactory(this::createServiceFeeTable);
         paymentTable.setPageFactory(this::createPaymentTable);
         residentTable.setPageFactory(this::createResidentTable);
+        roomPagination.setPageFactory(this::createRoomPagination);
 
         bindSection(Section.HOME, homeVBox, homeButton);
         bindSection(Section.CREATECHARGE, createChargeVBox, createChargeButton);
@@ -153,6 +154,7 @@ public class PageController {
         bindSection(Section.GRANTPERMISSION, grantPermissionVBox, manageButton);
 //        bindSection(Section.UNSUPPORTED, unsupportedVBox, staticButton);
         bindSection(Section.UNSUPPORTED, unsupportedVBox, contributeButton);
+        bindSection(Section.ROOM, roomVBox, roomButton);
         try {
             final var values = DatabaseConnection.getInstance().getDashboardValues();
 
@@ -172,7 +174,7 @@ public class PageController {
         roomSearch.textProperty().addListener((o, old, ne_) -> updatePayments());
         generalLabel.setText("Tổng quan tháng " + LocalDateTime.now().getMonthValue());
         nameResidentSearch.textProperty().addListener((o, old, ne_) -> updateResidents());
-
+        roomFilterField.textProperty().addListener((o, old, ne_) -> updateRooms());
         try {
             chart.setData(DatabaseConnection.getInstance().getChartData());
         } catch (SQLException e) {
@@ -263,17 +265,17 @@ public class PageController {
         try {
             var loader = new FXMLLoader(Objects.requireNonNull(PageController.class.getResource("/payment-table.fxml")));
             int start = pageIndex * ROWS_PER_PAGE;
-            var fees = dc.getPayments(feeSearch.getText(), roomSearch.getText(), ROWS_PER_PAGE, pageIndex * ROWS_PER_PAGE);
+            var payments = dc.getPayments(feeSearch.getText(), roomSearch.getText(), ROWS_PER_PAGE, pageIndex * ROWS_PER_PAGE);
             TableView<Payment> table = loader.load();
             PaymentTableController controller = loader.getController();
-            controller.setPage(start, FXCollections.observableArrayList(fees));
+            controller.setPaymentData(start, FXCollections.observableArrayList(payments), this::updatePayments);
             return table;
         } catch (SQLException e) {
             logger.warn("Lỗi khi thực thi lệnh SQL", e);
-            Announcement.show("Lỗi", "Không thể lấy được danh sách phí dịch vụ!", "Lỗi kết nối cơ sở dữ liệu: " + e.getMessage());
+            Announcement.show("Lỗi", "Không thể lấy được danh sách thanh toán!", "Lỗi kết nối cơ sở dữ liệu: " + e.getMessage());
         } catch (IOException e) {
             logger.fatal("Lỗi khi tải tệp FXML", e);
-            Announcement.show("Lỗi", "Không thể tải bảng phí dịch vụ FXML!", "Lỗi chi tiết: " + e.getMessage());
+            Announcement.show("Lỗi", "Không thể tải bảng thanh toán FXML!", "Lỗi chi tiết: " + e.getMessage());
         }
         return null;
     }
@@ -298,12 +300,33 @@ public class PageController {
         return null;
     }
 
+    private TableView<Room> createRoomPagination(int pageIndex) {
+        DatabaseConnection dc = DatabaseConnection.getInstance();
+        try {
+            var loader = new FXMLLoader(Objects.requireNonNull(PageController.class.getResource("/room-table.fxml")));
+            int start = pageIndex * ROWS_PER_PAGE;
+            var rooms = dc.getRooms(roomFilterField.getText(), ROWS_PER_PAGE, pageIndex * ROWS_PER_PAGE);
+            TableView<Room> table = loader.load();
+            RoomTableController controller = loader.getController();
+            controller.setRoomData(start, FXCollections.observableArrayList(rooms), this::updateRooms);
+            return table;
+        } catch (SQLException e) {
+            logger.warn("Lỗi khi thực thi lệnh SQL", e);
+            Announcement.show("Lỗi", "Không thể lấy được danh sách phí dịch vụ!", "Lỗi kết nối cơ sở dữ liệu: " + e.getMessage());
+        } catch (IOException e) {
+            logger.fatal("Lỗi khi tải tệp FXML", e);
+            Announcement.show("Lỗi", "Không thể tải bảng phí dịch vụ FXML!", "Lỗi chi tiết: " + e.getMessage());
+        }
+        return null;
+    }
+
     private void setNumPages() {
         try {
             usersPagination.setPageCount(Math.max(1, (DatabaseConnection.getInstance().getNumNonAdminUsers() + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE));
             serviceFeePagination.setPageCount(Math.max((DatabaseConnection.getInstance().getNumServiceFees(serviceFeeFilterField.getText()) + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE, 1));
-            paymentTable.setPageCount(Math.max(1, (DatabaseConnection.getInstance().getNumPayment() + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE));
+            paymentTable.setPageCount(Math.max(Math.max(1, (DatabaseConnection.getInstance().getNumPayments(feeSearch.getText(), roomSearch.getText()) + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE), 1));
             residentTable.setPageCount(Math.max(1, (DatabaseConnection.getInstance().getNumResident() + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE));
+            roomPagination.setPageCount(Math.max((DatabaseConnection.getInstance().getNumRooms(roomFilterField.getText()) + ROWS_PER_PAGE - 1) / ROWS_PER_PAGE, 1));
         } catch (SQLException e) {
             logger.warn("Lỗi khi thực hiện câu lệnh SQL", e);
             Announcement.show("Lỗi", "Không thể truy cập cơ sở dữ liệu!", e.getMessage());
@@ -338,13 +361,20 @@ public class PageController {
         residentTable.setCurrentPageIndex(Math.min(page, residentTable.getPageCount() - 1));
     }
 
+    private void updateRooms() {
+        int page = roomPagination.getCurrentPageIndex();
+        setNumPages();
+        roomPagination.setPageFactory(this::createRoomPagination);
+        roomPagination.setCurrentPageIndex(Math.min(page, roomPagination.getPageCount() - 1));
+    }
+
     public void addServiceFee(ActionEvent event) {
         try {
             AddServiceFeeController.open(((Node) event.getSource()).getScene().getWindow(), null);
             updateServiceFees();
         } catch (IOException e) {
             logger.fatal("Lỗi khi tải tệp FXML", e);
-            Announcement.show("Lỗi", "Không thể tải FXML của hộp thoại phí dịch vụ!", "Lỗi chi tiết: " + e.getMessage());
+            Announcement.show("Lỗi", "Không thể tải FXML của tạo khoản thu!", "Lỗi chi tiết: " + e.getMessage());
         }
     }
 
@@ -381,6 +411,26 @@ public class PageController {
 //            logger.fatal("Lỗi khi cập nhật thông tin người dùng", e);
 //            Announcement.show("Lỗi", "Không thể cập nhật thông tin người dùng!", "Lỗi chi tiết: " + e.getMessage());
 //        }
+    }
+
+    public void addPayment(ActionEvent event) {
+        try {
+            AddPaymentController.open(((Node) event.getSource()).getScene().getWindow(), null);
+            updatePayments();
+        } catch (IOException e) {
+            logger.fatal("Lỗi khi tải tệp FXML", e);
+            Announcement.show("Lỗi", "Không thể tải FXML của thu phí!", "Lỗi chi tiết: " + e.getMessage());
+        }
+    }
+
+    public void addRoom(ActionEvent event) {
+        try {
+            AddRoomController.open(((Node) event.getSource()).getScene().getWindow(), null);
+            updateRooms();
+        } catch (IOException e) {
+            logger.fatal("Lỗi khi tải tệp FXML", e);
+            Announcement.show("Lỗi", "Không thể tải FXML của tạo căn hộ!", "Lỗi chi tiết: " + e.getMessage());
+        }
     }
 }
 
