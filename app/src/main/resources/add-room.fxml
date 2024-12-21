@@ -27,17 +27,17 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label prefHeight="29.0" prefWidth="47.0" styleClass="big-label" text="Diện tích" GridPane.rowIndex="2" />
-            <Label prefHeight="34.0" prefWidth="89.0" styleClass="big-label" text="Số lượng xe máy" GridPane.rowIndex="3" />
-            <Label prefHeight="25.0" prefWidth="58.0" styleClass="big-label" text="Tên căn hộ" />
+            <Label prefHeight="26.0" prefWidth="280.0" styleClass="big-label" text="Diện tích" GridPane.rowIndex="2" />
+            <Label prefHeight="26.0" prefWidth="279.0" styleClass="big-label" text="Số lượng xe máy" GridPane.rowIndex="3" />
+            <Label prefHeight="26.0" prefWidth="273.0" styleClass="big-label" text="Tên căn hộ" />
             <Button fx:id="cancelButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Huỷ" GridPane.columnIndex="1" GridPane.rowIndex="6" />
           <Button fx:id="submitButton" contentDisplay="CENTER" defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Xác nhận" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <Label prefHeight="34.0" prefWidth="73.0" styleClass="big-label" text="Số lượng ô tô" GridPane.rowIndex="4" />
+            <Label prefHeight="26.0" prefWidth="285.0" styleClass="big-label" text="Số lượng ô tô" GridPane.rowIndex="4" />
             <TextField fx:id="nameField" GridPane.columnIndex="1" />
             <TextField fx:id="areaField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField fx:id="motorsField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <TextField fx:id="carsField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <Label prefHeight="30.0" prefWidth="60.0" styleClass="big-label" text="Chủ căn hộ" GridPane.rowIndex="1" />
+            <Label prefHeight="26.0" prefWidth="287.0" styleClass="big-label" text="Chủ căn hộ" GridPane.rowIndex="1" />
             <TextField fx:id="ownerField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
          <VBox.margin>

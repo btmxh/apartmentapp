@@ -31,22 +31,22 @@
             </rowConstraints>
             <children>
                 <Label styleClass="big-label" text="Họ và tên" />
-                <Label styleClass="big-label" text="Ngày sinh" GridPane.rowIndex="3" />
-                <Label styleClass="big-label" text="Số phòng" GridPane.rowIndex="4" />
-                <Label styleClass="big-label" text="Số CCCD" GridPane.rowIndex="2" />
+                <Label styleClass="big-label" text="Ngày sinh" GridPane.rowIndex="2" />
+                <Label styleClass="big-label" text="Tên căn hộ" GridPane.rowIndex="5" />
+                <Label styleClass="big-label" text="Số CCCD" GridPane.rowIndex="3" />
                 <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cancelButton" text="Huỷ" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                 <Button contentDisplay="CENTER" defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#submitButton" text="Xác nhận" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                <TextField fx:id="roomField" layoutX="304.0" layoutY="64.0" styleClass="big-text-field" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                <TextField fx:id="roomField" layoutX="304.0" layoutY="64.0" styleClass="big-text-field" GridPane.columnIndex="1" GridPane.rowIndex="5">
                     <padding>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                     </padding>
                 </TextField>
             <TextField fx:id="fullNameField" GridPane.columnIndex="1" />
-            <TextField fx:id="nationField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <TextField fx:id="passportIdField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="nationField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextField fx:id="passportIdField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label text="Giới tính" GridPane.rowIndex="1" />
-            <Label text="Quốc tịch" GridPane.rowIndex="5" />
-            <DatePicker fx:id="dateField" prefHeight="36.0" prefWidth="710.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label text="Quốc tịch" GridPane.rowIndex="4" />
+            <DatePicker fx:id="dateField" prefHeight="36.0" prefWidth="710.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <ComboBox fx:id="genderComboBox" prefHeight="26.0" prefWidth="716.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             </children>
             <VBox.margin>

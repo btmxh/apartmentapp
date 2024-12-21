@@ -172,7 +172,7 @@
                <children>
                   <TextField fx:id="nameResidentSearch" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefColumnCount="30" promptText="Nhập tên nhân khẩu cần tìm" />
                   <AnchorPane maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                  <Button mnemonicParsing="false" onAction="#addResident" text="Thêm nhân khẩu" />
+                  <Button mnemonicParsing="false" onAction="#addResident" text="Tạo nhân khẩu" />
                </children>
             </HBox>
             <Pagination fx:id="residentTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
