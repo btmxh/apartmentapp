@@ -183,7 +183,7 @@
                   <children>
                      <Label fx:id="greetingLabel" styleClass="section-title" text="Xin chao, mekiet" />
                      <Region HBox.hgrow="ALWAYS" />
-                     <Button mnemonicParsing="false" onAction="#changeInforUser" text="Thay đổi thông tin tài khoản">
+                     <Button mnemonicParsing="false" onAction="#changeInforUser" text="Thay đổi mật khẩu">
                         <font>
                            <Font size="15.0" />
                         </font></Button>
@@ -305,7 +305,7 @@
                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
             </padding>
          </VBox>
-         <VBox fx:id="roomVBox" alignment="TOP_CENTER" spacing="10.0">
+         <VBox fx:id="roomVBox" alignment="TOP_CENTER" prefHeight="612.0" prefWidth="1145.0" spacing="10.0">
             <children>
                <Label alignment="CENTER" styleClass="section-title" text="Danh sách căn hộ">
                   <opaqueInsets>

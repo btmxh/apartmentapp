@@ -432,19 +432,6 @@ public class DatabaseConnection {
         }
     }
 
-    public int getRoomArea(String room) throws SQLException, IOException {
-        try(var st = connection.prepareStatement("SELECT area FROM rooms WHERE room = ?")) {
-            st.setString(1, room);
-            var rs = st.executeQuery();
-            if(rs.next()) {
-                return rs.getInt(1);
-            } else {
-                return 0;
-            }
-        }
-
-    }
-
     public void updateServiceFee(ServiceFee fee) throws SQLException, IOException {
         if(fee.getId() == ServiceFee.NULL_ID) {
             try (var st = connection.prepareStatement("INSERT INTO service_fees (type, name, value1, value2, start_date, end_date) VALUES (?, ?, ?, ?, ?, ?)")) {
@@ -667,18 +654,17 @@ public class DatabaseConnection {
         return userList;
     }
 
-    public String getUserPasswordByPhoneNumber(String phoneNumber) throws SQLException {
-        String password = null;
+    public String getUserPassword(String name) throws SQLException {
         String query = "SELECT user_password FROM users WHERE user_name = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setString(1, phoneNumber);
+            ps.setString(1, name);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    password = rs.getString("user_password");
+                    return rs.getString("user_password");
                 }
             }
         }
-        return password;
+        return null;
     }
 
     public void setPassword (String pass, String name) throws SQLException {
