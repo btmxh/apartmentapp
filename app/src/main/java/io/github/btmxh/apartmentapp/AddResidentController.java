@@ -37,13 +37,17 @@ public class AddResidentController {
     private TextField passportIdField;
 
     @FXML
-    private TextField roomField;
+    private Label roomLabel;
+
+    @FXML
+    private Button selectRoomButton;
 
     private Stage stage;
     private Citizen citizen;
 
     @FXML
     public void initialize() {
+        selectRoomButton.setOnAction(e -> selectRoom());
         genderComboBox.getItems().addAll(DatabaseConnection.Gender.values());
         genderComboBox.setCellFactory(param -> new javafx.scene.control.ListCell<>() {
             @Override
@@ -69,6 +73,20 @@ public class AddResidentController {
         });
     }
 
+    private void selectRoom() {
+        try {
+            Room res = PickRoom.open(stage);
+            if (res != null) {
+                if (res.getName().equals(roomLabel.getText())) {
+                    return;
+                }
+                roomLabel.setText(res.getName());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void cancelButton(ActionEvent actionEvent) {
         stage.close();
     }
@@ -88,9 +106,8 @@ public class AddResidentController {
 
             final String nationality = nationField.getText().trim();
             final String passportId = passportIdField.getText().trim();
-            final String room = roomField.getText().trim();
 
-            if (fullname.isEmpty() || dateofbirth == null  || nationality.isEmpty() || passportId.isEmpty() || room.isEmpty()) {
+            if (fullname.isEmpty() || dateofbirth == null  || nationality.isEmpty() || passportId.isEmpty()) {
                 showAlert("Lỗi nhập liệu", "Vui lòng nhập đầy đủ thông tin trước khi bấm OK.");
                 logger.warn("Một hoặc nhiều trường bị bỏ trống.");
                 return;
@@ -100,7 +117,7 @@ public class AddResidentController {
             citizen.setGender(genderComboBox.getValue());
             citizen.setNationality(nationality);
             citizen.setPassportId(passportId);
-            citizen.setRoom(room);
+            citizen.setRoom(roomLabel.getText());
             DatabaseConnection.getInstance().addCitizenToDB(citizen);
 
         } catch (SQLException ex) {
@@ -123,7 +140,7 @@ public class AddResidentController {
             genderComboBox.setValue(citizen.getGender());
             passportIdField.setText(citizen.getPassportId());
             nationField.setText(citizen.getNationality());
-            roomField.setText(citizen.getRoom());
+            roomLabel.setText(citizen.getRoom());
         }
     }
 

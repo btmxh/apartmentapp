@@ -87,7 +87,7 @@
                      <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
                   </padding>
                </Button>
-               <Button fx:id="contributeButton" layoutX="20.0" layoutY="509.0" maxWidth="1.7976931348623157E308" styleClass="section-button" text="Khiếu nại">
+               <Button fx:id="contributeButton" layoutX="20.0" layoutY="509.0" maxWidth="1.7976931348623157E308" styleClass="section-button" text="Khiếu nại" visible="false">
                   <padding>
                      <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
                   </padding>
