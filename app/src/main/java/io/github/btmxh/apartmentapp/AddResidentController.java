@@ -37,13 +37,17 @@ public class AddResidentController {
     private TextField passportIdField;
 
     @FXML
-    private TextField roomField;
+    private Label roomLabel;
+
+    @FXML
+    private Button selectRoomButton;
 
     private Stage stage;
     private Citizen citizen;
 
     @FXML
     public void initialize() {
+        selectRoomButton.setOnAction(e -> selectRoom());
         genderComboBox.getItems().addAll(DatabaseConnection.Gender.values());
         genderComboBox.setCellFactory(param -> new javafx.scene.control.ListCell<>() {
             @Override
@@ -69,6 +73,20 @@ public class AddResidentController {
         });
     }
 
+    private void selectRoom() {
+        try {
+            Room res = PickRoom.open(stage);
+            if (res != null) {
+                if (res.getName().equals(roomLabel.getText())) {
+                    return;
+                }
+                roomLabel.setText(res.getName());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void cancelButton(ActionEvent actionEvent) {
         stage.close();
     }
@@ -83,9 +101,9 @@ public class AddResidentController {
 
     public void submitButton(ActionEvent actionEvent) {
         try{
-            final String fullname = fullNameField.getText().trim();
-            final LocalDate dateofbirth = dateField.getValue();
-
+            final String fullName = fullNameField.getText().trim();
+            final Gender gender = genderComboBox.getValue();
+            final LocalDate dateOfBirth = dateField.getValue();
             final String nationality = nationField.getText().trim();
             final String passportId = passportIdField.getText().trim();
             final String room = roomField.getText().trim();
@@ -94,9 +112,15 @@ public class AddResidentController {
                 logger.warn("Một hoặc nhiều trường bị bỏ trống.");
                 return;
             }
-            citizen.setFullName(fullNameField.getText());
-            citizen.setDateOfBirth(dateField.getValue());
-            citizen.setGender(genderComboBox.getValue());
+
+            if (room.isEmpty()) {
+                Announcement.show("Thiếu thông tin", "Căn hộ không được để trống", "Vui lòng chọn căn hộ.");
+                return;
+            }
+
+            citizen.setFullName(fullName);
+            citizen.setGender(gender);
+            citizen.setDateOfBirth(dateOfBirth);
             citizen.setNationality(nationality);
             citizen.setPassportId(passportId);
             citizen.setRoom(room);
@@ -107,6 +131,7 @@ public class AddResidentController {
             Announcement.show("Lỗi", "Không thể thêm cư dân vào CSDL", ex.getMessage());
             return;
         }
+
         stage.close();
     }
 
@@ -114,16 +139,14 @@ public class AddResidentController {
         this.stage = stage;
     }
 
-    public void setResident(Citizen c) {
-        citizen = c;
-        if (c != null) {
-            fullNameField.setText(citizen.getFullName());
-            dateField.setValue(citizen.getDateOfBirth());
-            genderComboBox.setValue(citizen.getGender());
-            passportIdField.setText(citizen.getPassportId());
-            nationField.setText(citizen.getNationality());
-            roomField.setText(citizen.getRoom());
-        }
+    public void setResident(Citizen citizen) {
+        this.citizen = citizen;
+        fullNameField.setText(citizen.getFullName());
+        dateField.setValue(citizen.getDateOfBirth());
+        genderComboBox.setValue(citizen.getGender());
+        passportIdField.setText(citizen.getPassportId());
+        nationField.setText(citizen.getNationality());
+        roomLabel.setText(citizen.getRoom());
     }
 
     public static void open(Window window, Citizen citizen) throws IOException {

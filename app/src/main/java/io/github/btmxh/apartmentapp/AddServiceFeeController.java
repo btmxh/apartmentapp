@@ -84,9 +84,9 @@ public class AddServiceFeeController {
                         if (newValue == FeeType.DONATION || newValue == null) {
                             valueLabel.setVisible(false);
                             value1TextField.setVisible(false);
-                            value1TextField.setText(null);
+                            value1TextField.setText("");
                             value2TextField.setVisible(false);
-                            value2TextField.setText(null);
+                            value2TextField.setText("");
                             motorLabel.setVisible(false);
                             carLabel.setVisible(false);
                             unit1Label.setVisible(false);
@@ -95,9 +95,9 @@ public class AddServiceFeeController {
                         else if (newValue == FeeType.PARKING) {
                             valueLabel.setVisible(true);
                             value1TextField.setVisible(true);
-                            value1TextField.setText(null);
+                            value1TextField.setText("");
                             value2TextField.setVisible(true);
-                            value2TextField.setText(null);
+                            value2TextField.setText("");
                             motorLabel.setVisible(true);
                             carLabel.setVisible(true);
                             unit1Label.setVisible(true);
@@ -108,7 +108,7 @@ public class AddServiceFeeController {
                             valueLabel.setVisible(true);
                             value1TextField.setVisible(true);
                             value2TextField.setVisible(false);
-                            value2TextField.setText(null);
+                            value2TextField.setText("");
                             motorLabel.setVisible(false);
                             carLabel.setVisible(false);
                             unit1Label.setVisible(true);
@@ -118,9 +118,9 @@ public class AddServiceFeeController {
                         else {
                             valueLabel.setVisible(true);
                             value1TextField.setVisible(true);
-                            value1TextField.setText(null);
+                            value1TextField.setText("");
                             value2TextField.setVisible(false);
-                            value2TextField.setText(null);
+                            value2TextField.setText("");
                             motorLabel.setVisible(false);
                             carLabel.setVisible(false);
                             unit1Label.setVisible(true);
@@ -168,6 +168,10 @@ public class AddServiceFeeController {
 
             long value1 = 0, value2 = 0;
             if (type != FeeType.DONATION) {
+                if (value1TextField.getText().trim().isEmpty()) {
+                    Announcement.show("Thiếu thông tin", "Chưa nhập số tiền", "Vui lòng nhập số tiền trước khi xác nhận.");
+                    return;
+                }
                 try {
                     value1 = Long.parseLong(value1TextField.getText().trim());
                 }
@@ -179,6 +183,10 @@ public class AddServiceFeeController {
             }
 
             if (type == FeeType.PARKING) {
+                if (value2TextField.getText().trim().isEmpty()) {
+                    Announcement.show("Thiếu thông tin", "Chưa nhập số tiền", "Vui lòng nhập số tiền trước khi xác nhận.");
+                    return;
+                }
                 try {
                     value2 = Long.parseLong(value2TextField.getText().trim());
                 }
@@ -211,7 +219,7 @@ public class AddServiceFeeController {
         final AddServiceFeeController controller = loader.getController();
         final var stage = new Stage();
         if (fee == null) {
-            fee = new ServiceFee(ServiceFee.NULL_ID, null,null, 0, 0, LocalDate.now(), LocalDate.now());
+            fee = new ServiceFee(ServiceFee.NULL_ID, null,"", -1, -1, LocalDate.now(), LocalDate.now());
         }
 
         stage.initOwner(window);
@@ -226,8 +234,18 @@ public class AddServiceFeeController {
         this.fee = fee;
         typeComboBox.setValue(fee.getType());
         nameTextField.setText(fee.getName());
-        value1TextField.setText(String.valueOf(fee.getValue1()));
-        value2TextField.setText(String.valueOf(fee.getValue2()));
+        if (fee.getValue1() != -1) {
+            value1TextField.setText(String.valueOf(fee.getValue1()));
+        }
+        else {
+            value1TextField.setText("");
+        }
+        if (fee.getValue2() != -1) {
+            value2TextField.setText(String.valueOf(fee.getValue2()));
+        }
+        else {
+            value2TextField.setText("");
+        }
         startDatePicker.setValue(fee.getStartDate());
         endDatePicker.setValue(fee.getDeadline());
     }

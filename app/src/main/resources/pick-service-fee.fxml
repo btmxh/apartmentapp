@@ -19,7 +19,7 @@
       <ButtonBar prefHeight="40.0" prefWidth="200.0">
         <buttons>
           <Button mnemonicParsing="false" onAction="#cancel" text="Huỷ" />
-            <Button defaultButton="true" layoutX="345.0" layoutY="17.0" mnemonicParsing="false" onAction="#submit" text="OK" />
+            <Button defaultButton="true" layoutX="345.0" layoutY="17.0" mnemonicParsing="false" onAction="#submit" text="Xác nhận" />
         </buttons>
       </ButtonBar>
    </children>
