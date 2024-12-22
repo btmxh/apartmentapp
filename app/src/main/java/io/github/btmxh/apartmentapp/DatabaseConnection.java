@@ -529,11 +529,28 @@ public class DatabaseConnection {
     }
 
     public long[] getDashboardValues() throws SQLException {
+        long paid = calc("SELECT SUM(value) FROM payments"), total = 0;
+        try(final var st = connection.createStatement()) {
+            var result = st.executeQuery("SELECT SUM(area), SUM(number_of_motors), SUM(number_of_cars) FROM rooms");
+            if(result.next()) {
+                final var totalArea = result.getLong(1);
+                final var totalMotors = result.getLong(2);
+                final var totalCars = result.getLong(3);
+                result = st.executeQuery("SELECT SUM(value1) FROM service_fees WHERE type = 'MANAGEMENT' OR type = 'SERVICE'");
+                if(result.next()) {
+                    total += result.getLong(1) * totalArea;
+                }
+                result = st.executeQuery("SELECT SUM(value1), SUM(value2) FROM service_fees WHERE type = 'PARKING'");
+                if(result.next()) {
+                    total += result.getLong(1) * totalMotors + result.getLong(2) * totalCars;
+                }
+            }
+        }
         return new long[]{
-            calc("SELECT SUM(IF(value1 > value, value1, value)) FROM payments INNER JOIN service_fees on payments.fee_id = service_fees.id"),
-            calc("SELECT SUM(IF(f.value1 > 0, f.value1, 0) * (SELECT COUNT(*) FROM citizens c WHERE f.start_date >= c.created_at)) FROM service_fees f"),
-            calc("SELECT COUNT(1) FROM citizens"),
-            calc("SELECT COUNT(DISTINCT room) FROM citizens"),
+            paid,
+            total,
+            calc("SELECT COUNT(*) FROM citizens"),
+            calc("SELECT COUNT(*) FROM rooms"),
         };
     }
 
@@ -542,11 +559,13 @@ public class DatabaseConnection {
                 SELECT
                     YEAR(f.end_date) AS year,
                     MONTH(f.end_date) AS month,
-                    SUM(f.value1 * (SELECT COUNT(*) FROM citizens c WHERE f.start_date >= c.created_at )) AS pending
+                    SUM(CASE
+                        WHEN f.type = 'MANAGEMENT' OR f.type = 'SERVICE' THEN (f.value1 * (SELECT SUM(area) FROM rooms))
+                        WHEN f.type = 'PARKING' THEN (f.value1 * (SELECT SUM(number_of_motors) FROM rooms) + f.value2 * (SELECT SUM(number_of_cars) FROM rooms))
+                        ELSE 0
+                    END) AS pending
                 FROM
                     service_fees f
-                WHERE
-                    f.value1 > 0
                 GROUP BY
                     YEAR(f.end_date),
                     MONTH(f.end_date)
@@ -575,7 +594,7 @@ public class DatabaseConnection {
                 SELECT
                     YEAR(f.end_date) AS year,
                     MONTH(f.end_date) AS month,
-                    SUM(IF(f.value1 > p.value, f.value1, p.value)) AS received
+                    SUM(p.value) AS received
                 FROM
                     payments p
                 INNER JOIN
@@ -852,7 +871,7 @@ public class DatabaseConnection {
     public ObservableList<Citizen> getResidents(String search, int limit, int offset) throws SQLException {
         ObservableList<Citizen> residentList = FXCollections.observableArrayList();
         String query = """
-                SELECT * FROM Citizens WHERE INSTR(full_name, ?) > 0 LIMIT ? OFFSET ?""";
+                SELECT * FROM citizens WHERE INSTR(full_name, ?) > 0 LIMIT ? OFFSET ?""";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, search);
             ps.setInt(2, limit);
