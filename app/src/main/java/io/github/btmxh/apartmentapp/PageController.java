@@ -45,7 +45,7 @@ public class PageController {
     }
 
     @FXML private TextField serviceFeeFilterField;
-    @FXML private Button residentsButton, contributeButton;
+    @FXML private Button residentsButton;
     @FXML private Button roomButton;
     @FXML private  VBox roomVBox;
     @FXML private TextField roomFilterField;
@@ -149,7 +149,7 @@ public class PageController {
         bindSection(Section.RESIDENT, residentsVBox, residentsButton);
         bindSection(Section.GRANTPERMISSION, grantPermissionVBox, manageButton);
 //        bindSection(Section.UNSUPPORTED, unsupportedVBox, staticButton);
-        bindSection(Section.UNSUPPORTED, unsupportedVBox, contributeButton);
+//        bindSection(Section.UNSUPPORTED, unsupportedVBox, contributeButton);
         bindSection(Section.ROOM, roomVBox, roomButton);
         try {
             final var values = DatabaseConnection.getInstance().getDashboardValues();

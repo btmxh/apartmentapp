@@ -15,12 +15,18 @@
     -fx-background-radius: 4px;
 }
 
+.button:hover {
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.0, 0, 0);
+}
+
 .text {
   -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 2, 0, 0, 2);
 }
 
 .text-field {
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 5);
+-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 5);
     -fx-background-border: 0px;
     -fx-font-size: 16px;
 }
@@ -34,10 +40,17 @@
 .logout-button:hover {
   -fx-background-color: #B47C48;
 }
+/*
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #3A8EBA, #FFFFFF); /* Từ xanh dương sang trắng
+}
+*/
+
 
 .sidebar {
-    -fx-background-color: linear-gradient(to bottom, #A3B2E0, #212F69);
+    -fx-background-color: linear-gradient(to bottom, #1E90FF, #FFFFF0); /* Từ xanh dương sang hồng*/
 }
+
 
 .dashboard {
     -fx-background-color: red;
@@ -76,6 +89,10 @@
 
 .section-button {
     -fx-font-size: 16px;
+}
+
+.table-view .column-header {
+    -fx-background-color: #87CEFA; /* Màu xám nhạt */
 }
 
 /*

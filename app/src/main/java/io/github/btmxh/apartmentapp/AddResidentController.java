@@ -89,7 +89,6 @@ public class AddResidentController {
             final String nationality = nationField.getText().trim();
             final String passportId = passportIdField.getText().trim();
             final String room = roomField.getText().trim();
-
             if (fullname.isEmpty() || dateofbirth == null  || nationality.isEmpty() || passportId.isEmpty() || room.isEmpty()) {
                 showAlert("Lỗi nhập liệu", "Vui lòng nhập đầy đủ thông tin trước khi bấm OK.");
                 logger.warn("Một hoặc nhiều trường bị bỏ trống.");

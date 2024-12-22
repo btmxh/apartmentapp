@@ -40,7 +40,6 @@ public class AddRoomController {
                 Announcement.show("Thiếu thông tin", "Tên căn hộ không được để trống", "Vui lòng nhập tên căn hộ.");
                 return;
             }
-
             final var owner = ownerField.getText().trim();
             if (owner.isEmpty()) {
                 Announcement.show("Thiếu thông tin", "Tên chủ căn hộ không được để trống", "Vui lòng nhập tên chủ căn hộ.");
