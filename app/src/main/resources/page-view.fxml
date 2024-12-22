@@ -305,7 +305,7 @@
                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
             </padding>
          </VBox>
-         <VBox fx:id="roomVBox" alignment="TOP_CENTER" prefHeight="612.0" prefWidth="1145.0" spacing="10.0">
+         <VBox fx:id="roomVBox" alignment="TOP_CENTER" prefHeight="771.2" prefWidth="1145.6" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                <Label alignment="CENTER" styleClass="section-title" text="Danh sách căn hộ">
                   <opaqueInsets>
