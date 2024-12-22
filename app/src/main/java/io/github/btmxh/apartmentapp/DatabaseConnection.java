@@ -33,7 +33,7 @@ public class DatabaseConnection {
     public enum Role {
         ADMIN("Quản trị viên"),
         MANAGER( "Quản lý"),
-        OFFICER( "Cảnh sát");
+        OFFICER( "Công an");
 
         private final String displayName;
 
@@ -239,12 +239,12 @@ public class DatabaseConnection {
         String sql = """
                 CREATE TABLE IF NOT EXISTS citizens (
                     id INT AUTO_INCREMENT PRIMARY KEY,
-                    full_name VARCHAR(255) NOT NULL,
+                    full_name VARCHAR(50) NOT NULL,
                     date_of_birth DATE NOT NULL,
                     gender ENUM('MALE', 'FEMALE', 'OTHER') NOT NULL,
-                    passport_id VARCHAR(12) NOT NULL UNIQUE,
+                    passport_id VARCHAR(20) NOT NULL UNIQUE,
                     nationality VARCHAR(100) NOT NULL,
-                    room VARCHAR(10) NOT NULL,
+                    room VARCHAR(20) NOT NULL,
                     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
                 );
@@ -261,8 +261,8 @@ public class DatabaseConnection {
         String sql = """
                 CREATE TABLE IF NOT EXISTS rooms (
                     id INT AUTO_INCREMENT PRIMARY KEY,
-                    name VARCHAR(10) NOT NULL,
-                    owner_name VARCHAR(255) NOT NULL,
+                    name VARCHAR(20) NOT NULL,
+                    owner_name VARCHAR(50) NOT NULL,
                     area FLOAT(1) NOT NULL,
                     number_of_motors INT NOT NULL DEFAULT 0,
                     number_of_cars INT NOT NULL DEFAULT 0

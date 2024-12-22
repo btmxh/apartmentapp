@@ -101,23 +101,49 @@ public class AddResidentController {
 
     public void submitButton(ActionEvent actionEvent) {
         try{
-            final String fullname = fullNameField.getText().trim();
-            final LocalDate dateofbirth = dateField.getValue();
-
+            final String fullName = fullNameField.getText().trim();
+            final Gender gender = genderComboBox.getValue();
+            final LocalDate dateOfBirth = dateField.getValue();
             final String nationality = nationField.getText().trim();
             final String passportId = passportIdField.getText().trim();
+            final String room = roomLabel.getText();
 
-            if (fullname.isEmpty() || dateofbirth == null  || nationality.isEmpty() || passportId.isEmpty()) {
-                showAlert("Lỗi nhập liệu", "Vui lòng nhập đầy đủ thông tin trước khi bấm OK.");
-                logger.warn("Một hoặc nhiều trường bị bỏ trống.");
+            if (fullName.isEmpty()) {
+                Announcement.show("Thiếu thông tin", "Họ tên không được để trống", "Vui lòng điền họ tên.");
                 return;
             }
-            citizen.setFullName(fullNameField.getText());
-            citizen.setDateOfBirth(dateField.getValue());
-            citizen.setGender(genderComboBox.getValue());
+
+            if (dateOfBirth == null) {
+                Announcement.show("Thiếu thông tin", "Ngày sinh không được để trống", "Vui lòng chọn ngày sinh.");
+                return;
+            }
+
+            if (gender == null) {
+                Announcement.show("Thiếu thông tin", "Giới tính không được để trống", "Vui lòng chọn giới tính.");
+                return;
+            }
+
+            if (passportId.isEmpty()) {
+                Announcement.show("Thiếu thông tin", "Số CCCD không được để trống", "Vui lòng điền số CCCD.");
+                return;
+            }
+
+            if (nationality.isEmpty()) {
+                Announcement.show("Thiếu thông tin", "Quốc tịch không được để trống", "Vui lòng điền quốc tịch.");
+                return;
+            }
+
+            if (room.isEmpty()) {
+                Announcement.show("Thiếu thông tin", "Căn hộ không được để trống", "Vui lòng chọn căn hộ.");
+                return;
+            }
+
+            citizen.setFullName(fullName);
+            citizen.setGender(gender);
+            citizen.setDateOfBirth(dateOfBirth);
             citizen.setNationality(nationality);
             citizen.setPassportId(passportId);
-            citizen.setRoom(roomLabel.getText());
+            citizen.setRoom(room);
             DatabaseConnection.getInstance().addCitizenToDB(citizen);
 
         } catch (SQLException ex) {
@@ -125,6 +151,7 @@ public class AddResidentController {
             Announcement.show("Lỗi", "Không thể thêm cư dân vào CSDL", ex.getMessage());
             return;
         }
+
         stage.close();
     }
 
@@ -132,16 +159,14 @@ public class AddResidentController {
         this.stage = stage;
     }
 
-    public void setResident(Citizen c) {
-        citizen = c;
-        if (c != null) {
-            fullNameField.setText(citizen.getFullName());
-            dateField.setValue(citizen.getDateOfBirth());
-            genderComboBox.setValue(citizen.getGender());
-            passportIdField.setText(citizen.getPassportId());
-            nationField.setText(citizen.getNationality());
-            roomLabel.setText(citizen.getRoom());
-        }
+    public void setResident(Citizen citizen) {
+        this.citizen = citizen;
+        fullNameField.setText(citizen.getFullName());
+        dateField.setValue(citizen.getDateOfBirth());
+        genderComboBox.setValue(citizen.getGender());
+        passportIdField.setText(citizen.getPassportId());
+        nationField.setText(citizen.getNationality());
+        roomLabel.setText(citizen.getRoom());
     }
 
     public static void open(Window window, Citizen citizen) throws IOException {
