@@ -21,7 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class ChangeInforUserController {
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger(ChangeInforUserController.class);
 
     @FXML
     private TextField fullNameUser;

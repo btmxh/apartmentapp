@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 public class ResidentTableController {
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger(ResidentTableController.class);
 
     public TableView<Citizen> table;
     public TableColumn<Citizen, Citizen> idCol;
