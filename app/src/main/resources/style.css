@@ -77,6 +77,10 @@
     -fx-text-fill: white;
 }
 
+.main-title {
+    -fx-font-weight: bold;
+}
+
 .dashboard-title {
     -fx-text-fill: white;
     -fx-font-size: 20px;
