@@ -108,10 +108,13 @@ public class AddPaymentController {
         try {
             if (room.get() == null || fee.get() == null) {
                 Announcement.show("Thiếu thông tin", "Chưa chọn căn hộ", "Vui lòng chọn căn hộ và khoản thu trước khi xác nhận.");
-                return;
             } else if (fee.get() == null) {
                 Announcement.show("Thiếu thông tin", "Chưa chọn khoản thu", "Vui lòng chọn khoản thu trước khi xác nhận.");
             } else {
+                if (valueTextField.getText().trim().isEmpty()) {
+                    Announcement.show("Thiếu thông tin", "Chưa nhập số tiền", "Vui lòng nhập số tiền trước khi xác nhận.");
+                    return;
+                }
                 long value;
                 try {
                     value = Long.parseLong(valueTextField.getText().trim());
@@ -156,8 +159,11 @@ public class AddPaymentController {
                 valueTextField.setDisable(false);
             }
         }
-        if (payment.getValue() != 0) {
+        if (payment.getValue() != -1) {
             valueTextField.setText(String.valueOf(payment.getValue()));
+        }
+        else {
+            valueTextField.setText("");
         }
         user.set(payment.getUser());
     }
@@ -172,7 +178,7 @@ public class AddPaymentController {
         final AddPaymentController controller = loader.getController();
         final var stage = new Stage();
         if (payment == null) {
-            payment = new Payment(-1, null, user.get(), null, 0, LocalDateTime.now());
+            payment = new Payment(-1, null, user.get(), null, -1, LocalDateTime.now());
         }
 
         stage.initOwner(window);
