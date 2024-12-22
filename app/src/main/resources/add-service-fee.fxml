@@ -35,12 +35,12 @@
             <Label fx:id="value2Label" prefHeight="17.0" prefWidth="270.0" styleClass="big-label" text="Loại khoản thu" GridPane.rowIndex="1" />
             <Label fx:id="valueLabel" styleClass="big-label" text="Số tiền " GridPane.rowIndex="5" />
             <Label styleClass="big-label" text="Ngày bắt đầu thu" GridPane.rowIndex="3" />
-            <DatePicker fx:id="startDatePicker" editable="false" maxWidth="1.7976931348623157E308" styleClass="big-text-field" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <DatePicker fx:id="startDatePicker" maxWidth="1.7976931348623157E308" styleClass="big-text-field" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <padding>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </padding></DatePicker>
             <Label styleClass="big-label" text="Hạn cuối" GridPane.rowIndex="4" />
-            <DatePicker fx:id="endDatePicker" editable="false" maxWidth="1.7976931348623157E308" styleClass="big-text-field" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <DatePicker fx:id="endDatePicker" maxWidth="1.7976931348623157E308" styleClass="big-text-field" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <padding>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </padding></DatePicker>
