@@ -106,16 +106,36 @@ public class AddResidentController {
             final LocalDate dateOfBirth = dateField.getValue();
             final String nationality = nationField.getText().trim();
             final String passportId = passportIdField.getText().trim();
-            final String room = roomLabel.getText().trim();
-            if (fullName.isEmpty() || dateOfBirth == null  || nationality.isEmpty() || passportId.isEmpty() ) {
-                showAlert("Lỗi nhập liệu", "Vui lòng nhập đầy đủ thông tin trước khi bấm OK.");
-                logger.warn("Một hoặc nhiều trường bị bỏ trống.");
+            final String room = roomLabel.getText();
+
+            if (fullName.isEmpty()) {
+                Announcement.show("Thiếu thông tin", "Họ tên không được để trống", "Vui lòng điền họ tên.");
+                return;
+            }
+
+            if (dateOfBirth == null) {
+                Announcement.show("Thiếu thông tin", "Ngày sinh không được để trống", "Vui lòng chọn ngày sinh.");
+                return;
+            }
+
+            if (gender == null) {
+                Announcement.show("Thiếu thông tin", "Giới tính không được để trống", "Vui lòng chọn giới tính.");
+                return;
+            }
+
+            if (passportId.isEmpty()) {
+                Announcement.show("Thiếu thông tin", "Số CCCD không được để trống", "Vui lòng điền số CCCD.");
                 return;
             }
 
             if (fullName.matches("\\d+")) {
                 Announcement.show("Giá trị không hợp lệ", "Tên không hợp lệ", "Tên không được chỉ bao gồm số. Vui lòng nhập lại.");
                 logger.warn("Tên đầy đủ chỉ bao gồm số.");
+                return;
+            }
+
+            if (nationality.isEmpty()) {
+                Announcement.show("Thiếu thông tin", "Quốc tịch không được để trống", "Vui lòng điền quốc tịch.");
                 return;
             }
 
