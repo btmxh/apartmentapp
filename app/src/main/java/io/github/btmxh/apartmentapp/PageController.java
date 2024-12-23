@@ -179,6 +179,19 @@ public class PageController {
         }
     }
 
+    private void updateDashboardStats() {
+        try {
+            final var values = DatabaseConnection.getInstance().getDashboardValues();
+            totalMoneyRecv.setText(formatMoney(values[0]));
+            totalMoneyPending.setText(formatMoney(Math.max(0, values[1] - values[0])));
+            numCitizens.setText(values[2] + " người");
+            numRooms.setText(values[3] + " hộ");
+        } catch (SQLException e) {
+            logger.error("Unable to retrieve dashboard stats", e);
+            Announcement.show("Lỗi", "Không thể lấy giá trị bảng điều khiển", "Vui lòng kiểm tra kết nối của bạn.");
+        }
+    }
+
     private void handleLogout() {
         try {
             Region loginPage = Utils.fxmlLoader("/login-view.fxml").load();
@@ -368,6 +381,7 @@ public class PageController {
         try {
             AddServiceFeeController.open(((Node) event.getSource()).getScene().getWindow(), null);
             updateServiceFees();
+            updateDashboardStats();
         } catch (IOException e) {
             logger.fatal("Lỗi khi tải tệp FXML", e);
             Announcement.show("Lỗi", "Không thể tải FXML của tạo khoản thu!", "Lỗi chi tiết: " + e.getMessage());
@@ -378,6 +392,7 @@ public class PageController {
         try {
             AddResidentController.open(((Node) event.getSource()).getScene().getWindow(), null);
             updateResidents();
+            updateDashboardStats();
         } catch (IOException e) {
             logger.fatal("Lỗi khi tải tệp FXML", e);
             Announcement.show("Lỗi", "Không thể tải FXML của nhân khẩu!", "Lỗi chi tiết: " + e.getMessage());
@@ -413,6 +428,7 @@ public class PageController {
         try {
             AddPaymentController.open(((Node) event.getSource()).getScene().getWindow(), null);
             updatePayments();
+            updateDashboardStats();
         } catch (IOException e) {
             logger.fatal("Lỗi khi tải tệp FXML", e);
             Announcement.show("Lỗi", "Không thể tải FXML của thu phí!", "Lỗi chi tiết: " + e.getMessage());
@@ -423,6 +439,7 @@ public class PageController {
         try {
             AddRoomController.open(((Node) event.getSource()).getScene().getWindow(), null);
             updateRooms();
+            updateDashboardStats();
         } catch (IOException e) {
             logger.fatal("Lỗi khi tải tệp FXML", e);
             Announcement.show("Lỗi", "Không thể tải FXML của tạo căn hộ!", "Lỗi chi tiết: " + e.getMessage());
