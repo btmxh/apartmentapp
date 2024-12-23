@@ -40,9 +40,25 @@ public class AddRoomController {
                 Announcement.show("Thiếu thông tin", "Tên căn hộ không được để trống", "Vui lòng nhập tên căn hộ.");
                 return;
             }
+
+            try {
+                float nameAsNumber = Float.parseFloat(name);
+                if (nameAsNumber < 0) {
+                    Announcement.show("Giá trị không hợp lệ", "Tên căn hộ không hợp lệ", "Tên căn hộ không được là số nhỏ hơn 0.");
+                    return;
+                }
+            } catch (NumberFormatException ex) {
+                // Không cần xử lý lỗi này vì tên không phải là số là hợp lệ.
+            }
+
             final var owner = ownerField.getText().trim();
             if (owner.isEmpty()) {
                 Announcement.show("Thiếu thông tin", "Tên chủ căn hộ không được để trống", "Vui lòng nhập tên chủ căn hộ.");
+                return;
+            }
+
+            if (owner.matches("\\d+")) {
+                Announcement.show("Giá trị không hợp lệ", "Tên chủ căn hộ không hợp lệ", "Tên chủ căn hộ không được chỉ bao gồm số.");
                 return;
             }
 
@@ -56,6 +72,11 @@ public class AddRoomController {
                 return;
             }
 
+            if (area <= 0 || area > 500) {
+                Announcement.show("Giá trị không hợp lệ", "Diện tích không hợp lệ", "Diện tích phải lớn hơn 0 và không vượt quá 500.");
+                return;
+            }
+
             int motors;
             try {
                 motors = Integer.parseInt(motorsField.getText().trim());
@@ -66,6 +87,11 @@ public class AddRoomController {
                 return;
             }
 
+            if (motors < 0) {
+                Announcement.show("Giá trị không hợp lệ", "Số lượng xe máy không hợp lệ", "Số lượng xe máy không được âm.");
+                return;
+            }
+
             int cars;
             try {
                 cars = Integer.parseInt(carsField.getText().trim());
@@ -73,6 +99,11 @@ public class AddRoomController {
             catch (NumberFormatException ex) {
                 logger.warn("Nhập số lượng ô tô không thành công", ex);
                 Announcement.show("Giá trị không hợp lệ", "Số lượng ô tô không đúng định dạng", "Vui lòng nhập số lượng ô tô hợp lệ.");
+                return;
+            }
+
+            if (cars < 0) {
+                Announcement.show("Giá trị không hợp lệ", "Số lượng ô tô không hợp lệ", "Số lượng ô tô không được âm.");
                 return;
             }
 

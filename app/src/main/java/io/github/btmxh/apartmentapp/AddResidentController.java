@@ -106,10 +106,16 @@ public class AddResidentController {
             final LocalDate dateOfBirth = dateField.getValue();
             final String nationality = nationField.getText().trim();
             final String passportId = passportIdField.getText().trim();
-            final String room = roomField.getText().trim();
-            if (fullname.isEmpty() || dateofbirth == null  || nationality.isEmpty() || passportId.isEmpty() || room.isEmpty()) {
+            final String room = roomLabel.getText().trim();
+            if (fullName.isEmpty() || dateOfBirth == null  || nationality.isEmpty() || passportId.isEmpty() ) {
                 showAlert("Lỗi nhập liệu", "Vui lòng nhập đầy đủ thông tin trước khi bấm OK.");
                 logger.warn("Một hoặc nhiều trường bị bỏ trống.");
+                return;
+            }
+
+            if (fullName.matches("\\d+")) {
+                Announcement.show("Giá trị không hợp lệ", "Tên không hợp lệ", "Tên không được chỉ bao gồm số. Vui lòng nhập lại.");
+                logger.warn("Tên đầy đủ chỉ bao gồm số.");
                 return;
             }
 

@@ -174,6 +174,10 @@ public class AddServiceFeeController {
                 }
                 try {
                     value1 = Long.parseLong(value1TextField.getText().trim());
+                    if (value1 < 0) {
+                        Announcement.show("Giá trị không hợp lệ", "Số tiền không hợp lệ", "Số tiền không được âm. Vui lòng nhập lại.");
+                        return;
+                    }
                 }
                 catch (NumberFormatException ex) {
                     logger.warn("Nhập số tiền không thành công", ex);
@@ -189,6 +193,10 @@ public class AddServiceFeeController {
                 }
                 try {
                     value2 = Long.parseLong(value2TextField.getText().trim());
+                    if (value2 < 0) {
+                        Announcement.show("Giá trị không hợp lệ", "Số tiền không hợp lệ", "Số tiền không được âm. Vui lòng nhập lại.");
+                        return;
+                    }
                 }
                 catch (NumberFormatException ex) {
                     logger.warn("Nhập số tiền không thành công", ex);
