@@ -894,4 +894,28 @@ public class DatabaseConnection {
         }
         return residentList;
     }
+    public boolean isUsernameTaken(String username) throws SQLException {
+        String query = "SELECT COUNT(*) FROM users WHERE user_name = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        }
+        return false;
+    }
+
+    public boolean isPhoneNumberTaken(String phoneNumber) throws SQLException {
+        String query = "SELECT COUNT(*) FROM users WHERE user_phone_number = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, phoneNumber);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        }
+        return false;
+    }
+
 }
