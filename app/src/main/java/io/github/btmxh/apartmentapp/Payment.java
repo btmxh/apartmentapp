@@ -15,16 +15,6 @@ public class Payment {
     private final SimpleObjectProperty<Room> room = new SimpleObjectProperty<>();
     private final SimpleLongProperty value = new SimpleLongProperty();
 
-
-    public Payment(int id, ServiceFee fee, String roomId, long amount, LocalDateTime committedTimestamp, String roomOwner) {
-        this.id = id;
-        this.fee.set(fee);
-        this.roomId.set(roomId);
-        this.amount.set(amount);
-        this.committedTimestamp.set(committedTimestamp);
-        this.roomOwner.set(roomOwner);// Initialize roomOwner
-    }
-
     public Payment(int id, ServiceFee fee, User user, Room room, long value, LocalDateTime committedTimestamp) {
         this.id = id;
         this.fee.set(fee);

@@ -6,23 +6,23 @@ plugins {
 
 application {
     mainClassName = "io.github.btmxh.apartmentapp.Main"
-    mainModule = "apartmentapp.app.main"
+//    mainModule = "apartmentapp.app.main"
 }
 
 jar {
-    manifest {
-        attributes 'Main-Class': "io.github.btmxh.apartmentapp.Launcher"
-    }
-
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-
-    from { (configurations.runtimeClasspath).collect { it.isDirectory() ? it : zipTree(it) } } {
-        exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
-    }
-
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//    manifest {
+//        attributes 'Main-Class': "io.github.btmxh.apartmentapp.Launcher"
+//    }
+//
+//    from {
+//        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+//    }
+//
+//    from { (configurations.runtimeClasspath).collect { it.isDirectory() ? it : zipTree(it) } } {
+//        exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+//    }
+//
+//    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 javafx {

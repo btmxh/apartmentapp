@@ -13,30 +13,9 @@ import java.util.stream.IntStream;
 
 public class CitizenRNG {
 
-    public static List<Citizen> generateCitizens() {
-        List<Citizen> citizens = new ArrayList<>();
-        final var rng = ThreadLocalRandom.current();
-        for(int i = 1; i < 10; ++i) {
-            for(int j = 1; j < rng.nextInt(4, 10); ++j) {
-                String room = String.format("%d%02d", i, j);
-                final var lst = IntStream.range(0, rng.nextInt(1, 3)).mapToObj(_ijk -> RandomVietnameseName.generateName()).toList();
-                for(int k = 0; k < lst.size(); ++k) {
-                    citizens.add(new Citizen(
-                            -1,
-                            lst.get(k),
-                            generateRandomDateOfBirth(),
-                            generateRandomGender(),
-                            generateRandomPassportId(),
-                            "Vietnam",
-                            room,
-                            LocalDateTime.now().minusDays(rng.nextInt(10, 1000)),
-                            LocalDateTime.now()
-                    ));
-                }
-            }
-        }
-
-        return citizens;
+    public static List<Citizen> generateCitizens(int room) {
+        var rng = ThreadLocalRandom.current();
+        return IntStream.range(0, rng.nextInt(1, 3)).mapToObj(_ijk -> RandomVietnameseName.generateName()).map(name -> new Citizen(-1, name, generateRandomDateOfBirth(), generateRandomGender(), generateRandomPassportId(), "Vietnam", String.valueOf(room), LocalDateTime.now().minusDays(rng.nextInt(10, 1000)), LocalDateTime.now())).toList();
     }
 
     private static LocalDate generateRandomDateOfBirth() {
