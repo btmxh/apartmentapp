@@ -115,6 +115,17 @@ public class RegisterController {
 
         DatabaseConnection dbc = DatabaseConnection.getInstance();
         try {
+            // Kiểm tra tên người dùng đã tồn tại
+            if (dbc.isUsernameTaken(username)) {
+                Announcement.show("Lỗi", "Tên người dùng đã được sử dụng", "Vui lòng chọn tên người dùng khác!");
+                return;
+            }
+
+            // Kiểm tra số điện thoại đã tồn tại
+            if (dbc.isPhoneNumberTaken(phoneNumber)) {
+                Announcement.show("Lỗi", "Số điện thoại đã được sử dụng", "Vui lòng sử dụng số điện thoại khác!");
+                return;
+            }
             if (dbc.signup(username, name, phoneNumber, password)) {
                 Announcement.show("Thành công!", "Đăng ký thành công", "Người dùng đã đăng ký thành công " + username);
                 if (dbc.getRole(username).equals("admin")) {

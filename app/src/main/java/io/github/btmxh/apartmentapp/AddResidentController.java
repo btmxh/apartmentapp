@@ -128,6 +128,12 @@ public class AddResidentController {
                 return;
             }
 
+            if (fullName.matches("\\d+")) {
+                Announcement.show("Giá trị không hợp lệ", "Tên không hợp lệ", "Tên không được chỉ bao gồm số. Vui lòng nhập lại.");
+                logger.warn("Tên đầy đủ chỉ bao gồm số.");
+                return;
+            }
+
             if (nationality.isEmpty()) {
                 Announcement.show("Thiếu thông tin", "Quốc tịch không được để trống", "Vui lòng điền quốc tịch.");
                 return;
