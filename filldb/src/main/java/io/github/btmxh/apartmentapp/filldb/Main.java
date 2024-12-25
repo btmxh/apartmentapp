@@ -2,6 +2,7 @@ package io.github.btmxh.apartmentapp.filldb;
 
 import io.github.btmxh.apartmentapp.DatabaseConnection;
 import io.github.btmxh.apartmentapp.Payment;
+import io.github.btmxh.apartmentapp.Room;
 import io.github.btmxh.apartmentapp.ServiceFee;
 import io.github.btmxh.apartmentapp.DatabaseConnection.FeeType;
 
@@ -26,18 +27,17 @@ public class Main {
         db.signup("leducanh", "Lê Đức Anh",   "0987654321", "ducanh123");
         db.signup("method123", "Phạm Nhật Minh",   "0987456321", "kizunamethod");
         db.signup("hat", "Hoàng Anh Tú", "0987452981", "hatxulemicu");
+        var users = db.getNonAdminUserList(1000, 0);
         final var fees = new ArrayList<ServiceFee>();
-        for(int i = 10; i >= 0; --i) {
-            final var ym = YearMonth.now().minusMonths(i);
-            final var nextYm = ym.plusMonths(1);
-            final var m = ym.getMonthValue();
+        for(int m = 5; m <= 11; ++m) {
             fees.add(new ServiceFee(
                     -1,
                     FeeType.MANAGEMENT,
                     "Tiền quản lý tháng " + m,
                     ThreadLocalRandom.current().nextInt(20, 25) * 1000L,
                     0,
-                    ym.atDay(25), nextYm.atDay(5)
+                    LocalDate.of(2024, m, 25),
+                    LocalDate.of(2024, m + 1, 5)
             ));
             fees.add(new ServiceFee(
                     -1,
@@ -45,7 +45,8 @@ public class Main {
                     "Tiền dịch vụ tháng " + m,
                     ThreadLocalRandom.current().nextInt(5, 10) * 1000L,
                     0,
-                    ym.atDay(25), nextYm.atDay(5)
+                    LocalDate.of(2024, m, 25),
+                    LocalDate.of(2024, m + 1, 5)
             ));
             fees.add(new ServiceFee(
                     -1,
@@ -53,27 +54,41 @@ public class Main {
                     "Tiền gửi xe tháng " + m,
                     ThreadLocalRandom.current().nextInt(100, 200) * 1000L,
                     ThreadLocalRandom.current().nextInt(1000, 1500) * 1000L,
-                    ym.atDay(25), nextYm.atDay(5)
+                    LocalDate.of(2024, m, 25),
+                    LocalDate.of(2024, m + 1, 5)
             ));
             fees.add(new ServiceFee(
                     -1,
                     FeeType.PARKING,
                     "Tiền đóng góp tháng " + m,
                     0, 0,
-                    ym.atDay(25), nextYm.atDay(5)
+                    LocalDate.of(2024, m, 25),
+                    LocalDate.of(2024, m + 1, 5)
             ));
+        }
+        for(int floor = 1; floor <= 10; ++floor) {
+            for(int num = 1; num <= 21; ++num) {
+                int roomNum = floor * 100 + num;
+                var citizens = CitizenRNG.generateCitizens(roomNum);
+                for(var citizen : citizens) db.addCitizenToDB(citizen);
+                var room = new Room(-1, "Phòng " + roomNum, citizens.getFirst().getFullName(), ThreadLocalRandom.current().nextInt(14, 621) / 2, ThreadLocalRandom.current().nextInt(1, 4), ThreadLocalRandom.current().nextInt(1, 4));
+                db.updateRoom(room);
+                for(var fee : fees) {
+                    var user = users.get(ThreadLocalRandom.current().nextInt(users.size()));
+                    db.updatePayment(new Payment(-1, fee, user, room, calcValue(fee, room), LocalDateTime.now()));
+                }
+            }
         }
         for(final var fee : fees) {
             db.updateServiceFee(fee);
         }
-        final var set = new HashSet<String>();
-        for(final var citizen : CitizenRNG.generateCitizens()) {
-            db.addCitizenToDB(citizen);
-            set.add(citizen.getRoom());
-            for(final var fee : fees) if(fee.getStartDate().isAfter(citizen.getCreatedAt().toLocalDate()) && ThreadLocalRandom.current().nextBoolean()) {
-                db.updatePayment(new Payment(-1, fee, citizen.getRoom(), fee.getValue1() <= 0? 100000 : -1, LocalDateTime.now(), null));
-            }
-        }
     }
 
+    private static long calcValue(ServiceFee fee, Room room) {
+        return switch (fee.getType()) {
+            case MANAGEMENT, SERVICE -> (long) (fee.getValue1() * room.getArea());
+            case PARKING -> fee.getValue1() * room.getNumMotors() + fee.getValue2() * room.getNumCars();
+            case DONATION -> ThreadLocalRandom.current().nextInt(50000, 100000);
+        };
+    }
 }
